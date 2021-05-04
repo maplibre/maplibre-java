@@ -1,18 +1,18 @@
 ext {
-    mapboxArtifactGroupId = 'com.mapbox.mapboxsdk'
-    mapboxArtifactId = project.hasProperty('POM_ARTIFACT_ID') ? project.property('POM_ARTIFACT_ID') : System.getenv('POM_ARTIFACT_ID')
-    mapboxArtifactTitle = 'Mapbox Java SDK'
-    mapboxArtifactDescription = project.hasProperty('POM_DESCRIPTION') ? project.property('POM_DESCRIPTION') : System.getenv('POM_DESCRIPTION')
-    mapboxDeveloperName = 'Mapbox'
-    mapboxDeveloperEmail = 'apps@mapbox.com'
-    mapboxDeveloperOrganization = 'Mapbox'
-    mapboxDeveloperOrganizationUrl = 'http://www.mapbox.com'
-    mapboxDeveloperId = 'mapbox'
-    mapboxArtifactUrl = 'https://github.com/mapbox/mapbox-java'
-    mapboxArtifactVcsUrl = 'https://github.com/mapbox/mapbox-java.git'
-    mapboxArtifactScmUrl = 'scm:git@github.com:mapbox/mapbox-java.git'
-    mapboxArtifactLicenseName = 'The Apache Software License, Version 2.0'
-    mapboxArtifactLicenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    mapLibreArtifactGroupId = 'org.maplibre.gl'
+    mapLibreArtifactId = project.hasProperty('POM_ARTIFACT_ID') ? project.property('POM_ARTIFACT_ID') : System.getenv('POM_ARTIFACT_ID')
+    mapLibreArtifactTitle = 'MapLibre Adnroid SDK'
+    mapLibreArtifactDescription = project.hasProperty('POM_DESCRIPTION') ? project.property('POM_DESCRIPTION') : System.getenv('POM_DESCRIPTION')
+    mapLibreDeveloperName = 'MapLibre'
+    mapLibreDeveloperEmail = 'maplibre@maplibre.org'
+    mapLibreDeveloperOrganization = 'MapLibre'
+    mapLibreDeveloperOrganizationUrl = 'http://www.maplibre.org'
+    mapLibreDeveloperId = 'maplibre'
+    mapLibreArtifactUrl = 'https://github.com/maplibre/maplibre-java'
+    mapLibreArtifactVcsUrl = 'https://github.com/maplibre/maplibre-java.git'
+    mapLibreArtifactScmUrl = 'scm:git@github.com:maplibre/maplibre-java.git'
+    mapLibreArtifactLicenseName = 'The Apache Software License, Version 2.0'
+    mapLibreArtifactLicenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     versionName = getVersionName()
 }
 

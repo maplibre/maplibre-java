@@ -23,7 +23,7 @@ configurations {
 }
 
 buildConfig {
-  packageName = 'com.mapbox.core'
+  packageName = 'org.maplibre.core'
   version = project.ext.versionName
   buildConfigField 'String', 'GIT_REVISION', getGitRevision()
 }

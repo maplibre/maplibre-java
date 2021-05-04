@@ -1,3 +1,5 @@
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
+
 buildscript {
   apply from: "${rootDir}/gradle/dependencies.gradle"
 
@@ -6,16 +8,6 @@ buildscript {
     google()
     mavenCentral()
     jcenter()
-    maven {
-      url 'https://api.mapbox.com/downloads/v2/releases/maven'
-      authentication {
-        basic(BasicAuthentication)
-      }
-      credentials {
-        username = "mapbox"
-        password = project.hasProperty('SDK_REGISTRY_TOKEN') ? project.property('SDK_REGISTRY_TOKEN') : System.getenv('SDK_REGISTRY_TOKEN')
-      }
-    }
   }
 
   dependencies {
@@ -27,7 +19,7 @@ buildscript {
     classpath pluginDependencies.jacoco
     classpath pluginDependencies.errorprone
     classpath pluginDependencies.buildConfig
-    classpath pluginDependencies.mapboxSdkRegistry
+    classpath pluginDependencies.gradleNexus
   }
 }
 
@@ -42,18 +34,6 @@ allprojects {
     google()
     mavenCentral()
     jcenter()
-    maven {
-      url 'https://api.mapbox.com/downloads/v2/releases/maven'
-      authentication {
-        basic(BasicAuthentication)
-      }
-      credentials {
-        username = "mapbox"
-        password = project.hasProperty('SDK_REGISTRY_TOKEN') ? project.property('SDK_REGISTRY_TOKEN') : System.getenv('SDK_REGISTRY_TOKEN')
-      }
-    }
-    // uncomment if snapshots access is needed
-    // maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/' }
   }
 }
 
@@ -127,7 +107,6 @@ subprojects { subproject ->
 
   if (RELEASE_MODULES.contains(subproject.name)) {
     subproject.apply from: "${rootDir}/gradle/publish.gradle"
-    subproject.apply from: "${rootDir}/gradle/dependencies-graph.gradle"
   }
 
   task sourcesJar(type: Jar, dependsOn: classes) {
@@ -148,4 +127,18 @@ subprojects { subproject ->
 
 task clean(type: Delete) {
   delete rootProject.buildDir
+}
+
+apply from: "${rootDir}/gradle/publish-root.gradle"
+// Set up Sonatype repository
+nexusPublishing {
+    repositories {
+        sonatype {
+            stagingProfileId = sonatypeStagingProfileId
+            username = ossrhUsername
+            password = ossrhPassword
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))            
+        }
+    }
 }

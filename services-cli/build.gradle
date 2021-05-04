@@ -7,10 +7,10 @@ buildscript {
     apply from: "../gradle/dependencies.gradle"
 
     repositories {
-        maven { url 'https://plugins.gradle.org/m2' }
-        // To use snapshots
-        //maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/' }
         jcenter()
+        maven {
+        url 'https://plugins.gradle.org/m2/'
+        }        
     }
 
     dependencies {
@@ -24,9 +24,6 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
-    // To use snapshots
-    //implementation "com.mapbox.mapboxsdk:mapbox-sdk-services:$VERSION_NAME"
-
     // Make sure to use ./gradlew shadowJar for this to work
     implementation project(":services-core")
     implementation project(":services-directions-models")
@@ -47,12 +44,12 @@ dependencies {
 }
 
 buildConfig {
-    packageName = 'com.mapbox.services.cli'
+    packageName = 'org.maplibre.services.cli'
     buildConfigField 'String', 'MAPBOX_ACCESS_TOKEN', System.getenv("MAPBOX_ACCESS_TOKEN")
 }
 
 application {
-    mainClassName = 'com.mapbox.services.cli.MapboxJavaCli'
+    mainClassName = 'org.maplibre.services.cli.MapboxJavaCli'
 }
 
 jar {

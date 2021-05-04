@@ -30,22 +30,9 @@ javadoc:
 	./gradlew :services-turf:javadoc; mv services-turf/build/docs/javadoc/ ./documentation/turf/javadoc/ ; \
 	./gradlew :services:javadoc; mv services/build/docs/javadoc/ ./documentation/services/javadoc/ ; \
 
-sdk-registry-upload:
-	./gradlew mapboxSDKRegistryUpload
-
-sdk-registry-publish:
-	./gradlew mapboxSDKRegistryPublishAll
-
-sdk-registry-publish-snapshot:
-	./gradlew mapboxSDKRegistryUpload -Psnapshot=true
-
-graphs:
-	./gradlew :services-core:generateDependencyGraphMapboxLibraries
-	./gradlew :services-geojson:generateDependencyGraphMapboxLibraries
-	./gradlew :services:generateDependencyGraphMapboxLibraries
-	./gradlew :services-turf:generateDependencyGraphMapboxLibraries
-	./gradlew :services-directions-models:generateDependencyGraphMapboxLibraries
-	./gradlew :services-directions-refresh-models:generateDependencyGraphMapboxLibraries
+# ./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
+publish:
+	./gradlew publishReleasePublicationToSonatypeRepository
 
 directions-matrix-fixtures:
 	# request a symmetric 1x3 matrix for pedestrians
