@@ -38,4 +38,4 @@ jobs:
         run: make checkstyle
       
       - name: Run unit-test for all modules
-        command: make test
+        run: make test
