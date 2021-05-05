@@ -30,9 +30,8 @@ javadoc:
 	./gradlew :services-turf:javadoc; mv services-turf/build/docs/javadoc/ ./documentation/turf/javadoc/ ; \
 	./gradlew :services:javadoc; mv services/build/docs/javadoc/ ./documentation/services/javadoc/ ; \
 
-# ./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
 publish:
-	./gradlew publishReleasePublicationToSonatypeRepository
+	./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
 
 directions-matrix-fixtures:
 	# request a symmetric 1x3 matrix for pedestrians
