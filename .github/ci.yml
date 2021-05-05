@@ -1,0 +1,41 @@
+name: ci
+
+on: 
+  workflow_dispatch:
+  push:
+    tags-ignore:
+      - '**'
+    paths-ignore:
+      - ".github/**" 
+      - "README.md"
+      - ".gitignore"      
+    branches:
+      - master
+  
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: platform/android
+    container:
+      image: ghcr.io/maplibre/android-ndk-r21b
+
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Build libraries
+        run: make build-release
+
+      - name: Build command line interface
+        run: make build-cli   
+
+      - name: Check Java code style
+        run: make checkstyle
+      
+      - name: Run unit-test for all modules
+        command: make test
