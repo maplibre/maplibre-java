@@ -25,6 +25,9 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Build config
+        run: make build-config
+
       - name: Build libraries
         run: make build-release
 
