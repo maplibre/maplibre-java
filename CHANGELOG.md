@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### main
 
+### 5.9.0 - May 5, 2021
+- Initial MapLibre release
+
 ### 5.9.0-alpha.5 - April 9, 2021
 - Exposed a method to pass a single boolean snapping closure parameter [#1253](https://github.com/mapbox/mapbox-java/pull/1253)
 
