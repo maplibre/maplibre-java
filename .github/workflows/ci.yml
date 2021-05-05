@@ -10,14 +10,11 @@ on:
       - "README.md"
       - ".gitignore"      
     branches:
-      - master
+      - main
   
 jobs:
   build:
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: platform/android
     container:
       image: ghcr.io/maplibre/android-ndk-r21b
 
