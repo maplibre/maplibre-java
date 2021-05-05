@@ -56,3 +56,7 @@ tasks.withType(Javadoc) {
     options.addStringOption('docencoding', 'UTF-8')
     options.addStringOption('charset', 'UTF-8')
 }
+
+signing {
+    sign publishing.publications
+}
