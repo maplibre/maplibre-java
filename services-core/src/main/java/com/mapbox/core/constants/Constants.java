@@ -1,6 +1,6 @@
 package com.mapbox.core.constants;
 
-import com.mapbox.core.BuildConfig;
+import org.maplibre.core.BuildConfig;
 
 import java.util.Locale;
 
