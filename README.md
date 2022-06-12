@@ -1,3 +1,5 @@
+# NOTE: This repo is looking for someone who would like to maintain it. 
+
 <h1 align="center">
   <br>
   <a href="https://www.mapbox.com/android-docs/java-sdk/overview/"><img src="https://github.com/mapbox/mapbox-java/blob/main/.github/mbxservice-logo.png" alt="Mapbox Service" width="400"></a>
