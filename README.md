@@ -1,4 +1,4 @@
-Note: This repo is looking for someone who would like to maintain it. 
+# NOTE: This repo is looking for someone who would like to maintain it. 
 
 <h1 align="center">
   <br>
