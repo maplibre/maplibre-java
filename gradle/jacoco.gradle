@@ -4,12 +4,6 @@ jacoco {
     toolVersion = pluginVersion.jacoco
 }
 
-test {
-    jacoco {
-        excludes.add("**/samples/**")
-    }
-}
-
 jacocoTestReport{
     dependsOn test
     group = 'Coverage reports'
