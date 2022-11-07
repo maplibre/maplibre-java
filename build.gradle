@@ -61,13 +61,7 @@ subprojects {
 
 def TESTABLE_MODULES = ["services",
                         "services-core",
-                        "services-directions",
-                        "services-directions-models",
-                        "services-geocoding",
                         "services-geojson",
-                        "services-matching",
-                        "services-matrix",
-                        "services-optimization",
                         "services-route-tiles",
                         "services-speech",
                         "services-staticmap",
@@ -80,9 +74,7 @@ def TESTABLE_MODULES = ["services",
 def RELEASE_MODULES = ["services",
                        "services-core",
                        "services-geojson",
-                       "services-turf",
-                       "services-directions-models",
-                       "services-directions-refresh-models"]
+                       "services-turf"]
 
 subprojects { subproject ->
   apply plugin: 'checkstyle'
