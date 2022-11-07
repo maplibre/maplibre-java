@@ -1,4 +1,10 @@
 apply plugin: 'java-library'
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion = '7.8.2'
+    checkstyleTest.enabled = false
+}
 
 dependencies {
     api project(":services-directions-models")

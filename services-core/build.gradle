@@ -1,4 +1,5 @@
 apply plugin: 'java-library'
+apply plugin: 'checkstyle'
 
 // Re-apply runtime required subproject gradle scripts and classpaths,
 // so that Maps SDK doesn't rely on them being served from the top level build.gradle
@@ -20,6 +21,11 @@ buildscript {
 
 configurations {
   testOutput
+}
+
+checkstyle {
+  toolVersion = '7.8.2'
+  checkstyleTest.enabled = false
 }
 
 buildConfig {

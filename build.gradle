@@ -85,6 +85,12 @@ def RELEASE_MODULES = ["services",
                        "services-directions-refresh-models"]
 
 subprojects { subproject ->
+  apply plugin: 'checkstyle'
+
+  checkstyle {
+    toolVersion = '7.8.2'
+    checkstyleTest.enabled = false
+  }
 
   tasks.withType(Jar) { jarTask ->
     if (!jarTask.name.endsWith("sourcesJar")) {
