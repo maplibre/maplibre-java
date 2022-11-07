@@ -1,75 +1,70 @@
 apply plugin: 'io.github.gradle-nexus.publish-plugin'
 
 buildscript {
-  apply from: "${rootDir}/gradle/dependencies.gradle"
+    apply from: "${rootDir}/gradle/dependencies.gradle"
 
-  repositories {
-    maven { url 'https://plugins.gradle.org/m2' }
-    google()
-    mavenCentral()
-    jcenter()
-  }
-
-  dependencies {
-    dependencies.create(pluginDependencies.checkstyle) {
-      transitive = false
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2' }
+        google()
+        mavenCentral()
+        jcenter()
     }
 
-    classpath pluginDependencies.jacoco
-    classpath pluginDependencies.buildConfig
-    classpath pluginDependencies.gradleNexus
-  }
+    dependencies {
+        dependencies.create(pluginDependencies.checkstyle) {
+            transitive = false
+        }
+
+        classpath pluginDependencies.jacoco
+        classpath pluginDependencies.buildConfig
+        classpath pluginDependencies.gradleNexus
+    }
 }
 
 tasks.withType(JavaCompile) {
-  options.encoding = 'UTF-8'
-  options.compilerArgs += ['-Xlint:all', '-Xlint:unchecked', 'autovaluegson.defaultCollectionsToEmpty:true']
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xlint:all', '-Xlint:unchecked', 'autovaluegson.defaultCollectionsToEmpty:true']
 }
 
 allprojects {
-  repositories {
-    maven { url 'https://plugins.gradle.org/m2' }
-    google()
-    mavenCentral()
-    jcenter()
-  }
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2' }
+        google()
+        mavenCentral()
+        jcenter()
+    }
 }
 
 subprojects {
-  apply from: "${rootDir}/gradle/dependencies.gradle"
-  apply plugin: 'java'
-  apply plugin: 'idea'
+    apply from: "${rootDir}/gradle/dependencies.gradle"
+    apply plugin: 'java'
+    apply plugin: 'idea'
 
-  // Fixes issue with test resources not being found inside Intellij
-  idea {
-    module {
-      testOutputDir = file('build/resources/test')
+    // Fixes issue with test resources not being found inside Intellij
+    idea {
+        module {
+            testOutputDir = file('build/resources/test')
+        }
     }
-  }
 
-  sourceCompatibility = JavaVersion.VERSION_1_7
-  targetCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
 
-  dependencies {
-    // Test Dependencies
-    testCompile dependenciesList.junit
-    testCompile dependenciesList.hamcrestJunit
-    testCompile dependenciesList.mockito
-    testCompile dependenciesList.googleTruth
-  }
+    dependencies {
+        // Test Dependencies
+        testCompile dependenciesList.junit
+        testCompile dependenciesList.hamcrestJunit
+        testCompile dependenciesList.mockito
+        testCompile dependenciesList.googleTruth
+    }
 }
 
 def TESTABLE_MODULES = ["services",
                         "services-core",
                         "services-geojson",
-                        "services-route-tiles",
-                        "services-speech",
                         "services-staticmap",
                         "services-tilequery",
-                        "services-turf",
-                        "services-directions-refresh",
-                        "services-directions-refresh-models",
-                        "services-isochrone"]
+                        "services-turf"]
 
 def RELEASE_MODULES = ["services",
                        "services-core",
@@ -77,48 +72,48 @@ def RELEASE_MODULES = ["services",
                        "services-turf"]
 
 subprojects { subproject ->
-  apply plugin: 'checkstyle'
+    apply plugin: 'checkstyle'
 
-  checkstyle {
-    toolVersion = '7.8.2'
-    checkstyleTest.enabled = false
-  }
-
-  tasks.withType(Jar) { jarTask ->
-    if (!jarTask.name.endsWith("sourcesJar")) {
-      jarTask.exclude("**/*.java")
+    checkstyle {
+        toolVersion = '7.8.2'
+        checkstyleTest.enabled = false
     }
-  }
 
-  if (TESTABLE_MODULES.contains(subproject.name)) {
-    afterEvaluate { project ->
-      project.apply from: "${rootDir}/gradle/jacoco.gradle"
-      project.apply from: "${rootDir}/gradle/checkstyle.gradle"
+    tasks.withType(Jar) { jarTask ->
+        if (!jarTask.name.endsWith("sourcesJar")) {
+            jarTask.exclude("**/*.java")
+        }
     }
-  }
 
-  if (RELEASE_MODULES.contains(subproject.name)) {
-    subproject.apply from: "${rootDir}/gradle/publish.gradle"
-  }
+    if (TESTABLE_MODULES.contains(subproject.name)) {
+        afterEvaluate { project ->
+            project.apply from: "${rootDir}/gradle/jacoco.gradle"
+            project.apply from: "${rootDir}/gradle/checkstyle.gradle"
+        }
+    }
 
-  task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-  }
+    if (RELEASE_MODULES.contains(subproject.name)) {
+        subproject.apply from: "${rootDir}/gradle/publish.gradle"
+    }
 
-  task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-  }
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
 
-  artifacts {
-    archives sourcesJar
-    archives javadocJar
-  }
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
 }
 
 task clean(type: Delete) {
-  delete rootProject.buildDir
+    delete rootProject.buildDir
 }
 
 apply from: "${rootDir}/gradle/publish-root.gradle"
@@ -130,7 +125,7 @@ nexusPublishing {
             username = ossrhUsername
             password = ossrhPassword
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))            
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
 }
