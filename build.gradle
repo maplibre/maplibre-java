@@ -60,13 +60,10 @@ subprojects {
 }
 
 def TESTABLE_MODULES = ["services",
-                        "services-core",
                         "services-geojson",
-                        "services-staticmap",
                         "services-turf"]
 
 def RELEASE_MODULES = ["services",
-                       "services-core",
                        "services-geojson",
                        "services-turf"]
 

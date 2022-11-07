@@ -1,7 +1,5 @@
 rootProject.name = "mapbox-java"
 
 include ':services'
-include ':services-core'
 include ':services-geojson'
 include ':services-turf'
-include ':services-staticmap'

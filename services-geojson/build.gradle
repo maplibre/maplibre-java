@@ -19,5 +19,4 @@ dependencies {
 
   // Test Dependencies
   testImplementation dependenciesList.okhttp3Mockwebserver
-  testImplementation project(path: ':services-core', configuration: 'testOutput')
 }
