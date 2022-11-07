@@ -11,13 +11,11 @@ buildscript {
   }
 
   dependencies {
-
     dependencies.create(pluginDependencies.checkstyle) {
       transitive = false
     }
 
     classpath pluginDependencies.jacoco
-    classpath pluginDependencies.errorprone
     classpath pluginDependencies.buildConfig
     classpath pluginDependencies.gradleNexus
   }
@@ -41,7 +39,6 @@ subprojects {
   apply from: "${rootDir}/gradle/dependencies.gradle"
   apply plugin: 'java'
   apply plugin: 'idea'
-  apply plugin: 'net.ltgt.errorprone'
 
   // Fixes issue with test resources not being found inside Intellij
   idea {
@@ -54,9 +51,6 @@ subprojects {
   targetCompatibility = JavaVersion.VERSION_1_7
 
   dependencies {
-
-    errorprone dependenciesList.errorprone
-
     // Test Dependencies
     testCompile dependenciesList.junit
     testCompile dependenciesList.hamcrestJunit
