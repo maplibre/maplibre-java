@@ -24,7 +24,7 @@ def getVersionName() {
 
 def isSnapshot() {
     return project.hasProperty("snapshot")
-            ? project.property("snapshot").toBoolean()
+            ? project.property("snapshot").asBoolean()
             : false
 }
 
