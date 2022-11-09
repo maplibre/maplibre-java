@@ -2,13 +2,13 @@ buildscript {
     apply from: "${rootDir}/gradle/dependencies.gradle"
 
     repositories {
-        maven { url 'https://plugins.gradle.org/m2' }
         google()
         mavenCentral()
         jcenter()
     }
 
     dependencies {
+        // Adding CheckStyle dependency without having to declare specific version explicitly here.
         dependencies.create(pluginDependencies.checkstyle) {
             transitive = false
         }
@@ -19,16 +19,7 @@ buildscript {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-    options.compilerArgs += ['-Xlint:all', '-Xlint:unchecked', 'autovaluegson.defaultCollectionsToEmpty:true']
-}
-
-allprojects {
-    repositories {
-        maven { url 'https://plugins.gradle.org/m2' }
-        google()
-        mavenCentral()
-        jcenter()
-    }
+    options.compilerArgs += ['-Xlint:all', '-Xlint:unchecked']
 }
 
 subprojects {
@@ -46,6 +37,12 @@ subprojects {
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
 
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+    }
+
     dependencies {
         // Test Dependencies
         testCompile dependenciesList.junit
@@ -55,7 +52,6 @@ subprojects {
 }
 
 def TESTABLE_MODULES = ["services-geojson", "services-turf"]
-
 def RELEASE_MODULES = ["services-geojson", "services-turf"]
 
 subprojects { subproject ->
@@ -92,8 +88,6 @@ subprojects { subproject ->
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
 apply from: "${rootDir}/gradle/publish-root.gradle"
+
+defaultTasks('clean', 'build')

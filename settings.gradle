@@ -1,4 +1,5 @@
-rootProject.name = "mapbox-java"
+rootProject.name = "maplibre-java"
+println('MapLibre Java combined build initializing')
 
-include ':services-geojson'
-include ':services-turf'
+include 'services-geojson'
+include 'services-turf'
