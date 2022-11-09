@@ -59,22 +59,11 @@ subprojects {
     }
 }
 
-def TESTABLE_MODULES = ["services",
-                        "services-geojson",
-                        "services-turf"]
+def TESTABLE_MODULES = ["services-geojson", "services-turf"]
 
-def RELEASE_MODULES = ["services",
-                       "services-geojson",
-                       "services-turf"]
+def RELEASE_MODULES = ["services-geojson", "services-turf"]
 
 subprojects { subproject ->
-    apply plugin: 'checkstyle'
-
-    checkstyle {
-        toolVersion = '7.8.2'
-        checkstyleTest.enabled = false
-    }
-
     tasks.withType(Jar) { jarTask ->
         if (!jarTask.name.endsWith("sourcesJar")) {
             jarTask.exclude("**/*.java")
@@ -84,7 +73,7 @@ subprojects { subproject ->
     if (TESTABLE_MODULES.contains(subproject.name)) {
         afterEvaluate { project ->
             project.apply from: "${rootDir}/gradle/jacoco.gradle"
-            project.apply from: "${rootDir}/gradle/checkstyle.gradle"
+           // project.apply from: "${rootDir}/gradle/checkstyle.gradle"
         }
     }
 
