@@ -8,9 +8,9 @@ task checkstyle(type: Checkstyle) {
   description 'Checks if the code adheres to coding standards'
   group 'verification'
 
-  configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+  configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
   configProperties = [
-      'configDir': rootProject.file('config/checkstyle'),
+      'configDir': file("${rootDir}/config/checkstyle"),
       'baseDir'  : rootDir,
   ]
 
@@ -18,3 +18,5 @@ task checkstyle(type: Checkstyle) {
   classpath = files()
   ignoreFailures = false
 }
+
+

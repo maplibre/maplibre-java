@@ -1,144 +1,93 @@
-apply plugin: 'io.github.gradle-nexus.publish-plugin'
-
 buildscript {
-  apply from: "${rootDir}/gradle/dependencies.gradle"
+    apply from: "${rootDir}/gradle/dependencies.gradle"
 
-  repositories {
-    maven { url 'https://plugins.gradle.org/m2' }
-    google()
-    mavenCentral()
-    jcenter()
-  }
-
-  dependencies {
-
-    dependencies.create(pluginDependencies.checkstyle) {
-      transitive = false
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
     }
 
-    classpath pluginDependencies.jacoco
-    classpath pluginDependencies.errorprone
-    classpath pluginDependencies.buildConfig
-    classpath pluginDependencies.gradleNexus
-  }
+    dependencies {
+        // Adding CheckStyle dependency without having to declare specific version explicitly here.
+        dependencies.create(pluginDependencies.checkstyle) {
+            transitive = false
+        }
+
+        classpath pluginDependencies.jacoco
+    }
 }
 
 tasks.withType(JavaCompile) {
-  options.encoding = 'UTF-8'
-  options.compilerArgs += ['-Xlint:all', '-Xlint:unchecked', 'autovaluegson.defaultCollectionsToEmpty:true']
-}
-
-allprojects {
-  repositories {
-    maven { url 'https://plugins.gradle.org/m2' }
-    google()
-    mavenCentral()
-    jcenter()
-  }
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xlint:all', '-Xlint:unchecked']
 }
 
 subprojects {
-  apply from: "${rootDir}/gradle/dependencies.gradle"
-  apply plugin: 'java'
-  apply plugin: 'idea'
-  apply plugin: 'net.ltgt.errorprone'
+    apply from: "${rootDir}/gradle/dependencies.gradle"
+    apply plugin: 'java'
+    apply plugin: 'idea'
 
-  // Fixes issue with test resources not being found inside Intellij
-  idea {
-    module {
-      testOutputDir = file('build/resources/test')
+    // Fixes issue with test resources not being found inside Intellij
+    idea {
+        module {
+            testOutputDir = file('build/resources/test')
+        }
     }
-  }
 
-  sourceCompatibility = JavaVersion.VERSION_1_7
-  targetCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
 
-  dependencies {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+    }
 
-    errorprone dependenciesList.errorprone
-
-    // Test Dependencies
-    testCompile dependenciesList.junit
-    testCompile dependenciesList.hamcrestJunit
-    testCompile dependenciesList.mockito
-    testCompile dependenciesList.googleTruth
-  }
+    dependencies {
+        // Test Dependencies
+        testImplementation dependenciesList.junit
+        testImplementation dependenciesList.hamcrestJunit
+        testImplementation dependenciesList.mockito
+    }
 }
 
-def TESTABLE_MODULES = ["services",
-                        "services-core",
-                        "services-directions",
-                        "services-directions-models",
-                        "services-geocoding",
-                        "services-geojson",
-                        "services-matching",
-                        "services-matrix",
-                        "services-optimization",
-                        "services-route-tiles",
-                        "services-speech",
-                        "services-staticmap",
-                        "services-tilequery",
-                        "services-turf",
-                        "services-directions-refresh",
-                        "services-directions-refresh-models",
-                        "services-isochrone"]
-
-def RELEASE_MODULES = ["services",
-                       "services-core",
-                       "services-geojson",
-                       "services-turf",
-                       "services-directions-models",
-                       "services-directions-refresh-models"]
+def TESTABLE_MODULES = ["services-geojson", "services-turf"]
+def RELEASE_MODULES = ["services-geojson", "services-turf"]
 
 subprojects { subproject ->
-
-  tasks.withType(Jar) { jarTask ->
-    if (!jarTask.name.endsWith("sourcesJar")) {
-      jarTask.exclude("**/*.java")
+    tasks.withType(Jar) { jarTask ->
+        if (!jarTask.name.endsWith("sourcesJar")) {
+            jarTask.exclude("**/*.java")
+        }
     }
-  }
 
-  if (TESTABLE_MODULES.contains(subproject.name)) {
-    afterEvaluate { project ->
-      project.apply from: "${rootDir}/gradle/jacoco.gradle"
-      project.apply from: "${rootDir}/gradle/checkstyle.gradle"
+    if (TESTABLE_MODULES.contains(subproject.name)) {
+        afterEvaluate { project ->
+            project.apply from: "${rootDir}/gradle/jacoco.gradle"
+            // project.apply from: "${rootDir}/gradle/checkstyle.gradle"
+        }
     }
-  }
 
-  if (RELEASE_MODULES.contains(subproject.name)) {
-    subproject.apply from: "${rootDir}/gradle/publish.gradle"
-  }
+    if (RELEASE_MODULES.contains(subproject.name)) {
+        subproject.apply from: "${rootDir}/gradle/publish.gradle"
+    }
 
-  task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-  }
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        archiveClassifier.set('sources')
+        from sourceSets.main.allSource
+    }
 
-  task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-  }
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        archiveClassifier.set('javadoc')
+        from javadoc.destinationDir
+    }
 
-  artifacts {
-    archives sourcesJar
-    archives javadocJar
-  }
-}
-
-task clean(type: Delete) {
-  delete rootProject.buildDir
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
 }
 
 apply from: "${rootDir}/gradle/publish-root.gradle"
-// Set up Sonatype repository
-nexusPublishing {
-    repositories {
-        sonatype {
-            stagingProfileId = sonatypeStagingProfileId
-            username = ossrhUsername
-            password = ossrhPassword
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))            
-        }
-    }
-}
+
+defaultTasks('clean', 'build')
