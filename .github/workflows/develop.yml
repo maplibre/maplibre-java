@@ -1,0 +1,18 @@
+name: Development build on ${{ github.event_name }}  for @${{ github.actor }} - Linux
+
+on:
+  push:
+    paths-ignore:
+      - ".github/**"
+      - "README.md"
+      - ".gitignore"
+    branches:
+      - develop
+  
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@vdevelop
+      - name: Gradle Build
+        run: ./gradlew build
