@@ -1,4 +1,4 @@
-name: Development build on ${{ github.event_name }}  for @${{ github.actor }} - Linux
+name: Development build - Linux
 
 on:
   workflow_dispatch:
@@ -17,4 +17,5 @@ jobs:
       - uses: actions/checkout@develop
       
       - name: Gradle Build
-        run: "./gradlew build"
+        run: |
+          ./gradlew build"
