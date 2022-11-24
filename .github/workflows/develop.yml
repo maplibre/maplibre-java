@@ -2,10 +2,10 @@ name: Development build on ${{ github.event_name }}  for @${{ github.actor }} - 
 
 on:
   push:
-    paths-ignore:
-      - ".github/**"
-      - "README.md"
-      - ".gitignore"
+    # paths-ignore:
+    #   - ".github/**"
+    #   - "README.md"
+    #   - ".gitignore"
     branches:
       - develop
   
