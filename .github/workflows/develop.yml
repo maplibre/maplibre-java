@@ -1,6 +1,8 @@
 name: Development build on ${{ github.event_name }}  for @${{ github.actor }} - Linux
 
 on:
+  pull_request:
+    types: [opened, reopened, edited]
   push:
     # paths-ignore:
     #   - ".github/**"
