@@ -1,6 +1,7 @@
 name: Development build on ${{ github.event_name }}  for @${{ github.actor }} - Linux
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [opened, reopened, edited]
   push:
@@ -16,4 +17,4 @@ jobs:
       - uses: actions/checkout@develop
       
       - name: Gradle Build
-        run: ./gradlew build
+        run: "./gradlew build"
