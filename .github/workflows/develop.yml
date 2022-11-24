@@ -10,11 +10,12 @@ on:
     #   - ".gitignore"
     branches:
       - develop
-  
-  jobs:
-    build:
-      runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@vdevelop
-      - name: Gradle Build
-        run: ./gradlew build
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@vdevelop
+    
+    - name: Gradle Build
+      run: ./gradlew build
