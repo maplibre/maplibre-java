@@ -18,4 +18,4 @@ jobs:
       
       - name: Gradle Build
         run: |
-          ./gradlew build
+          ./gradlew build --debug
