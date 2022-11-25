@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ env.BRANCH_NAME }}
       
       - name: Gradle Build
         run: |
