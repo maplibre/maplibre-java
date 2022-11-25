@@ -1,4 +1,6 @@
 name: Development build - Linux
+env:
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 on:
   workflow_dispatch:
@@ -15,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+        with:
+          ref: ${{ github.ref }}
       
       - name: Gradle Build
         run: |
