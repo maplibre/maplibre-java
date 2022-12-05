@@ -69,6 +69,7 @@ subprojects { subproject ->
     }
 
     if (RELEASE_MODULES.contains(subproject.name)) {
+        project.logger.info("Applying gradle publish plugin to ${subproject.name}")
         subproject.apply from: "${rootDir}/gradle/publish.gradle"
     }
 

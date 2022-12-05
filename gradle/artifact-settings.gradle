@@ -1,7 +1,7 @@
 ext {
     mapLibreArtifactGroupId = 'org.maplibre.gl'
     mapLibreArtifactId = project.hasProperty('POM_ARTIFACT_ID') ? project.property('POM_ARTIFACT_ID') : System.getenv('POM_ARTIFACT_ID')
-    mapLibreArtifactTitle = 'MapLibre Android SDK'
+    mapLibreArtifactTitle = 'MapLibre Android Java Utilities'
     mapLibreArtifactDescription = project.hasProperty('POM_DESCRIPTION') ? project.property('POM_DESCRIPTION') : System.getenv('POM_DESCRIPTION')
     mapLibreDeveloperName = 'MapLibre'
     mapLibreDeveloperEmail = 'maplibre@maplibre.org'
