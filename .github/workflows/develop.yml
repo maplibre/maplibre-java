@@ -7,10 +7,10 @@ on:
   pull_request:
     types: [opened, reopened, edited]
   push:
-    # paths-ignore:
-    #   - ".github/**"
-    #   - "README.md"
-    #   - ".gitignore"
+    paths-ignore:
+      - ".github/**"
+      - "README.md"
+      - ".gitignore"
 
 jobs:
   build:
@@ -20,11 +20,6 @@ jobs:
         with:
           ref: ${{ env.BRANCH_NAME }}
           fetch-depth: '0'
-
-      - name: git
-        run: |
-          # Checking Git Branch
-          git describe --tag --abbrev=0
 
       - name: Gradle Build
         run: |
