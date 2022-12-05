@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
+
 apply from: file("${rootDir}/gradle/artifact-settings.gradle")
 apply from: file("${rootDir}/gradle/publish-root.gradle")
 
@@ -23,7 +24,7 @@ afterEvaluate {
                     classifier "javadoc"
                 }
 
-                 pom {
+                pom {
                     name = project.ext.mapLibreArtifactTitle
                     description = project.ext.mapLibreArtifactTitle
                     url = project.ext.mapLibreArtifactUrl
@@ -45,6 +46,17 @@ afterEvaluate {
                         developerConnection = project.ext.mapLibreArtifactScmUrl
                         url = project.ext.mapLibreArtifactUrl
                     }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = "https://maven.pkg.github.com/maplibre.org/maplibre-java"
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
                 }
             }
         }
