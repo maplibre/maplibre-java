@@ -153,6 +153,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
    * @param baseType class of base type
    * @param typeFieldName field name used to distinguish subtypes
    * @param maintainType true if the type will be stored in pojo, false - otherwise
+   * @return The RuntimeTypeAdaptorFactory instance created
    */
   public static <T> RuntimeTypeAdapterFactory<T> of(Class<T> baseType,
                                                     String typeFieldName,
@@ -167,6 +168,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
    * @param <T> base type
    * @param baseType class of base type
    * @param typeFieldName field name used to distinguish subtypes
+   * @return The RuntimeTypeAdaptorFactory instance created
    */
   public static <T> RuntimeTypeAdapterFactory<T> of(Class<T> baseType, String typeFieldName) {
     return new RuntimeTypeAdapterFactory<T>(baseType, typeFieldName, false);
@@ -178,6 +180,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
    *
    * @param <T> base type
    * @param baseType class of base type
+   * @return The RuntimeTypeAdaptorFactory instance created
    */
   public static <T> RuntimeTypeAdapterFactory<T> of(Class<T> baseType) {
     return new RuntimeTypeAdapterFactory<T>(baseType, "type", false);
@@ -191,6 +194,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
    * @param label string value for field that distinguishes subtypes
    * @throws IllegalArgumentException if either {@code type} or {@code label}
    *     have already been registered on this type adapter.
+   * @return The same object it is called on, so the calls can be chained
    */
   public RuntimeTypeAdapterFactory<T> registerSubtype(Class<? extends T> type, String label) {
     if (type == null || label == null) {
@@ -211,6 +215,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
    * @param type type name
    * @throws IllegalArgumentException if either {@code type} or its simple name
    *     have already been registered on this type adapter.
+   * @return The same object it is called on, so the calls can be chained
    */
   public RuntimeTypeAdapterFactory<T> registerSubtype(Class<? extends T> type) {
     return registerSubtype(type, type.getSimpleName());

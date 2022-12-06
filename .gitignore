@@ -13,6 +13,8 @@ documentation
 build/
 /captures
 .externalNativeBuild
+services-geojson/bin/
+services-turf/bin/
 
 # Idea
 .idea
