@@ -19,8 +19,9 @@ ext {
 def getVersionName() {
     def cmd = "git describe --tag --abbrev=0"
     def version = cmd.execute().text.trim()
-    project.logger.info("Project version detected: ${version}")
-    return isSnapshot() ? getSnapshotVersion(version) : getReleaseVersion(version)
+    def deducedVersion =  isSnapshot() ? getSnapshotVersion(version) : getReleaseVersion(version)
+    project.logger.info("Project version detected: ${deducedVersion}")
+    return deducedVersion
 }
 
 def isSnapshot() {
