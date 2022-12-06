@@ -1,4 +1,5 @@
 apply plugin: 'io.github.gradle-nexus.publish-plugin'
+apply from: file("${rootDir}/gradle/artifact-settings.gradle")
 
 buildscript {
     apply from: "${rootDir}/gradle/dependencies.gradle"
@@ -100,6 +101,7 @@ defaultTasks('clean', 'build')
 nexusPublishing {
     repositories {
         sonatype {
+            useStaging = !project.ext.isSnapshot
             stagingProfileId = sonatypeStagingProfileId
             username = ossrhUsername
             password = ossrhPassword

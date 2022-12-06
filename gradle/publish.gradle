@@ -16,6 +16,8 @@ afterEvaluate {
 
                 version project.ext.versionName
 
+                project.logger.info("Publishing project with version: ${versionName}")
+
                 artifact sourcesJar {
                     classifier "sources"
                 }
