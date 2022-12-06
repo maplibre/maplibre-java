@@ -14,6 +14,7 @@ ext {
     mapLibreArtifactLicenseName = 'The Apache Software License, Version 2.0'
     mapLibreArtifactLicenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     versionName = getVersionName()
+    isSnapshot = isSnapshot()
 }
 
 def getVersionName() {

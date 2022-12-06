@@ -38,7 +38,7 @@ jobs:
 
       - name: Publish to MavenCentral
         run: |
-          ./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository --debug --stacktrace
+          ./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository --info --stacktrace
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
