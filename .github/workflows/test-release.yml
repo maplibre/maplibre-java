@@ -1,6 +1,7 @@
 name: Release - Linux
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  IS_SNAPSHOT: ${{ github.ref_name != 'main' }}
 on:
   push:
     branches:
@@ -38,7 +39,7 @@ jobs:
 
       - name: Publish to MavenCentral
         run: |
-          ./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository --info --stacktrace
+          ./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository --info --stacktrace -Psnapshot=${{ env.IS_SNAPSHOT }}
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
