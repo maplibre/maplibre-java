@@ -20,6 +20,6 @@ jobs:
           ref: ${{ env.BRANCH_NAME }}
           fetch-depth: '0'
 
-      - name: Gradle Build
+      - name: Gradle Build and Test
         run: |
-          ./gradlew build --info --stacktrace
+          ./gradlew build test --info --stacktrace
