@@ -86,7 +86,7 @@ public final class Feature implements GeoJson {
         // Even thought properties are Nullable,
         // Feature object will be created with properties set to an empty object,
         // so that addProperties() would work
-        if (feature.properties() != null) {
+        if (feature.properties != null) {
             return feature;
         }
         return new Feature(TYPE, feature.bbox(),
@@ -178,7 +178,7 @@ public final class Feature implements GeoJson {
      * @return {@link Feature}
      * @since 1.0.0
      */
-    public static Feature fromGeometry(@Nullable Geometry geometry, @NonNull JsonObject properties,
+    public static Feature fromGeometry(@Nullable Geometry geometry, @Nullable JsonObject properties,
                                        @Nullable String id, @Nullable BoundingBox bbox) {
         return new Feature(TYPE, bbox, id, geometry,
                 properties == null ? new JsonObject() : properties);
@@ -258,8 +258,11 @@ public final class Feature implements GeoJson {
      * @return a {@link JsonObject} which holds this features current properties
      * @since 1.0.0
      */
-    @Nullable
+    @NonNull
     public JsonObject properties() {
+        if(properties == null) {
+            throw new IllegalStateException("Properties should not be null");
+        }
         return properties;
     }
 
@@ -397,6 +400,7 @@ public final class Feature implements GeoJson {
      * @return the value of the member, null if it doesn't exist
      * @since 1.0.0
      */
+    @Deprecated
     public Character getCharacterProperty(String key) {
         JsonElement propertyKey = properties().get(key);
         return propertyKey == null ? null : propertyKey.getAsCharacter();
@@ -470,7 +474,7 @@ public final class Feature implements GeoJson {
                     && ((this.geometry == null)
                     ? (that.geometry() == null) : this.geometry.equals(that.geometry()))
                     && ((this.properties == null)
-                    ? (that.properties() == null) : this.properties.equals(that.properties()));
+                    ? (that.properties == null) : this.properties.equals(that.properties()));
         }
         return false;
     }
@@ -555,7 +559,7 @@ public final class Feature implements GeoJson {
                 geometryTypeAdapter.write(jsonWriter, object.geometry());
             }
             jsonWriter.name("properties");
-            if (object.properties() == null) {
+            if (object.properties == null) {
                 jsonWriter.nullValue();
             } else {
                 TypeAdapter<JsonObject> jsonObjectTypeAdapter = this.jsonObjectTypeAdapter;

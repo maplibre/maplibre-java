@@ -353,11 +353,11 @@ public final class TurfConversion {
    * If the original FeatureCollection parameter has {@link Point}(s)
    * and/or {@link MultiPoint}s), the returned
    * FeatureCollection will include a {@link MultiPoint} object.
-   *
+   * <p></p>
    * If the original FeatureCollection parameter has
    * {@link LineString}(s) and/or {@link MultiLineString}s), the returned
    * FeatureCollection will include a {@link MultiLineString} object.
-   *
+   * <p></p>
    * If the original FeatureCollection parameter has
    * {@link Polygon}(s) and/or {@link MultiPolygon}s), the returned
    * FeatureCollection will include a {@link MultiPolygon} object.

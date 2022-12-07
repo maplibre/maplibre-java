@@ -170,8 +170,7 @@ public class ShifterTest {
   }
 
   public void compareJson(String expectedJson, String actualJson) {
-    JsonParser parser = new JsonParser();
-    assertThat(parser.parse(actualJson), Matchers.equalTo(parser.parse(expectedJson)));
+    assertThat(JsonParser.parseString(actualJson), Matchers.equalTo(JsonParser.parseString(expectedJson)));
   }
 
 }

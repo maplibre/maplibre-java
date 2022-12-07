@@ -288,11 +288,11 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
    * @return a List of {@link LineString}s defining holes inside the polygon
    * @since 3.0.0
    */
-  @Nullable
+  @NonNull
   public List<LineString> inner() {
     List<List<Point>> coordinates = coordinates();
     if (coordinates.size() <= 1) {
-      return new ArrayList(0);
+      return new ArrayList<>(0);
     }
     List<LineString> inner = new ArrayList<>(coordinates.size() - 1);
     for (List<Point> points : coordinates.subList(1, coordinates.size())) {
@@ -375,13 +375,11 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
    * ring rules.
    *
    * @param lineString {@link LineString} the polygon geometry
-   * @return true if number of coordinates are 4 or more, and first and last coordinates
-   *   are identical, else false
-   * @throws GeoJsonException if number of coordinates are less than 4,
+s   * @throws GeoJsonException if number of coordinates are less than 4,
    *   or first and last coordinates are not identical
    * @since 3.0.0
    */
-  private static boolean isLinearRing(LineString lineString) {
+  private static void isLinearRing(LineString lineString) {
     if (lineString.coordinates().size() < 4) {
       throw new GeoJsonException("LinearRings need to be made up of 4 or more coordinates.");
     }
@@ -389,7 +387,6 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
       lineString.coordinates().get(lineString.coordinates().size() - 1)))) {
       throw new GeoJsonException("LinearRings require first and last coordinate to be identical.");
     }
-    return true;
   }
 
   @Override
