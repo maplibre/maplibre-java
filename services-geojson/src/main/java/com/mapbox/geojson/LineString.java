@@ -155,8 +155,8 @@ public final class LineString implements CoordinateContainer<List<Point>> {
 
   static LineString fromLngLats(double[][] coordinates) {
     ArrayList<Point> converted = new ArrayList<>(coordinates.length);
-    for (int i = 0; i < coordinates.length; i++) {
-      converted.add(Point.fromLngLat(coordinates[i]));
+    for (double[] coordinate : coordinates) {
+      converted.add(Point.fromLngLat(coordinate));
     }
     return LineString.fromLngLats(converted);
   }

@@ -475,37 +475,37 @@ public class TurfMeasurementTest extends TestUtils {
 
   @Test
   public void square(){
-    BoundingBox bbox1 =  BoundingBox.fromCoordinates(0, 0, 5, 10);
-    BoundingBox bbox2 = BoundingBox.fromCoordinates(0, 0, 10, 5);
+    BoundingBox bbox1 =  BoundingBox.fromLngLats(0, 0, 5, 10);
+    BoundingBox bbox2 = BoundingBox.fromLngLats(0, 0, 10, 5);
 
     BoundingBox sq1 = TurfMeasurement.square(bbox1);
     BoundingBox sq2 = TurfMeasurement.square(bbox2);
 
-    assertEquals(BoundingBox.fromCoordinates(-2.5, 0, 7.5, 10), sq1);
-    assertEquals(BoundingBox.fromCoordinates(0, -2.5, 10, 7.5), sq2);
+    assertEquals(BoundingBox.fromLngLats(-2.5, 0, 7.5, 10), sq1);
+    assertEquals(BoundingBox.fromLngLats(0, -2.5, 10, 7.5), sq2);
   }
 
   @Test
   public void areaPolygon() {
-    double expected = Double.valueOf(loadJsonFixture(TURF_AREA_POLYGON_RESULT));
+    double expected = Double.parseDouble(loadJsonFixture(TURF_AREA_POLYGON_RESULT));
     assertEquals(expected, TurfMeasurement.area(Feature.fromJson(loadJsonFixture(TURF_AREA_POLYGON_GEOJSON))), 1);
   }
 
   @Test
   public void areaMultiPolygon() {
-    double expected = Double.valueOf(loadJsonFixture(TURF_AREA_MULTIPOLYGON_RESULT));
+    double expected = Double.parseDouble(loadJsonFixture(TURF_AREA_MULTIPOLYGON_RESULT));
     assertEquals(expected, TurfMeasurement.area(Feature.fromJson(loadJsonFixture(TURF_AREA_MULTIPOLYGON_GEOJSON))), 1);
   }
 
   @Test
   public void areaGeometry() {
-    double expected = Double.valueOf(loadJsonFixture(TURF_AREA_GEOM_POLYGON_RESULT));
+    double expected = Double.parseDouble(loadJsonFixture(TURF_AREA_GEOM_POLYGON_RESULT));
     assertEquals(expected, TurfMeasurement.area(Polygon.fromJson(loadJsonFixture(TURF_AREA_GEOM_POLYGON_GEOJSON))), 1);
   }
 
   @Test
   public void areaFeatureCollection() {
-    double expected = Double.valueOf(loadJsonFixture(TURF_AREA_FEATURECOLLECTION_POLYGON_RESULT));
+    double expected = Double.parseDouble(loadJsonFixture(TURF_AREA_FEATURECOLLECTION_POLYGON_RESULT));
     assertEquals(expected, TurfMeasurement.area(FeatureCollection.fromJson(loadJsonFixture(TURF_AREA_FEATURECOLLECTION_POLYGON_GEOJSON))), 1);
   }
 

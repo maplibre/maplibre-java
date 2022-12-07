@@ -131,8 +131,8 @@ import com.google.gson.stream.JsonWriter;
 public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
   private final Class<?> baseType;
   private final String typeFieldName;
-  private final Map<String, Class<?>> labelToSubtype = new LinkedHashMap<String, Class<?>>();
-  private final Map<Class<?>, String> subtypeToLabel = new LinkedHashMap<Class<?>, String>();
+  private final Map<String, Class<?>> labelToSubtype = new LinkedHashMap<>();
+  private final Map<Class<?>, String> subtypeToLabel = new LinkedHashMap<>();
   private final boolean maintainType;
 
   private RuntimeTypeAdapterFactory(Class<?> baseType, String typeFieldName, boolean maintainType) {
@@ -158,7 +158,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
   public static <T> RuntimeTypeAdapterFactory<T> of(Class<T> baseType,
                                                     String typeFieldName,
                                                     boolean maintainType) {
-    return new RuntimeTypeAdapterFactory<T>(baseType, typeFieldName, maintainType);
+    return new RuntimeTypeAdapterFactory<>(baseType, typeFieldName, maintainType);
   }
 
   /**
@@ -171,7 +171,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
    * @return The RuntimeTypeAdaptorFactory instance created
    */
   public static <T> RuntimeTypeAdapterFactory<T> of(Class<T> baseType, String typeFieldName) {
-    return new RuntimeTypeAdapterFactory<T>(baseType, typeFieldName, false);
+    return new RuntimeTypeAdapterFactory<>(baseType, typeFieldName, false);
   }
 
   /**
@@ -183,7 +183,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
    * @return The RuntimeTypeAdaptorFactory instance created
    */
   public static <T> RuntimeTypeAdapterFactory<T> of(Class<T> baseType) {
-    return new RuntimeTypeAdapterFactory<T>(baseType, "type", false);
+    return new RuntimeTypeAdapterFactory<>(baseType, "type", false);
   }
 
   /**
@@ -217,6 +217,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
    *     have already been registered on this type adapter.
    * @return The same object it is called on, so the calls can be chained
    */
+  @SuppressWarnings("unused")
   public RuntimeTypeAdapterFactory<T> registerSubtype(Class<? extends T> type) {
     return registerSubtype(type, type.getSimpleName());
   }
@@ -228,9 +229,9 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
     }
 
     final Map<String, TypeAdapter<?>> labelToDelegate
-            = new LinkedHashMap<String, TypeAdapter<?>>();
+            = new LinkedHashMap<>();
     final Map<Class<?>, TypeAdapter<?>> subtypeToDelegate
-            = new LinkedHashMap<Class<?>, TypeAdapter<?>>();
+            = new LinkedHashMap<>();
     for (Map.Entry<String, Class<?>> entry : labelToSubtype.entrySet()) {
       TypeAdapter<?> delegate =
         gson.getDelegateAdapter(this, TypeToken.get(entry.getValue()));
@@ -238,6 +239,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
       subtypeToDelegate.put(entry.getValue(), delegate);
     }
 
+    //noinspection RedundantThrows
     return new TypeAdapter<R>() {
       @Override public R read(JsonReader in) throws IOException {
         JsonElement jsonElement = Streams.parse(in);

@@ -233,9 +233,6 @@ public class FeatureTest extends TestUtils {
 
     value = feature.getNumberProperty("does_not_exist");
     assertNull(value);
-
-    value = feature.getCharacterProperty("does_not_exist");
-    assertNull(value);
   }
 
   @Test
@@ -253,9 +250,6 @@ public class FeatureTest extends TestUtils {
 
     value = feature.getNumberProperty("does_not_exist");
     assertNull(value);
-
-    value = feature.getCharacterProperty("does_not_exist");
-    assertNull(value);
-
+    
   }
 }
