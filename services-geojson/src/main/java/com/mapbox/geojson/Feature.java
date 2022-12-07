@@ -399,10 +399,16 @@ public final class Feature implements GeoJson {
      * @param key name of the member
      * @return the value of the member, null if it doesn't exist
      * @since 1.0.0
+     * @deprecated 
+     * This method was passing the call to JsonElement::getAsCharacter()
+     * which is in turn deprecated because of misleading nature, as it
+     * does not get this element as a char but rather as a string's first character.
      */
     @Deprecated
+    @Nullable
     public Character getCharacterProperty(String key) {
         JsonElement propertyKey = properties().get(key);
+        //noinspection deprecation
         return propertyKey == null ? null : propertyKey.getAsCharacter();
     }
 
