@@ -149,7 +149,7 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
    * @since 3.0.0
    */
   public static Polygon fromOuterInner(@NonNull LineString outer, @Nullable LineString... inner) {
-    isLinearRing(outer);
+    ensureIsLinearRing(outer);
     List<List<Point>> coordinates = new ArrayList<>();
     coordinates.add(outer.coordinates());
     // If inner rings are set to null, return early.
@@ -157,7 +157,7 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
       return new Polygon(TYPE, null, coordinates);
     }
     for (LineString lineString : inner) {
-      isLinearRing(lineString);
+      ensureIsLinearRing(lineString);
       coordinates.add(lineString.coordinates());
     }
     return new Polygon(TYPE, null, coordinates);
@@ -179,7 +179,7 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
    */
   public static Polygon fromOuterInner(@NonNull LineString outer, @Nullable BoundingBox bbox,
                                        @Nullable LineString... inner) {
-    isLinearRing(outer);
+    ensureIsLinearRing(outer);
     List<List<Point>> coordinates = new ArrayList<>();
     coordinates.add(outer.coordinates());
     // If inner rings are set to null, return early.
@@ -187,7 +187,7 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
       return new Polygon(TYPE, bbox, coordinates);
     }
     for (LineString lineString : inner) {
-      isLinearRing(lineString);
+      ensureIsLinearRing(lineString);
       coordinates.add(lineString.coordinates());
     }
     return new Polygon(TYPE, bbox, coordinates);
@@ -210,7 +210,7 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
    */
   public static Polygon fromOuterInner(@NonNull LineString outer,
                                        @Nullable @Size(min = 1) List<LineString> inner) {
-    isLinearRing(outer);
+    ensureIsLinearRing(outer);
     List<List<Point>> coordinates = new ArrayList<>();
     coordinates.add(outer.coordinates());
     // If inner rings are set to null, return early.
@@ -218,7 +218,7 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
       return new Polygon(TYPE, null, coordinates);
     }
     for (LineString lineString : inner) {
-      isLinearRing(lineString);
+      ensureIsLinearRing(lineString);
       coordinates.add(lineString.coordinates());
     }
     return new Polygon(TYPE, null, coordinates);
@@ -242,7 +242,7 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
    */
   public static Polygon fromOuterInner(@NonNull LineString outer, @Nullable BoundingBox bbox,
                                        @Nullable @Size(min = 1) List<LineString> inner) {
-    isLinearRing(outer);
+    ensureIsLinearRing(outer);
     List<List<Point>> coordinates = new ArrayList<>();
     coordinates.add(outer.coordinates());
     // If inner rings are set to null, return early.
@@ -250,7 +250,7 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
       return new Polygon(TYPE, bbox, coordinates);
     }
     for (LineString lineString : inner) {
-      isLinearRing(lineString);
+      ensureIsLinearRing(lineString);
       coordinates.add(lineString.coordinates());
     }
     return new Polygon(TYPE, bbox, coordinates);
@@ -275,7 +275,7 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
    * @return a {@link LineString} defining the outer perimeter of this polygon
    * @since 3.0.0
    */
-  @Nullable
+  @NonNull
   public LineString outer() {
     return LineString.fromLngLats(coordinates().get(0));
   }
@@ -376,10 +376,10 @@ public final class Polygon implements CoordinateContainer<List<List<Point>>> {
    *
    * @param lineString {@link LineString} the polygon geometry
    * @throws GeoJsonException if number of coordinates are less than 4,
-   *   or first and last coordinates are not identical
+   *   or first and last coordinates are not identical (it is not linear ring)
    * @since 3.0.0
    */
-  private static void isLinearRing(LineString lineString) {
+  private static void ensureIsLinearRing(LineString lineString) {
     if (lineString.coordinates().size() < 4) {
       throw new GeoJsonException("LinearRings need to be made up of 4 or more coordinates.");
     }
