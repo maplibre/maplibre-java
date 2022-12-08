@@ -131,7 +131,7 @@ public final class TurfMisc {
    * Takes a {@link LineString}, a specified distance along the line to a start {@link Point},
    * and a specified distance along the line to a stop point,
    * returns a subsection of the line in-between those points.
-   *
+   * <p></p>
    * This can be useful for extracting only the part of a route between two distances.
    *
    * @param line input line

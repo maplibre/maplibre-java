@@ -28,8 +28,7 @@ public class TestUtils {
   public static final String ACCESS_TOKEN = "pk.XXX";
 
   public void compareJson(String expectedJson, String actualJson) {
-    JsonParser parser = new JsonParser();
-    assertThat(parser.parse(actualJson), Matchers.equalTo(parser.parse(expectedJson)));
+    assertThat(JsonParser.parseString(actualJson), Matchers.equalTo(JsonParser.parseString(expectedJson)));
   }
 
   protected String loadJsonFixture(String filename) {

@@ -148,8 +148,6 @@ public final class GeometryCollection implements Geometry {
    *
    * @param geometries a non-null list of geometry which makes up this collection
    * @param bbox       optionally include a bbox definition as a double array
-   * @return a new instance of this class defined by the values passed inside this static factory
-   *         method
    * @since 4.6.0
    */
   GeometryCollection(String type, @Nullable BoundingBox bbox, List<Geometry> geometries) {

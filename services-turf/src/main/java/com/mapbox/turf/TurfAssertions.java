@@ -69,7 +69,7 @@ public final class TurfAssertions {
       throw new TurfException(String.format(
         "Invalid input to %s, Feature with geometry required", name));
     }
-    if (feature.geometry() == null || !feature.geometry().type().equals(type)) {
+    if (!feature.geometry().type().equals(type)) {
       throw new TurfException(String.format(
         "Invalid input to %s: must be a %s, given %s", name, type, feature.geometry().type()));
     }
@@ -99,7 +99,7 @@ public final class TurfAssertions {
         throw new TurfException(String.format(
           "Invalid input to %s, Feature with geometry required", name));
       }
-      if (feature.geometry() == null || !feature.geometry().type().equals(type)) {
+      if (!feature.geometry().type().equals(type)) {
         throw new TurfException(String.format(
           "Invalid input to %s: must be a %s, given %s", name, type, feature.geometry().type()));
       }
