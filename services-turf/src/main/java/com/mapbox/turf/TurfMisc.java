@@ -99,9 +99,9 @@ public final class TurfMisc {
    * Takes a {@link LineString}, a specified distance along the line to a start {@link Point},
    * and a specified distance along the line to a stop point
    * and returns a subsection of the line in-between those points.
-   *
+   * <p>
    * This can be useful for extracting only the part of a route between two distances.
-   *
+   * </p>
    * @param line input line
    * @param startDist distance along the line to starting point
    * @param stopDist distance along the line to ending point
@@ -128,12 +128,13 @@ public final class TurfMisc {
   }
 
   /**
+   * <p>
    * Takes a {@link LineString}, a specified distance along the line to a start {@link Point},
    * and a specified distance along the line to a stop point,
    * returns a subsection of the line in-between those points.
-   * <p></p>
+   * </p><p>
    * This can be useful for extracting only the part of a route between two distances.
-   *
+   *</p>
    * @param line input line
    * @param startDist distance along the line to starting point
    * @param stopDist distance along the line to ending point

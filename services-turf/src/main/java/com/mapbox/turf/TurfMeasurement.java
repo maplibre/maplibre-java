@@ -669,15 +669,16 @@ public final class TurfMeasurement {
   }
 
   /**
+   * <p>
    * Calculate the approximate area of the polygon were it projected onto the earth.
    * Note that this area will be positive if ring is oriented clockwise, otherwise
    * it will be negative.
-   * <p></p>
+   * </p><p>
    * Reference:
    * Robert. G. Chamberlain and William H. Duquette, "Some Algorithms for Polygons on a Sphere",
    * JPL Publication 07-03, Jet Propulsion
    * Laboratory, Pasadena, CA, June 2007 <a href="https://trs.jpl.nasa.gov/handle/2014/41271">JPL Publication 07-03</a>
-   *
+   * </p>
    * @param coordinates  A list of {@link Point} of Ring Coordinates
    * @return The approximate signed geodesic area of the polygon in square meters.
    */

@@ -348,20 +348,21 @@ public final class TurfConversion {
   }
 
   /**
+   * <p>
    * Combines a FeatureCollection of geometries and returns
    * a {@link FeatureCollection} with "Multi-" geometries in it.
    * If the original FeatureCollection parameter has {@link Point}(s)
    * and/or {@link MultiPoint}s), the returned
    * FeatureCollection will include a {@link MultiPoint} object.
-   * <p></p>
+   * </p><p>
    * If the original FeatureCollection parameter has
    * {@link LineString}(s) and/or {@link MultiLineString}s), the returned
    * FeatureCollection will include a {@link MultiLineString} object.
-   * <p></p>
+   * </p><p>
    * If the original FeatureCollection parameter has
    * {@link Polygon}(s) and/or {@link MultiPolygon}s), the returned
    * FeatureCollection will include a {@link MultiPolygon} object.
-   *
+   *</p>
    * @param originalFeatureCollection a {@link FeatureCollection}
    *
    * @return a {@link FeatureCollection} with a "Multi-" geometry
