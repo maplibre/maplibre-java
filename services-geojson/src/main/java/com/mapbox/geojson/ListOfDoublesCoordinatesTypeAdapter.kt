@@ -1,12 +1,9 @@
-package com.mapbox.geojson;
+package com.mapbox.geojson
 
-import androidx.annotation.Keep;
-
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
-import java.util.List;
+import androidx.annotation.Keep
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
+import java.io.IOException
 
 /**
  * Type Adapter to serialize/deserialize Poinr into/from for double array.
@@ -14,15 +11,16 @@ import java.util.List;
  * @since 4.6.0
  */
 @Keep
-class ListOfDoublesCoordinatesTypeAdapter extends BaseCoordinatesTypeAdapter<List<Double>> {
+internal class ListOfDoublesCoordinatesTypeAdapter : BaseCoordinatesTypeAdapter<List<Double>?>() {
+    @Throws(IOException::class)
+    override fun write(out: JsonWriter, value: List<Double>?) {
+        writePointList(out, value)
+    }
 
-  @Override
-  public void write(JsonWriter out, List<Double> value) throws IOException {
-    writePointList(out, value);
-  }
+    @Throws(IOException::class)
+    override fun read(`in`: JsonReader): List<Double> {
+        return readPointList(`in`)
+    }
 
-  @Override
-  public List<Double> read(JsonReader in) throws IOException {
-    return readPointList(in);
-  }
+    
 }

@@ -1,255 +1,251 @@
-package com.mapbox.geojson;
+package com.mapbox.geojson
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import com.google.gson.JsonObject
+import com.mapbox.geojson.BoundingBox.Companion.fromLngLats
+import com.mapbox.geojson.Feature.Companion.fromGeometry
+import com.mapbox.geojson.Point.Companion.fromLngLat
+import org.junit.Assert
+import org.junit.Test
+import java.io.IOException
 
-import com.google.gson.JsonObject;
+class FeatureTest : TestUtils() {
+    @Test
+    @Throws(Exception::class)
+    fun sanity() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val lineString = LineString.fromLngLats(points)
+        val feature = Feature.fromGeometry(lineString)
+        Assert.assertNotNull(feature)
+    }
 
-import org.junit.Test;
+    @Test
+    @Throws(Exception::class)
+    fun bbox_nullWhenNotSet() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val lineString = LineString.fromLngLats(points)
+        val feature = Feature.fromGeometry(lineString)
+        Assert.assertNull(feature.bbox())
+    }
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+    @Test
+    @Throws(Exception::class)
+    fun bbox_doesNotSerializeWhenNotPresent() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val lineString = LineString.fromLngLats(points)
+        val feature = Feature.fromGeometry(lineString)
+        val featureJsonString = feature.toJson()
+        compareJson(
+            featureJsonString, "{\"type\":\"Feature\",\"geometry\":{\"type\":"
+                    + "\"LineString\",\"coordinates\":[[1,2],[2,3]]}}"
+        )
+    }
 
-public class FeatureTest extends TestUtils {
+    @Test
+    @Throws(Exception::class)
+    fun bbox_returnsCorrectBbox() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val lineString = LineString.fromLngLats(points)
+        val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
+        val feature = Feature.fromGeometry(lineString, bbox)
+        Assert.assertNotNull(feature.bbox())
+        Assert.assertEquals(1.0, feature.bbox()!!.west(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(2.0, feature.bbox()!!.south(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(3.0, feature.bbox()!!.east(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(4.0, feature.bbox()!!.north(), TestUtils.Companion.DELTA)
+    }
 
-  private static final String SAMPLE_FEATURE_POINT = "sample-feature-point-all.json";
+    @Test
+    @Throws(Exception::class)
+    fun bbox_doesSerializeWhenPresent() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val lineString = LineString.fromLngLats(points)
+        val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
+        val feature = Feature.fromGeometry(lineString, bbox)
+        val featureJsonString = feature.toJson()
+        compareJson(
+            "{\"type\":\"Feature\",\"bbox\":[1.0,2.0,3.0,4.0],\"geometry\":"
+                    + "{\"type\":\"LineString\",\"coordinates\":[[1,2],[2,3]]}}",
+            featureJsonString
+        )
+    }
 
-  @Test
-  public void sanity() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    LineString lineString = LineString.fromLngLats(points);
-    Feature feature = Feature.fromGeometry(lineString);
-    assertNotNull(feature);
-  }
+    @Test
+    @Throws(IOException::class)
+    fun point_feature_fromJson() {
+        val json = "{ \"type\": \"Feature\"," +
+                "\"geometry\": { \"type\": \"Point\", \"coordinates\": [ 125.6, 10.1] }," +
+                "\"properties\": {\"name\": \"Dinagat Islands\" }}"
+        val geo = Feature.fromJson(json)
+        Assert.assertEquals(geo.type(), "Feature")
+        Assert.assertEquals(geo.geometry()!!.type(), "Point")
+        Assert.assertEquals(
+            (geo.geometry() as Point?)!!.longitude(),
+            125.6,
+            TestUtils.Companion.DELTA
+        )
+        Assert.assertEquals(
+            (geo.geometry() as Point?)!!.latitude(),
+            10.1,
+            TestUtils.Companion.DELTA
+        )
+        Assert.assertEquals(geo.properties()["name"].asString, "Dinagat Islands")
+    }
 
-  @Test
-  public void bbox_nullWhenNotSet() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    LineString lineString = LineString.fromLngLats(points);
-    Feature feature = Feature.fromGeometry(lineString);
-    assertNull(feature.bbox());
-  }
+    @Test
+    @Throws(IOException::class)
+    fun linestring_feature_fromJson() {
+        val json = "{ \"type\": \"Feature\"," +
+                "\"geometry\": { \"type\": \"LineString\", " +
+                " \"coordinates\": [[ 102.0, 20],[103.0, 3.0],[104.0, 4.0], [105.0, 5.0]]}," +
+                "\"properties\": {\"name\": \"line name\" }}"
+        val geo = Feature.fromJson(json)
+        Assert.assertEquals(geo.type(), "Feature")
+        Assert.assertEquals(geo.geometry()!!.type(), "LineString")
+        Assert.assertNotNull(geo.geometry())
+        val coordinates = (geo.geometry() as LineString?)!!.coordinates()
+        Assert.assertNotNull(coordinates)
+        Assert.assertEquals(4, coordinates.size.toLong())
+        Assert.assertEquals(105.0, coordinates[3].longitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(5.0, coordinates[3].latitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals("line name", geo.properties()["name"].asString)
+    }
 
-  @Test
-  public void bbox_doesNotSerializeWhenNotPresent() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    LineString lineString = LineString.fromLngLats(points);
-    Feature feature = Feature.fromGeometry(lineString);
+    @Test
+    @Throws(IOException::class)
+    fun point_feature_toJson() {
+        val properties = JsonObject()
+        properties.addProperty("name", "Dinagat Islands")
+        val geo = fromGeometry(
+            fromLngLat(125.6, 10.1),
+            properties
+        )
+        val geoJsonString = geo.toJson()
+        val expectedJson = "{ \"type\": \"Feature\"," +
+                "\"geometry\": { \"type\": \"Point\", \"coordinates\": [ 125.6, 10.1] }," +
+                "\"properties\": {\"name\": \"Dinagat Islands\" }}"
+        compareJson(expectedJson, geoJsonString)
+    }
 
-    String featureJsonString = feature.toJson();
-    compareJson(featureJsonString,
-      "{\"type\":\"Feature\",\"geometry\":{\"type\":"
-        + "\"LineString\",\"coordinates\":[[1,2],[2,3]]}}");
-  }
+    @Test
+    @Throws(IOException::class)
+    fun linestring_feature_toJson() {
+        val properties = JsonObject()
+        properties.addProperty("name", "Dinagat Islands")
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 1.0))
+        points.add(fromLngLat(2.0, 2.0))
+        points.add(fromLngLat(3.0, 3.0))
+        val lineString = LineString.fromLngLats(points)
+        val geo = fromGeometry(lineString, properties)
+        val geoJsonString = geo.toJson()
+        val expectedJson = "{ \"type\": \"Feature\"," +
+                "\"geometry\": { \"type\": \"LineString\", \"coordinates\": [[1,1],[2,2],[3,3]]}," +
+                "\"properties\": {\"name\": \"Dinagat Islands\" }}"
+        compareJson(expectedJson, geoJsonString)
+    }
 
-  @Test
-  public void bbox_returnsCorrectBbox() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    LineString lineString = LineString.fromLngLats(points);
+    @Test
+    fun testNullProperties() {
+        val coordinates: MutableList<Point> = ArrayList()
+        coordinates.add(fromLngLat(0.1, 2.3))
+        coordinates.add(fromLngLat(4.5, 6.7))
+        val line = LineString.fromLngLats(coordinates)
+        val feature = Feature.fromGeometry(line)
+        val jsonString = feature.toJson()
+        Assert.assertFalse(jsonString!!.contains("\"properties\":{}"))
 
-    BoundingBox bbox = BoundingBox.fromLngLats(1.0, 2.0, 3.0, 4.0);
-    Feature feature = Feature.fromGeometry(lineString, bbox);
-    assertNotNull(feature.bbox());
-    assertEquals(1.0, feature.bbox().west(), DELTA);
-    assertEquals(2.0, feature.bbox().south(), DELTA);
-    assertEquals(3.0, feature.bbox().east(), DELTA);
-    assertEquals(4.0, feature.bbox().north(), DELTA);
-  }
+        // Feature (empty Properties) -> Json (null Properties) -> Equavalent Feature
+        val featureFromJson = Feature.fromJson(jsonString)
+        Assert.assertEquals(featureFromJson, feature)
+    }
 
-  @Test
-  public void bbox_doesSerializeWhenPresent() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    LineString lineString = LineString.fromLngLats(points);
+    @Test
+    fun testNonNullProperties() {
+        val coordinates: MutableList<Point> = ArrayList()
+        coordinates.add(fromLngLat(0.1, 2.3))
+        coordinates.add(fromLngLat(4.5, 6.7))
+        val line = LineString.fromLngLats(coordinates)
+        val properties = JsonObject()
+        properties.addProperty("key", "value")
+        val feature = fromGeometry(line, properties)
+        val jsonString = feature.toJson()
+        Assert.assertTrue(jsonString!!.contains("\"properties\":{\"key\":\"value\"}"))
 
-    BoundingBox bbox = BoundingBox.fromLngLats(1.0, 2.0, 3.0, 4.0);
-    Feature feature = Feature.fromGeometry(lineString, bbox);
-    String featureJsonString = feature.toJson();
-    compareJson("{\"type\":\"Feature\",\"bbox\":[1.0,2.0,3.0,4.0],\"geometry\":"
-        + "{\"type\":\"LineString\",\"coordinates\":[[1,2],[2,3]]}}",
-      feature.toJson());
-  }
+        // Feature (non-empty Properties) -> Json (non-empty Properties) -> Equavalent Feature
+        Assert.assertEquals(Feature.fromJson(jsonString), feature)
+    }
 
-  @Test
-  public void point_feature_fromJson() throws IOException {
-    final String json =  "{ \"type\": \"Feature\"," +
-      "\"geometry\": { \"type\": \"Point\", \"coordinates\": [ 125.6, 10.1] }," +
-      "\"properties\": {\"name\": \"Dinagat Islands\" }}";
-    Feature geo = Feature.fromJson(json);
-    assertEquals(geo.type(), "Feature");
-    assertEquals(geo.geometry().type(), "Point");
-    assertEquals(((Point)geo.geometry()).longitude(), 125.6, DELTA);
-    assertEquals(((Point)geo.geometry()).latitude(), 10.1, DELTA);
-    assertEquals(geo.properties().get("name").getAsString(), "Dinagat Islands");
-  }
+    @Test
+    fun testNullPropertiesJson() {
+        val jsonString = ("{\"type\":\"Feature\"," +
+                " \"bbox\":[1.0,2.0,3.0,4.0]," +
+                " \"geometry\":"
+                + "{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}")
+        val feature = Feature.fromJson(jsonString)
 
-  @Test
-  public void linestring_feature_fromJson() throws IOException {
-      final String json =  "{ \"type\": \"Feature\"," +
-      "\"geometry\": { \"type\": \"LineString\", "+
-      " \"coordinates\": [[ 102.0, 20],[103.0, 3.0],[104.0, 4.0], [105.0, 5.0]]}," +
-      "\"properties\": {\"name\": \"line name\" }}";
-    Feature geo = Feature.fromJson(json);
-    assertEquals(geo.type(), "Feature");
-    assertEquals(geo.geometry().type(), "LineString");
-    assertNotNull(geo.geometry());
-    List<Point> coordinates = ((LineString) geo.geometry()).coordinates();
-    assertNotNull(coordinates);
-    assertEquals(4, coordinates.size());
-    assertEquals(105.0,coordinates.get(3).longitude(),  DELTA);
-    assertEquals(5.0,coordinates.get(3).latitude(),  DELTA);
-    assertEquals("line name", geo.properties().get("name").getAsString());
-  }
+        // Json( null Properties) -> Feature (empty Properties) -> Json(null Properties)
+        val fromFeatureJsonString = feature.toJson()
+        compareJson(fromFeatureJsonString, jsonString)
+    }
 
-  @Test
-  public void point_feature_toJson() throws IOException {
-    JsonObject properties = new JsonObject();
-    properties.addProperty("name", "Dinagat Islands");
-    Feature geo = Feature.fromGeometry(Point.fromLngLat(125.6, 10.1),
-      properties);
-    String geoJsonString = geo.toJson();
+    @Test
+    @Throws(IOException::class)
+    fun pointFeature_fromJson_toJson() {
+        val jsonString = "{\"id\" : \"id0\"," +
+                " \"bbox\": [-120.0, -60.0, 120.0, 60.0]," +
+                " \"geometry\": {" +
+                "    \"bbox\": [-110.0, -50.0, 110.0, 50.0]," +
+                "    \"coordinates\": [ 100.0, 0.0], " +
+                "     \"type\": \"Point\"}," +
+                "\"type\": \"Feature\"," +
+                "\"properties\": {\"prop0\": \"value0\", \"prop1\": \"value1\"}" +
+                "}"
+        val featureFromJson = Feature.fromJson(jsonString)
+        val jsonStringFromFeature = featureFromJson.toJson()
+        compareJson(jsonString, jsonStringFromFeature)
+    }
 
-    String expectedJson = "{ \"type\": \"Feature\"," +
-      "\"geometry\": { \"type\": \"Point\", \"coordinates\": [ 125.6, 10.1] }," +
-              "\"properties\": {\"name\": \"Dinagat Islands\" }}";
+    @Test
+    @Throws(IOException::class)
+    fun feature_getProperty_empty_property() {
+        val jsonString = ("{\"type\":\"Feature\"," +
+                " \"geometry\":"
+                + "{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}")
+        val feature = Feature.fromJson(jsonString)
+        var value: Any? = feature.getStringProperty("does_not_exist")
+        Assert.assertNull(value)
+        value = feature.getBooleanProperty("does_not_exist")
+        Assert.assertNull(value)
+        value = feature.getNumberProperty("does_not_exist")
+        Assert.assertNull(value)
+    }
 
-    compareJson(expectedJson, geoJsonString);
-  }
+    @Test
+    @Throws(IOException::class)
+    fun feature_property_doesnotexist() {
+        val jsonString = "{ \"type\": \"Feature\"," +
+                "\"geometry\": { \"type\": \"LineString\", \"coordinates\": [[1,1],[2,2],[3,3]]}," +
+                "\"properties\": {\"some_name\": \"some_value\" }}"
+        val feature = Feature.fromJson(jsonString)
+        var value: Any? = feature.getStringProperty("does_not_exist")
+        Assert.assertNull(value)
+        value = feature.getBooleanProperty("does_not_exist")
+        Assert.assertNull(value)
+        value = feature.getNumberProperty("does_not_exist")
+        Assert.assertNull(value)
+    }
 
-  @Test
-  public void linestring_feature_toJson() throws IOException {
-    JsonObject properties = new JsonObject();
-    properties.addProperty("name", "Dinagat Islands");
-
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 1.0));
-    points.add(Point.fromLngLat(2.0, 2.0));
-    points.add(Point.fromLngLat(3.0, 3.0));
-    LineString lineString = LineString.fromLngLats(points);
-
-    Feature geo = Feature.fromGeometry(lineString, properties);
-    String geoJsonString = geo.toJson();
-
-    String expectedJson = "{ \"type\": \"Feature\"," +
-            "\"geometry\": { \"type\": \"LineString\", \"coordinates\": [[1,1],[2,2],[3,3]]}," +
-            "\"properties\": {\"name\": \"Dinagat Islands\" }}";
-
-    compareJson(expectedJson, geoJsonString);
-  }
-
-  @Test
-  public void testNullProperties() {
-    List<Point> coordinates = new ArrayList<>();
-    coordinates.add(Point.fromLngLat(0.1, 2.3));
-    coordinates.add(Point.fromLngLat(4.5, 6.7));
-    LineString line = LineString.fromLngLats(coordinates);
-    Feature feature = Feature.fromGeometry(line);
-    String jsonString = feature.toJson();
-    assertFalse(jsonString.contains("\"properties\":{}"));
-
-    // Feature (empty Properties) -> Json (null Properties) -> Equavalent Feature
-    Feature featureFromJson = Feature.fromJson(jsonString);
-    assertEquals(featureFromJson, feature);
-  }
-
-  @Test
-  public void testNonNullProperties() {
-    List<Point> coordinates = new ArrayList<>();
-    coordinates.add(Point.fromLngLat(0.1, 2.3));
-    coordinates.add(Point.fromLngLat(4.5, 6.7));
-    LineString line = LineString.fromLngLats(coordinates);
-    JsonObject properties = new JsonObject();
-    properties.addProperty("key", "value");
-    Feature feature = Feature.fromGeometry(line, properties);
-    String jsonString = feature.toJson();
-    assertTrue(jsonString.contains("\"properties\":{\"key\":\"value\"}"));
-
-    // Feature (non-empty Properties) -> Json (non-empty Properties) -> Equavalent Feature
-    assertEquals(Feature.fromJson(jsonString), feature);
-  }
-
-  @Test
-  public void testNullPropertiesJson() {
-    final String jsonString =
-      "{\"type\":\"Feature\"," +
-      " \"bbox\":[1.0,2.0,3.0,4.0]," +
-      " \"geometry\":"
-      + "{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}";
-
-    Feature feature = Feature.fromJson(jsonString);
-
-    // Json( null Properties) -> Feature (empty Properties) -> Json(null Properties)
-    String fromFeatureJsonString = feature.toJson();
-    compareJson(fromFeatureJsonString, jsonString);
-  }
-
-
-  @Test
-  public void pointFeature_fromJson_toJson() throws IOException {
-    final String jsonString =
-      "{\"id\" : \"id0\"," +
-       " \"bbox\": [-120.0, -60.0, 120.0, 60.0]," +
-       " \"geometry\": {" +
-          "    \"bbox\": [-110.0, -50.0, 110.0, 50.0]," +
-          "    \"coordinates\": [ 100.0, 0.0], " +
-          "     \"type\": \"Point\"}," +
-       "\"type\": \"Feature\"," +
-       "\"properties\": {\"prop0\": \"value0\", \"prop1\": \"value1\"}" +
-       "}";
-
-
-    Feature featureFromJson = Feature.fromJson(jsonString);
-    String jsonStringFromFeature = featureFromJson.toJson();
-
-    compareJson(jsonString, jsonStringFromFeature);
-  }
-
-  @Test
-  public void feature_getProperty_empty_property() throws IOException {
-    final String jsonString =
-            "{\"type\":\"Feature\"," +
-                    " \"geometry\":"
-                    + "{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}";
-
-    Feature feature = Feature.fromJson(jsonString);
-    Object value = feature.getStringProperty("does_not_exist");
-    assertNull(value);
-
-    value = feature.getBooleanProperty("does_not_exist");
-    assertNull(value);
-
-    value = feature.getNumberProperty("does_not_exist");
-    assertNull(value);
-  }
-
-  @Test
-  public void feature_property_doesnotexist() throws IOException {
-    final String jsonString =
-            "{ \"type\": \"Feature\"," +
-                    "\"geometry\": { \"type\": \"LineString\", \"coordinates\": [[1,1],[2,2],[3,3]]}," +
-                    "\"properties\": {\"some_name\": \"some_value\" }}";
-    Feature feature = Feature.fromJson(jsonString);
-    Object value = feature.getStringProperty("does_not_exist");
-    assertNull(value);
-
-    value = feature.getBooleanProperty("does_not_exist");
-    assertNull(value);
-
-    value = feature.getNumberProperty("does_not_exist");
-    assertNull(value);
-    
-  }
+    companion object {
+        private const val SAMPLE_FEATURE_POINT = "sample-feature-point-all.json"
+    }
 }

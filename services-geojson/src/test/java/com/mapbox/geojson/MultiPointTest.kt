@@ -1,120 +1,127 @@
-package com.mapbox.geojson;
+package com.mapbox.geojson
 
-import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import com.mapbox.geojson.BoundingBox.Companion.fromLngLats
+import com.mapbox.geojson.MultiPoint
+import com.mapbox.geojson.Point.Companion.fromLngLat
+import org.junit.Assert
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.ExpectedException
+import java.io.IOException
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+class MultiPointTest : TestUtils() {
+    @Rule
+    @JvmField
+    var thrown : ExpectedException = ExpectedException.none()
+    @Test
+    @Throws(Exception::class)
+    fun sanity() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val multiPoint = MultiPoint.fromLngLats(points)
+        Assert.assertNotNull(multiPoint)
+    }
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+    @Test
+    @Throws(Exception::class)
+    fun bbox_nullWhenNotSet() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val multiPoint = MultiPoint.fromLngLats(points)
+        Assert.assertNull(multiPoint.bbox())
+    }
 
-public class MultiPointTest extends TestUtils {
+    @Test
+    @Throws(Exception::class)
+    fun bbox_doesNotSerializeWhenNotPresent() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val multiPoint = MultiPoint.fromLngLats(points)
+        compareJson(
+            multiPoint.toJson(),
+            "{\"coordinates\":[[1,2],[2,3]],\"type\":\"MultiPoint\"}"
+        )
+    }
 
-  private static final String SAMPLE_MULTIPOINT = "sample-multipoint.json";
+    @Test
+    @Throws(Exception::class)
+    fun bbox_returnsCorrectBbox() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
+        val multiPoint = MultiPoint.fromLngLats(points, bbox)
+        Assert.assertNotNull(multiPoint.bbox())
+        Assert.assertEquals(1.0, multiPoint.bbox()!!.west(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(2.0, multiPoint.bbox()!!.south(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(3.0, multiPoint.bbox()!!.east(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(4.0, multiPoint.bbox()!!.north(), TestUtils.Companion.DELTA)
+    }
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
+    @Test
+    @Throws(Exception::class)
+    fun bbox_doesSerializeWhenPresent() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
+        val multiPoint = MultiPoint.fromLngLats(points, bbox)
+        compareJson(
+            multiPoint.toJson(),
+            "{\"coordinates\":[[1,2],[2,3]],\"type\":\"MultiPoint\",\"bbox\":[1.0,2.0,3.0,4.0]}"
+        )
+    }
 
-  @Test
-  public void sanity() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
+    @Test
+    @Throws(Exception::class)
+    fun testSerializable() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
+        val multiPoint = MultiPoint.fromLngLats(points, bbox)
+        val bytes: ByteArray = TestUtils.Companion.serialize<MultiPoint>(multiPoint)
+        Assert.assertEquals(
+            multiPoint,
+            TestUtils.Companion.deserialize<MultiPoint>(bytes, MultiPoint::class.java)
+        )
+    }
 
-    MultiPoint multiPoint = MultiPoint.fromLngLats(points);
-    assertNotNull(multiPoint);
-  }
+    @Test
+    @Throws(IOException::class)
+    fun fromJson() {
+        val json = "{ \"type\": \"MultiPoint\"," +
+                "\"coordinates\": [ [100, 0], [101, 1] ] } "
+        val geo = MultiPoint.fromJson(json)
+        Assert.assertEquals(geo.type(), "MultiPoint")
+        Assert.assertEquals(geo.coordinates()[0].longitude(), 100.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(geo.coordinates()[0].latitude(), 0.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(geo.coordinates()[1].longitude(), 101.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(geo.coordinates()[1].latitude(), 1.0, TestUtils.Companion.DELTA)
+        Assert.assertFalse(geo.coordinates()[0].hasAltitude())
+        Assert.assertEquals(Double.NaN, geo.coordinates()[0].altitude(), TestUtils.Companion.DELTA)
+    }
 
-  @Test
-  public void bbox_nullWhenNotSet() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
+    @Test
+    @Throws(IOException::class)
+    fun toJson() {
+        val json = "{ \"type\": \"MultiPoint\"," +
+                "\"coordinates\": [ [100, 0], [101, 1] ] } "
+        val geo = MultiPoint.fromJson(json)
+        compareJson(json, geo.toJson())
+    }
 
-    MultiPoint multiPoint = MultiPoint.fromLngLats(points);
-    assertNull(multiPoint.bbox());
-  }
+    @Test
+    @Throws(Exception::class)
+    fun fromJson_coordinatesPresent() {
+        thrown.expect(NullPointerException::class.java)
+        MultiPoint.fromJson("{\"type\":\"MultiPoint\",\"coordinates\":null}")
+    }
 
-  @Test
-  public void bbox_doesNotSerializeWhenNotPresent() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-
-    MultiPoint multiPoint = MultiPoint.fromLngLats(points);
-    compareJson(multiPoint.toJson(),
-      "{\"coordinates\":[[1,2],[2,3]],\"type\":\"MultiPoint\"}");
-  }
-
-  @Test
-  public void bbox_returnsCorrectBbox() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-
-    BoundingBox bbox = BoundingBox.fromLngLats(1.0, 2.0, 3.0, 4.0);
-    MultiPoint multiPoint = MultiPoint.fromLngLats(points, bbox);
-    assertNotNull(multiPoint.bbox());
-    assertEquals(1.0, multiPoint.bbox().west(), DELTA);
-    assertEquals(2.0, multiPoint.bbox().south(), DELTA);
-    assertEquals(3.0, multiPoint.bbox().east(), DELTA);
-    assertEquals(4.0, multiPoint.bbox().north(), DELTA);
-  }
-
-  @Test
-  public void bbox_doesSerializeWhenPresent() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-
-    BoundingBox bbox = BoundingBox.fromLngLats(1.0, 2.0, 3.0, 4.0);
-    MultiPoint multiPoint = MultiPoint.fromLngLats(points, bbox);
-    compareJson(multiPoint.toJson(),
-      "{\"coordinates\":[[1,2],[2,3]],\"type\":\"MultiPoint\",\"bbox\":[1.0,2.0,3.0,4.0]}");
-  }
-
-  @Test
-  public void testSerializable() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-
-    BoundingBox bbox = BoundingBox.fromLngLats(1.0, 2.0, 3.0, 4.0);
-    MultiPoint multiPoint = MultiPoint.fromLngLats(points, bbox);
-    byte[] bytes = serialize(multiPoint);
-    assertEquals(multiPoint, deserialize(bytes, MultiPoint.class));
-  }
-
-  @Test
-  public void fromJson() throws IOException {
-    final String json = "{ \"type\": \"MultiPoint\"," +
-            "\"coordinates\": [ [100, 0], [101, 1] ] } ";
-    MultiPoint geo = MultiPoint.fromJson(json);
-    assertEquals(geo.type(), "MultiPoint");
-    assertEquals(geo.coordinates().get(0).longitude(), 100.0, DELTA);
-    assertEquals(geo.coordinates().get(0).latitude(), 0.0, DELTA);
-    assertEquals(geo.coordinates().get(1).longitude(), 101.0, DELTA);
-    assertEquals(geo.coordinates().get(1).latitude(), 1.0, DELTA);
-    assertFalse(geo.coordinates().get(0).hasAltitude());
-    assertEquals(Double.NaN, geo.coordinates().get(0).altitude(), DELTA);
-  }
-
-  @Test
-  public void toJson() throws IOException {
-    final String json = "{ \"type\": \"MultiPoint\"," +
-            "\"coordinates\": [ [100, 0], [101, 1] ] } ";
-    MultiPoint geo = MultiPoint.fromJson(json);
-    compareJson(json, geo.toJson());
-  }
-
-  @Test
-  public void fromJson_coordinatesPresent() throws Exception {
-    thrown.expect(NullPointerException.class);
-    MultiPoint.fromJson("{\"type\":\"MultiPoint\",\"coordinates\":null}");
-  }
+    companion object {
+        private const val SAMPLE_MULTIPOINT = "sample-multipoint.json"
+    }
 }

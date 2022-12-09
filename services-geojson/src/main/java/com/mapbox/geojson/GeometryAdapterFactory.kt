@@ -1,40 +1,45 @@
-package com.mapbox.geojson;
+package com.mapbox.geojson
 
-import androidx.annotation.Keep;
-
-import com.google.gson.TypeAdapterFactory;
-
-import com.mapbox.geojson.internal.typeadapters.RuntimeTypeAdapterFactory;
+import androidx.annotation.Keep
+import com.google.gson.TypeAdapterFactory
+import com.mapbox.geojson.GeometryCollection
+import com.mapbox.geojson.LineString
+import com.mapbox.geojson.MultiLineString
+import com.mapbox.geojson.MultiPoint
+import com.mapbox.geojson.MultiPolygon
+import com.mapbox.geojson.internal.typeadapters.RuntimeTypeAdapterFactory
 
 /**
  * A Geometry type adapter factory for convenience for serialization/deserialization.
  * @since 4.6.0
  */
 @Keep
-public abstract class GeometryAdapterFactory implements TypeAdapterFactory  {
+abstract class GeometryAdapterFactory : TypeAdapterFactory {
 
-  private static TypeAdapterFactory geometryTypeFactory;
-
-
-  /**
-   * Create a new instance of Geometry type adapter factory, this is passed into the Gson
-   * Builder.
-   *
-   * @return a new GSON TypeAdapterFactory
-   * @since 4.4.0
-   */
-  public static TypeAdapterFactory create() {
-
-    if (geometryTypeFactory == null) {
-      geometryTypeFactory = RuntimeTypeAdapterFactory.of(Geometry.class, "type", true)
-        .registerSubtype(GeometryCollection.class, "GeometryCollection")
-        .registerSubtype(Point.class, "Point")
-        .registerSubtype(MultiPoint.class, "MultiPoint")
-        .registerSubtype(LineString.class, "LineString")
-        .registerSubtype(MultiLineString.class, "MultiLineString")
-        .registerSubtype(Polygon.class, "Polygon")
-         .registerSubtype(MultiPolygon.class, "MultiPolygon");
+    companion object {
+        private var geometryTypeFactory: TypeAdapterFactory? = null
+        /**
+         * Create a new instance of Geometry type adapter factory, this is passed into the Gson
+         * Builder.
+         *
+         * @return a new GSON TypeAdapterFactory
+         * @since 4.4.0
+         */
+        @kotlin.jvm.JvmStatic
+        fun create(): TypeAdapterFactory? {
+            if (geometryTypeFactory == null) {
+                geometryTypeFactory = RuntimeTypeAdapterFactory.of(
+                    Geometry::class.java, "type", true
+                )
+                    .registerSubtype(GeometryCollection::class.java, "GeometryCollection")
+                    .registerSubtype(Point::class.java, "Point")
+                    .registerSubtype(MultiPoint::class.java, "MultiPoint")
+                    .registerSubtype(LineString::class.java, "LineString")
+                    .registerSubtype(MultiLineString::class.java, "MultiLineString")
+                    .registerSubtype(Polygon::class.java, "Polygon")
+                    .registerSubtype(MultiPolygon::class.java, "MultiPolygon")
+            }
+            return geometryTypeFactory
+        }
     }
-    return geometryTypeFactory;
-  }
 }

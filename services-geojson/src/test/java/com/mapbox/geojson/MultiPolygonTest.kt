@@ -1,170 +1,191 @@
-package com.mapbox.geojson;
+package com.mapbox.geojson
 
-import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import com.mapbox.geojson.BoundingBox.Companion.fromLngLats
+import com.mapbox.geojson.MultiPolygon
+import com.mapbox.geojson.MultiPolygon.Companion.fromPolygon
+import com.mapbox.geojson.MultiPolygon.Companion.fromPolygons
+import com.mapbox.geojson.Point.Companion.fromLngLat
+import com.mapbox.geojson.Polygon.Companion.fromLngLats
+import com.mapbox.geojson.Polygon.Companion.fromOuterInner
+import org.junit.Assert
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.ExpectedException
+import java.io.IOException
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+class MultiPolygonTest : TestUtils() {
+    @Rule
+    @JvmField
+    var thrown : ExpectedException = ExpectedException.none()
+    @Test
+    @Throws(Exception::class)
+    fun sanity() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        points.add(fromLngLat(3.0, 4.0))
+        points.add(fromLngLat(1.0, 2.0))
+        val outer = LineString.fromLngLats(points)
+        val polygons: MutableList<Polygon> = ArrayList()
+        polygons.add(fromOuterInner(outer))
+        polygons.add(fromOuterInner(outer))
+        val multiPolygon = fromPolygons(polygons)
+        Assert.assertNotNull(multiPolygon)
+    }
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+    @Test
+    @Throws(Exception::class)
+    fun bbox_nullWhenNotSet() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        points.add(fromLngLat(3.0, 4.0))
+        points.add(fromLngLat(1.0, 2.0))
+        val outer = LineString.fromLngLats(points)
+        val polygons: MutableList<Polygon> = ArrayList()
+        polygons.add(fromOuterInner(outer))
+        polygons.add(fromOuterInner(outer))
+        val multiPolygon = fromPolygons(polygons)
+        Assert.assertNull(multiPolygon.bbox())
+    }
 
-public class MultiPolygonTest extends TestUtils {
-  private static final String SAMPLE_MULTIPOLYGON = "sample-multipolygon.json";
+    @Test
+    @Throws(Exception::class)
+    fun bbox_doesNotSerializeWhenNotPresent() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        points.add(fromLngLat(3.0, 4.0))
+        points.add(fromLngLat(1.0, 2.0))
+        val outer = LineString.fromLngLats(points)
+        val polygons: MutableList<Polygon> = ArrayList()
+        polygons.add(fromOuterInner(outer))
+        polygons.add(fromOuterInner(outer))
+        val multiPolygon = fromPolygons(polygons)
+        compareJson(
+            multiPolygon.toJson(), "{\"type\":\"MultiPolygon\","
+                    + "\"coordinates\":[[[[1,2],[2,3],[3,4],[1,2]]],[[[1,2],[2,3],[3,4],[1,2]]]]}"
+        )
+    }
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
+    @Test
+    @Throws(Exception::class)
+    fun bbox_returnsCorrectBbox() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        points.add(fromLngLat(3.0, 4.0))
+        points.add(fromLngLat(1.0, 2.0))
+        val outer = LineString.fromLngLats(points)
+        val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
+        val polygons: MutableList<Polygon> = ArrayList()
+        polygons.add(fromOuterInner(outer))
+        polygons.add(fromOuterInner(outer))
+        val multiPolygon = fromPolygons(polygons, bbox)
+        Assert.assertNotNull(multiPolygon.bbox())
+        Assert.assertEquals(1.0, multiPolygon.bbox()!!.west(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(2.0, multiPolygon.bbox()!!.south(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(3.0, multiPolygon.bbox()!!.east(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(4.0, multiPolygon.bbox()!!.north(), TestUtils.Companion.DELTA)
+    }
 
-  @Test
-  public void sanity() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    points.add(Point.fromLngLat(3.0, 4.0));
-    points.add(Point.fromLngLat(1.0, 2.0));
-    LineString outer = LineString.fromLngLats(points);
-    List<Polygon> polygons = new ArrayList<>();
-    polygons.add(Polygon.fromOuterInner(outer));
-    polygons.add(Polygon.fromOuterInner(outer));
-    MultiPolygon multiPolygon = MultiPolygon.fromPolygons(polygons);
-    assertNotNull(multiPolygon);
-  }
+    @Test
+    @Throws(Exception::class)
+    fun passingInSinglePolygon_doesHandleCorrectly() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(3.0, 4.0))
+        val pointsList: MutableList<List<Point>> = ArrayList()
+        pointsList.add(points)
+        val geometry = fromLngLats(pointsList)
+        val multiPolygon = fromPolygon(geometry)
+        Assert.assertNotNull(multiPolygon)
+        Assert.assertEquals(1, multiPolygon.polygons().size.toLong())
+        Assert.assertEquals(
+            2.0,
+            multiPolygon.polygons()[0].coordinates()[0][0].latitude(),
+            TestUtils.Companion.DELTA
+        )
+    }
 
-  @Test
-  public void bbox_nullWhenNotSet() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    points.add(Point.fromLngLat(3.0, 4.0));
-    points.add(Point.fromLngLat(1.0, 2.0));
-    LineString outer = LineString.fromLngLats(points);
-    List<Polygon> polygons = new ArrayList<>();
-    polygons.add(Polygon.fromOuterInner(outer));
-    polygons.add(Polygon.fromOuterInner(outer));
-    MultiPolygon multiPolygon = MultiPolygon.fromPolygons(polygons);
-    assertNull(multiPolygon.bbox());
-  }
+    @Test
+    @Throws(Exception::class)
+    fun bbox_doesSerializeWhenPresent() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        points.add(fromLngLat(3.0, 4.0))
+        points.add(fromLngLat(1.0, 2.0))
+        val outer = LineString.fromLngLats(points)
+        val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
+        val polygons: MutableList<Polygon> = ArrayList()
+        polygons.add(fromOuterInner(outer))
+        polygons.add(fromOuterInner(outer))
+        val multiPolygon = fromPolygons(polygons, bbox)
+        compareJson(
+            multiPolygon.toJson(), "{\"type\":\"MultiPolygon\",\"bbox\":[1.0,2.0,3.0,4.0],"
+                    + "\"coordinates\":[[[[1,2],[2,3],[3,4],[1,2]]],[[[1,2],[2,3],[3,4],[1,2]]]]}"
+        )
+    }
 
-  @Test
-  public void bbox_doesNotSerializeWhenNotPresent() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    points.add(Point.fromLngLat(3.0, 4.0));
-    points.add(Point.fromLngLat(1.0, 2.0));
-    LineString outer = LineString.fromLngLats(points);
-    List<Polygon> polygons = new ArrayList<>();
-    polygons.add(Polygon.fromOuterInner(outer));
-    polygons.add(Polygon.fromOuterInner(outer));
-    MultiPolygon multiPolygon = MultiPolygon.fromPolygons(polygons);
-    compareJson(multiPolygon.toJson(),
-      "{\"type\":\"MultiPolygon\","
-        + "\"coordinates\":[[[[1,2],[2,3],[3,4],[1,2]]],[[[1,2],[2,3],[3,4],[1,2]]]]}");
-  }
+    @Test
+    @Throws(Exception::class)
+    fun testSerializable() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        points.add(fromLngLat(3.0, 4.0))
+        points.add(fromLngLat(1.0, 2.0))
+        val outer = LineString.fromLngLats(points)
+        val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
+        val polygons: MutableList<Polygon> = ArrayList()
+        polygons.add(fromOuterInner(outer))
+        polygons.add(fromOuterInner(outer))
+        val multiPolygon = fromPolygons(polygons, bbox)
+        val bytes: ByteArray = TestUtils.Companion.serialize<MultiPolygon>(multiPolygon)
+        Assert.assertEquals(
+            multiPolygon,
+            TestUtils.Companion.deserialize<MultiPolygon>(bytes, MultiPolygon::class.java)
+        )
+    }
 
-  @Test
-  public void bbox_returnsCorrectBbox() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    points.add(Point.fromLngLat(3.0, 4.0));
-    points.add(Point.fromLngLat(1.0, 2.0));
-    LineString outer = LineString.fromLngLats(points);
+    @Test
+    @Throws(IOException::class)
+    fun fromJson() {
+        val json = "{\"type\":\"MultiPolygon\",\"coordinates\": " +
+                "    [[[[102, 2], [103, 2], [103, 3], [102, 3], [102, 2]]]," +
+                "     [[[100, 0], [101, 0], [101, 1], [100, 1], [100, 0]]," +
+                "      [[100.2, 0.2], [100.2, 0.8], [100.8, 0.8], [100.8, 0.2], [100.2, 0.2]]]]}"
+        val geo = MultiPolygon.fromJson(json)
+        Assert.assertEquals(geo.type(), "MultiPolygon")
+        Assert.assertEquals(
+            geo.coordinates()!![0][0][0].longitude(),
+            102.0,
+            TestUtils.Companion.DELTA
+        )
+        Assert.assertEquals(geo.coordinates()!![0][0][0].latitude(), 2.0, TestUtils.Companion.DELTA)
+        Assert.assertFalse(geo.coordinates()!![0][0][0].hasAltitude())
+    }
 
-    BoundingBox bbox = BoundingBox.fromLngLats(1.0, 2.0, 3.0, 4.0);
-    List<Polygon> polygons = new ArrayList<>();
-    polygons.add(Polygon.fromOuterInner(outer));
-    polygons.add(Polygon.fromOuterInner(outer));
-    MultiPolygon multiPolygon = MultiPolygon.fromPolygons(polygons, bbox);
-    assertNotNull(multiPolygon.bbox());
-    assertEquals(1.0, multiPolygon.bbox().west(), DELTA);
-    assertEquals(2.0, multiPolygon.bbox().south(), DELTA);
-    assertEquals(3.0, multiPolygon.bbox().east(), DELTA);
-    assertEquals(4.0, multiPolygon.bbox().north(), DELTA);
-  }
+    @Test
+    @Throws(IOException::class)
+    fun toJson() {
+        val json = "{\"type\":\"MultiPolygon\",\"coordinates\": " +
+                "    [[[[102, 2], [103, 2], [103, 3], [102, 3], [102, 2]]]," +
+                "     [[[100, 0], [101, 0], [101, 1], [100, 1], [100, 0]]," +
+                "      [[100.2, 0.2], [100.2, 0.8], [100.8, 0.8], [100.8, 0.2], [100.2, 0.2]]]]}"
+        val geo = MultiPolygon.fromJson(json)
+        compareJson(json, geo.toJson())
+    }
 
-  @Test
-  public void passingInSinglePolygon_doesHandleCorrectly() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(3.0, 4.0));
-    List<List<Point>> pointsList = new ArrayList<>();
-    pointsList.add(points);
-    Polygon geometry = Polygon.fromLngLats(pointsList);
-    MultiPolygon multiPolygon = MultiPolygon.fromPolygon(geometry);
-    assertNotNull(multiPolygon);
-    assertEquals(1, multiPolygon.polygons().size());
-    assertEquals(2.0, multiPolygon.polygons().get(0).coordinates().get(0).get(0).latitude(), DELTA);
-  }
+    @Test
+    @Throws(Exception::class)
+    fun fromJson_coordinatesPresent() {
+        thrown.expect(NullPointerException::class.java)
+        MultiPolygon.fromJson("{\"type\":\"MultiPolygon\",\"coordinates\":null}")
+    }
 
-  @Test
-  public void bbox_doesSerializeWhenPresent() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    points.add(Point.fromLngLat(3.0, 4.0));
-    points.add(Point.fromLngLat(1.0, 2.0));
-    LineString outer = LineString.fromLngLats(points);
-
-    BoundingBox bbox = BoundingBox.fromLngLats(1.0, 2.0, 3.0, 4.0);
-    List<Polygon> polygons = new ArrayList<>();
-    polygons.add(Polygon.fromOuterInner(outer));
-    polygons.add(Polygon.fromOuterInner(outer));
-    MultiPolygon multiPolygon = MultiPolygon.fromPolygons(polygons, bbox);
-    compareJson(multiPolygon.toJson(),
-      "{\"type\":\"MultiPolygon\",\"bbox\":[1.0,2.0,3.0,4.0],"
-        + "\"coordinates\":[[[[1,2],[2,3],[3,4],[1,2]]],[[[1,2],[2,3],[3,4],[1,2]]]]}");
-  }
-
-  @Test
-  public void testSerializable() throws Exception {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    points.add(Point.fromLngLat(3.0, 4.0));
-    points.add(Point.fromLngLat(1.0, 2.0));
-    LineString outer = LineString.fromLngLats(points);
-
-    BoundingBox bbox = BoundingBox.fromLngLats(1.0, 2.0, 3.0, 4.0);
-    List<Polygon> polygons = new ArrayList<>();
-    polygons.add(Polygon.fromOuterInner(outer));
-    polygons.add(Polygon.fromOuterInner(outer));
-    MultiPolygon multiPolygon = MultiPolygon.fromPolygons(polygons, bbox);
-    byte[] bytes = serialize(multiPolygon);
-    assertEquals(multiPolygon, deserialize(bytes, MultiPolygon.class));
-  }
-
-  @Test
-  public void fromJson() throws IOException {
-    final String json = "{\"type\":\"MultiPolygon\",\"coordinates\": " +
-            "    [[[[102, 2], [103, 2], [103, 3], [102, 3], [102, 2]]]," +
-            "     [[[100, 0], [101, 0], [101, 1], [100, 1], [100, 0]]," +
-            "      [[100.2, 0.2], [100.2, 0.8], [100.8, 0.8], [100.8, 0.2], [100.2, 0.2]]]]}";
-    MultiPolygon geo = MultiPolygon.fromJson(json);
-    assertEquals(geo.type(), "MultiPolygon");
-    assertEquals(geo.coordinates().get(0).get(0).get(0).longitude(), 102.0, DELTA);
-    assertEquals(geo.coordinates().get(0).get(0).get(0).latitude(), 2.0, DELTA);
-    assertFalse(geo.coordinates().get(0).get(0).get(0).hasAltitude());
-  }
-
-  @Test
-  public void toJson() throws IOException {
-    final String json = "{\"type\":\"MultiPolygon\",\"coordinates\": " +
-            "    [[[[102, 2], [103, 2], [103, 3], [102, 3], [102, 2]]]," +
-            "     [[[100, 0], [101, 0], [101, 1], [100, 1], [100, 0]]," +
-            "      [[100.2, 0.2], [100.2, 0.8], [100.8, 0.8], [100.8, 0.2], [100.2, 0.2]]]]}";
-
-    MultiPolygon geo = MultiPolygon.fromJson(json);
-    compareJson(json, geo.toJson());
-  }
-
-  @Test
-  public void fromJson_coordinatesPresent() throws Exception {
-    thrown.expect(NullPointerException.class);
-    MultiPolygon.fromJson("{\"type\":\"MultiPolygon\",\"coordinates\":null}");
-  }
+    companion object {
+        private const val SAMPLE_MULTIPOLYGON = "sample-multipolygon.json"
+    }
 }

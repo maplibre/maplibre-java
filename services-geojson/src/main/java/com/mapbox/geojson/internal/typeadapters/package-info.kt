@@ -1,5 +1,5 @@
 /**
  * Contains Google gson type adapters.
  */
+package com.google.gson.typeadapters
 
-package com.google.gson.typeadapters;

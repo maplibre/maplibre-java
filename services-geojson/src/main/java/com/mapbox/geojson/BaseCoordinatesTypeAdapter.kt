@@ -1,89 +1,78 @@
-package com.mapbox.geojson;
+package com.mapbox.geojson
 
-import androidx.annotation.Keep;
-
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
-import com.mapbox.geojson.exception.GeoJsonException;
-import com.mapbox.geojson.shifter.CoordinateShifterManager;
-import com.mapbox.geojson.utils.GeoJsonUtils;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.Keep
+import com.google.gson.TypeAdapter
+import java.io.IOException
+import com.google.gson.stream.JsonWriter
+import com.google.gson.stream.JsonReader
+import com.mapbox.geojson.exception.GeoJsonException
+import com.mapbox.geojson.shifter.CoordinateShifterManager
+import com.mapbox.geojson.utils.GeoJsonUtils
+import com.google.gson.stream.JsonToken
+import java.lang.NullPointerException
+import java.util.ArrayList
 
 /**
- *  Base class for converting {@code T} instance of coordinates to JSON and
- *  JSON to instance of {@code T}.
+ * Base class for converting `T` instance of coordinates to JSON and
+ * JSON to instance of `T`.
  *
  * @param <T> Type of coordinates
  * @since 4.6.0
- */
+</T> */
 @Keep
-abstract class BaseCoordinatesTypeAdapter<T> extends TypeAdapter<T> {
-
-
-  protected void writePoint(JsonWriter out, Point point) throws  IOException {
-    if (point == null) {
-      return;
-    }
-    writePointList(out, point.coordinates());
-  }
-
-  protected Point readPoint(JsonReader in) throws IOException {
-
-    List<Double> coordinates = readPointList(in);
-    if (coordinates != null && coordinates.size() > 1) {
-      return new Point("Point",null, coordinates);
+abstract class BaseCoordinatesTypeAdapter<T> : TypeAdapter<T>() {
+    @Throws(IOException::class)
+    protected fun writePoint(out: JsonWriter, point: Point?) {
+        if (point == null) {
+            return
+        }
+        writePointList(out, point.coordinates())
     }
 
-    throw new GeoJsonException(" Point coordinates should be non-null double array");
-  }
-
-
-  protected void writePointList(JsonWriter out, List<Double> value) throws IOException {
-
-    if (value == null) {
-      return;
+    @Throws(IOException::class)
+    protected fun readPoint(inReader: JsonReader): Point {
+        val coordinates = readPointList(inReader)
+        if (coordinates.size > 1) {
+            return Point("Point", null, coordinates)
+        }
+        throw GeoJsonException(" Point coordinates should be non-null double array")
     }
 
-    out.beginArray();
+    @Throws(IOException::class)
+    protected fun writePointList(out: JsonWriter, value: List<Double>?) {
+        if (value == null) {
+            return
+        }
+        out.beginArray()
 
-    // Unshift coordinates
-    List<Double> unshiftedCoordinates =
-            CoordinateShifterManager.getCoordinateShifter().unshiftPoint(value);
+        // Unshift coordinates
+        val unshiftedCoordinates =
+            CoordinateShifterManager.getCoordinateShifter().unshiftPoint(value)
+        out.value(GeoJsonUtils.trim(unshiftedCoordinates[0]))
+        out.value(GeoJsonUtils.trim(unshiftedCoordinates[1]))
 
-    out.value(GeoJsonUtils.trim(unshiftedCoordinates.get(0)));
-    out.value(GeoJsonUtils.trim(unshiftedCoordinates.get(1)));
-
-    // Includes altitude
-    if (value.size() > 2) {
-      out.value(unshiftedCoordinates.get(2));
-    }
-    out.endArray();
-  }
-
-  protected List<Double> readPointList(JsonReader in) throws IOException {
-
-    if (in.peek() == JsonToken.NULL) {
-      throw new NullPointerException();
+        // Includes altitude
+        if (value.size > 2) {
+            out.value(unshiftedCoordinates[2])
+        }
+        out.endArray()
     }
 
-    List<Double> coordinates = new ArrayList<Double>();
-    in.beginArray();
-    while (in.hasNext()) {
-      coordinates.add(in.nextDouble());
+    @Throws(IOException::class)
+    protected fun readPointList(inReader: JsonReader): List<Double> {
+        if (inReader.peek() == JsonToken.NULL) {
+            throw NullPointerException()
+        }
+        val coordinates: MutableList<Double> = ArrayList()
+        inReader.beginArray()
+        while (inReader.hasNext()) {
+            coordinates.add(inReader.nextDouble())
+        }
+        inReader.endArray()
+        return if (coordinates.size > 2) {
+            CoordinateShifterManager.getCoordinateShifter()
+                .shiftLonLatAlt(coordinates[0], coordinates[1], coordinates[2])
+        } else CoordinateShifterManager.getCoordinateShifter()
+            .shiftLonLat(coordinates[0], coordinates[1])
     }
-    in.endArray();
-
-    if (coordinates.size() > 2) {
-      return CoordinateShifterManager.getCoordinateShifter()
-              .shiftLonLatAlt(coordinates.get(0), coordinates.get(1), coordinates.get(2));
-    }
-    return CoordinateShifterManager.getCoordinateShifter()
-            .shiftLonLat(coordinates.get(0), coordinates.get(1));
-  }
-
 }

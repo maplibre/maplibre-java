@@ -1,69 +1,65 @@
-package com.mapbox.geojson.shifter;
+package com.mapbox.geojson.shifter
 
-import com.mapbox.geojson.Point;
-
-import java.util.Arrays;
-import java.util.List;
+import com.mapbox.geojson.Point
+import java.util.*
 
 /**
  * CoordinateShifterManager keeps track of currently set CoordinateShifter.
  *
  * @since 4.2.0
  */
-public final class CoordinateShifterManager {
+object CoordinateShifterManager {
+    private val DEFAULT: CoordinateShifter = object : CoordinateShifter {
+        override fun shiftLonLat(lon: Double, lat: Double): List<Double> {
+            return Arrays.asList(lon, lat)
+        }
 
-  private static final CoordinateShifter DEFAULT = new CoordinateShifter() {
-    @Override
-    public List<Double> shiftLonLat(double lon, double lat) {
-      return Arrays.asList(lon, lat);
+        override fun shiftLonLatAlt(lon: Double, lat: Double, altitude: Double): List<Double> {
+            return if (java.lang.Double.isNaN(altitude)) Arrays.asList(lon, lat) else Arrays.asList(
+                lon,
+                lat,
+                altitude
+            )
+        }
+
+        override fun unshiftPoint(shiftedPoint: Point): List<Double?> {
+            return shiftedPoint.coordinates()
+        }
+
+        override fun unshiftPoint(shiftedCoordinates: List<Double>): List<Double> {
+            return shiftedCoordinates
+        }
     }
 
-    @Override
-    public List<Double> shiftLonLatAlt(double lon, double lat, double alt) {
-      return Double.isNaN(alt)
-              ? Arrays.asList(lon, lat) :
-              Arrays.asList(lon, lat, alt);
+    @Volatile
+    private var coordinateShifter = DEFAULT
+
+    /**
+     * Currently set CoordinateShifterManager.
+     *
+     * @return Currently set CoordinateShifterManager
+     * @since 4.2.0
+     */
+    fun getCoordinateShifter(): CoordinateShifter {
+        return coordinateShifter
     }
 
-    @Override
-    public List<Double> unshiftPoint(Point point) {
-      return point.coordinates();
+    /**
+     * Sets CoordinateShifterManager.
+     *
+     * @param coordinateShifter CoordinateShifterManager to be set
+     * @since 4.2.0
+     */
+    @JvmStatic
+    fun setCoordinateShifter(coordinateShifter: CoordinateShifter?) {
+        CoordinateShifterManager.coordinateShifter = coordinateShifter ?: DEFAULT
     }
 
-    @Override
-    public List<Double> unshiftPoint(List<Double> coordinates) {
-      return coordinates;
-    }
-  };
-
-  private static volatile CoordinateShifter coordinateShifter = DEFAULT;
-
-  /**
-   * Currently set CoordinateShifterManager.
-   *
-   * @return Currently set CoordinateShifterManager
-   * @since 4.2.0
-   */
-  public static CoordinateShifter getCoordinateShifter() {
-    return coordinateShifter;
-  }
-
-  /**
-   * Sets CoordinateShifterManager.
-   *
-   * @param coordinateShifter CoordinateShifterManager to be set
-   * @since 4.2.0
-   */
-  public static void setCoordinateShifter(CoordinateShifter coordinateShifter) {
-    CoordinateShifterManager.coordinateShifter =
-      coordinateShifter == null ? DEFAULT : coordinateShifter;
-  }
-
-  /**
-   * Check whether the current shifter is the default one.
-   * @return true if using default shifter.
-   */
-  public static boolean isUsingDefaultShifter() {
-    return coordinateShifter == DEFAULT;
-  }
+    /**
+     * Check whether the current shifter is the default one.
+     * @return true if using default shifter.
+     */
+    @kotlin.jvm.JvmStatic
+    val isUsingDefaultShifter: Boolean
+        get() = coordinateShifter === DEFAULT
 }

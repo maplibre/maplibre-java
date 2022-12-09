@@ -1,160 +1,209 @@
-package com.mapbox.turf;
+package com.mapbox.turf
 
-import com.mapbox.geojson.BoundingBox;
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Geometry;
-import com.mapbox.geojson.GeometryCollection;
-import com.mapbox.geojson.LineString;
-import com.mapbox.geojson.MultiPolygon;
-import com.mapbox.geojson.Point;
-import com.mapbox.geojson.Polygon;
+import com.mapbox.geojson.BoundingBox.Companion.fromLngLats
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection.Companion.fromFeature
+import com.mapbox.geojson.FeatureCollection.Companion.fromFeatures
+import com.mapbox.geojson.Geometry
+import com.mapbox.geojson.GeometryCollection.Companion.fromGeometries
+import com.mapbox.geojson.LineString
+import com.mapbox.geojson.LineString.Companion.fromLngLats
+import com.mapbox.geojson.MultiPolygon
+import com.mapbox.geojson.Point
+import com.mapbox.geojson.Point.Companion.fromLngLat
+import com.mapbox.geojson.Polygon
+import com.mapbox.turf.TurfMeta.coordAll
+import com.mapbox.turf.TurfMeta.getCoord
+import org.hamcrest.CoreMatchers
+import org.junit.Assert
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.ExpectedException
+import java.util.*
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+class TurfMetaTest : TestUtils() {
+    @Rule
+    var thrown = ExpectedException.none()
+    @Test
+    @Throws(TurfException::class)
+    fun coordAllPoint() {
+        val jsonPoint = "{type: 'Point', coordinates: [0, 0]}"
+        val pointGeometry = Point.fromJson(jsonPoint)
+        val resultList = coordAll(pointGeometry)
+        Assert.assertEquals(resultList.size.toDouble(), 1.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(resultList[0], fromLngLat(0.0, 0.0))
+    }
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+    @Test
+    @Throws(TurfException::class)
+    fun coordAllLineString() {
+        val jsonLineString = "{type: 'LineString', coordinates: [[0, 0], [1, 1]]}"
+        val lineStringGeometry = LineString.fromJson(jsonLineString)
+        val resultList = coordAll(lineStringGeometry)
+        Assert.assertEquals(resultList.size.toDouble(), 2.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(resultList[0], fromLngLat(0.0, 0.0))
+        Assert.assertEquals(resultList[1], fromLngLat(1.0, 1.0))
+    }
 
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+    @Test
+    @Throws(TurfException::class)
+    fun coordAllPolygon() {
+        val polygonString = "{type: 'Polygon', coordinates: [[[0, 0], [1, 1], [0, 1], [0, 0]]]}"
+        val polygonGeometry = Polygon.fromJson(polygonString)
+        val resultList = coordAll(polygonGeometry, false)
+        Assert.assertEquals(resultList.size.toDouble(), 4.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(resultList[0], fromLngLat(0.0, 0.0))
+        Assert.assertEquals(resultList[1], fromLngLat(1.0, 1.0))
+        Assert.assertEquals(resultList[2], fromLngLat(0.0, 1.0))
+        Assert.assertEquals(resultList[3], fromLngLat(0.0, 0.0))
+    }
 
-public class TurfMetaTest extends TestUtils {
+    @Test
+    @Throws(TurfException::class)
+    fun coordAllPolygonExcludeWrapCoord() {
+        val polygonString = "{type: 'Polygon', coordinates: [[[0, 0], [1, 1], [0, 1], [0, 0]]]}"
+        val polygonGeometry = Polygon.fromJson(polygonString)
+        val resultList = coordAll(polygonGeometry, true)
+        Assert.assertEquals(resultList.size.toDouble(), 3.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(resultList[0], fromLngLat(0.0, 0.0))
+        Assert.assertEquals(resultList[1], fromLngLat(1.0, 1.0))
+        Assert.assertEquals(resultList[2], fromLngLat(0.0, 1.0))
+    }
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
+    @Test
+    @Throws(TurfException::class)
+    fun coordAllMultiPolygon() {
+        val multipolygonString =
+            "{type: 'MultiPolygon', coordinates: [[[[0, 0], [1, 1], [0, 1], [0, 0]]]]}"
+        val multiPolygonGeometry = MultiPolygon.fromJson(multipolygonString)
+        val resultList = coordAll(multiPolygonGeometry, false)
+        Assert.assertEquals(resultList.size.toDouble(), 4.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(resultList[0], fromLngLat(0.0, 0.0))
+        Assert.assertEquals(resultList[1], fromLngLat(1.0, 1.0))
+        Assert.assertEquals(resultList[2], fromLngLat(0.0, 1.0))
+        Assert.assertEquals(resultList[3], fromLngLat(0.0, 0.0))
+    }
 
-  @Test
-  public void coordAllPoint() throws TurfException {
-    String jsonPoint = "{type: 'Point', coordinates: [0, 0]}";
-    Point pointGeometry = Point.fromJson(jsonPoint);
-    List<Point> resultList = TurfMeta.coordAll(pointGeometry);
+    @Test
+    fun testInvariantGetCoord() {
+        val jsonFeature = "{type: 'Feature', geometry: {type: 'Point', coordinates: [1, 2]}}"
+        Assert.assertEquals(
+            getCoord(Feature.fromJson(jsonFeature)),
+            fromLngLat(1.0, 2.0)
+        )
+    }
 
-    assertEquals(resultList.size(), 1, DELTA);
-    assertEquals(resultList.get(0), Point.fromLngLat(0, 0));
-  }
+    @Test
+    @Throws(TurfException::class)
+    fun coordAllFeatureCollection() {
+        val multipolygonJson =
+            "{type: 'MultiPolygon', coordinates: [[[[0, 0], [1, 1], [0, 1], [0, 0]]]]}"
+        val lineStringJson = "{type: 'LineString', coordinates: [[0, 0], [1, 1]]}"
+        val featureCollection = fromFeatures(
+            arrayOf(
+                Feature.fromGeometry(MultiPolygon.fromJson(multipolygonJson)),
+                Feature.fromGeometry(LineString.fromJson(lineStringJson))
+            )
+        )
+        Assert.assertNotNull(featureCollection)
+        Assert.assertEquals(5, coordAll(featureCollection, true).size.toLong())
+        Assert.assertEquals(
+            0.0,
+            coordAll(featureCollection, true)[0].latitude(),
+            TestUtils.Companion.DELTA
+        )
+        Assert.assertEquals(
+            0.0,
+            coordAll(featureCollection, true)[0].longitude(),
+            TestUtils.Companion.DELTA
+        )
+        Assert.assertEquals(
+            1.0,
+            coordAll(featureCollection, true)[4].latitude(),
+            TestUtils.Companion.DELTA
+        )
+        Assert.assertEquals(
+            1.0,
+            coordAll(featureCollection, true)[4].longitude(),
+            TestUtils.Companion.DELTA
+        )
+    }
 
-  @Test
-  public void coordAllLineString() throws TurfException {
-    String jsonLineString = "{type: 'LineString', coordinates: [[0, 0], [1, 1]]}";
-    LineString lineStringGeometry = LineString.fromJson(jsonLineString);
-    List<Point> resultList = TurfMeta.coordAll(lineStringGeometry);
+    @Test
+    @Throws(TurfException::class)
+    fun coordAllSingleFeature() {
+        val lineStringJson = "{type: 'LineString', coordinates: [[0, 0], [1, 1]]}"
+        val featureCollection = fromFeature(
+            Feature.fromGeometry(LineString.fromJson(lineStringJson))
+        )
+        Assert.assertNotNull(featureCollection)
+        Assert.assertEquals(2, coordAll(featureCollection, true).size.toLong())
+        Assert.assertEquals(
+            0.0,
+            coordAll(featureCollection, true)[0].latitude(),
+            TestUtils.Companion.DELTA
+        )
+        Assert.assertEquals(
+            0.0,
+            coordAll(featureCollection, true)[0].longitude(),
+            TestUtils.Companion.DELTA
+        )
+        Assert.assertEquals(
+            1.0,
+            coordAll(featureCollection, true)[1].latitude(),
+            TestUtils.Companion.DELTA
+        )
+        Assert.assertEquals(
+            1.0,
+            coordAll(featureCollection, true)[1].longitude(),
+            TestUtils.Companion.DELTA
+        )
+    }
 
-    assertEquals(resultList.size(), 2, DELTA);
-    assertEquals(resultList.get(0), Point.fromLngLat(0, 0));
-    assertEquals(resultList.get(1), Point.fromLngLat(1, 1));
-  }
+    @Test
+    @Throws(TurfException::class)
+    fun coordAllGeometryCollection() {
+        val points: MutableList<Point> = ArrayList()
+        points.add(fromLngLat(1.0, 2.0))
+        points.add(fromLngLat(2.0, 3.0))
+        val lineString = fromLngLats(points)
+        val geometries: MutableList<Geometry> = ArrayList()
+        geometries.add(points[0])
+        geometries.add(lineString)
+        val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
+        val geometryCollection = fromGeometries(geometries, bbox)
+        val featureCollection = fromFeature(
+            Feature.fromGeometry(geometryCollection)
+        )
+        Assert.assertNotNull(featureCollection)
+        Assert.assertNotNull(coordAll(featureCollection, true))
+        Assert.assertEquals(3, coordAll(featureCollection, true).size.toLong())
+        Assert.assertEquals(
+            1.0,
+            coordAll(featureCollection, true)[0].longitude(),
+            TestUtils.Companion.DELTA
+        )
+        Assert.assertEquals(
+            2.0,
+            coordAll(featureCollection, true)[0].latitude(),
+            TestUtils.Companion.DELTA
+        )
+    }
 
-  @Test
-  public void coordAllPolygon() throws TurfException {
-    String polygonString = "{type: 'Polygon', coordinates: [[[0, 0], [1, 1], [0, 1], [0, 0]]]}";
-    Polygon polygonGeometry = Polygon.fromJson(polygonString);
-    List<Point> resultList = TurfMeta.coordAll(polygonGeometry, false);
-
-    assertEquals(resultList.size(), 4, DELTA);
-    assertEquals(resultList.get(0), Point.fromLngLat(0, 0));
-    assertEquals(resultList.get(1), Point.fromLngLat(1, 1));
-    assertEquals(resultList.get(2), Point.fromLngLat(0, 1));
-    assertEquals(resultList.get(3), Point.fromLngLat(0, 0));
-  }
-
-  @Test
-  public void coordAllPolygonExcludeWrapCoord() throws TurfException {
-    String polygonString = "{type: 'Polygon', coordinates: [[[0, 0], [1, 1], [0, 1], [0, 0]]]}";
-    Polygon polygonGeometry = Polygon.fromJson(polygonString);
-    List<Point> resultList = TurfMeta.coordAll(polygonGeometry, true);
-
-    assertEquals(resultList.size(), 3, DELTA);
-    assertEquals(resultList.get(0), Point.fromLngLat(0, 0));
-    assertEquals(resultList.get(1), Point.fromLngLat(1, 1));
-    assertEquals(resultList.get(2), Point.fromLngLat(0, 1));
-  }
-
-  @Test
-  public void coordAllMultiPolygon() throws TurfException {
-    String multipolygonString = "{type: 'MultiPolygon', coordinates: [[[[0, 0], [1, 1], [0, 1], [0, 0]]]]}";
-    MultiPolygon multiPolygonGeometry = MultiPolygon.fromJson(multipolygonString);
-    List<Point> resultList = TurfMeta.coordAll(multiPolygonGeometry, false);
-
-    assertEquals(resultList.size(), 4, DELTA);
-    assertEquals(resultList.get(0), Point.fromLngLat(0, 0));
-    assertEquals(resultList.get(1), Point.fromLngLat(1, 1));
-    assertEquals(resultList.get(2), Point.fromLngLat(0, 1));
-    assertEquals(resultList.get(3), Point.fromLngLat(0, 0));
-  }
-
-  @Test
-  public void testInvariantGetCoord() {
-    String jsonFeature = "{type: 'Feature', geometry: {type: 'Point', coordinates: [1, 2]}}";
-    assertEquals(TurfMeta.getCoord(Feature.fromJson(jsonFeature)),
-      Point.fromLngLat(1, 2));
-  }
-
-  @Test
-  public void coordAllFeatureCollection() throws TurfException {
-    String multipolygonJson = "{type: 'MultiPolygon', coordinates: [[[[0, 0], [1, 1], [0, 1], [0, 0]]]]}";
-    String lineStringJson = "{type: 'LineString', coordinates: [[0, 0], [1, 1]]}";
-    FeatureCollection featureCollection = FeatureCollection.fromFeatures(
-      new Feature[] {
-        Feature.fromGeometry(MultiPolygon.fromJson(multipolygonJson)),
-        Feature.fromGeometry(LineString.fromJson(lineStringJson))}
-    );
-    assertNotNull(featureCollection);
-    assertEquals(5, TurfMeta.coordAll(featureCollection,true).size());
-    assertEquals(0, TurfMeta.coordAll(featureCollection,true).get(0).latitude(), DELTA);
-    assertEquals(0, TurfMeta.coordAll(featureCollection,true).get(0).longitude(), DELTA);
-    assertEquals(1, TurfMeta.coordAll(featureCollection,true).get(4).latitude(), DELTA);
-    assertEquals(1, TurfMeta.coordAll(featureCollection,true).get(4).longitude(), DELTA);
-  }
-
-  @Test
-  public void coordAllSingleFeature() throws TurfException {
-    String lineStringJson = "{type: 'LineString', coordinates: [[0, 0], [1, 1]]}";
-    FeatureCollection featureCollection = FeatureCollection.fromFeature(
-      Feature.fromGeometry(LineString.fromJson(lineStringJson))
-    );
-    assertNotNull(featureCollection);
-    assertEquals(2, TurfMeta.coordAll(featureCollection,true).size());
-    assertEquals(0, TurfMeta.coordAll(featureCollection,true).get(0).latitude(), DELTA);
-    assertEquals(0, TurfMeta.coordAll(featureCollection,true).get(0).longitude(), DELTA);
-    assertEquals(1, TurfMeta.coordAll(featureCollection,true).get(1).latitude(), DELTA);
-    assertEquals(1, TurfMeta.coordAll(featureCollection,true).get(1).longitude(), DELTA);
-  }
-
-  @Test
-  public void coordAllGeometryCollection() throws TurfException {
-    List<Point> points = new ArrayList<>();
-    points.add(Point.fromLngLat(1.0, 2.0));
-    points.add(Point.fromLngLat(2.0, 3.0));
-    LineString lineString = LineString.fromLngLats(points);
-    List<Geometry> geometries = new ArrayList<>();
-    geometries.add(points.get(0));
-    geometries.add(lineString);
-
-    BoundingBox bbox = BoundingBox.fromLngLats(1.0, 2.0, 3.0, 4.0);
-    GeometryCollection geometryCollection = GeometryCollection.fromGeometries(geometries, bbox);
-
-    FeatureCollection featureCollection = FeatureCollection.fromFeature(
-      Feature.fromGeometry(geometryCollection)
-    );
-
-    assertNotNull(featureCollection);
-    assertNotNull(TurfMeta.coordAll(featureCollection,true));
-    assertEquals(3, TurfMeta.coordAll(featureCollection,true).size());
-    assertEquals(1.0, TurfMeta.coordAll(featureCollection,true).get(0).longitude(), DELTA);
-    assertEquals(2.0, TurfMeta.coordAll(featureCollection,true).get(0).latitude(), DELTA);
-  }
-
-  @Test
-  public void wrongFeatureGeometryForGetCoordThrowsException() throws TurfException {
-    thrown.expect(TurfException.class);
-    thrown.expectMessage(startsWith("A Feature with a Point geometry is required."));
-    TurfMeta.getCoord(Feature.fromGeometry(LineString.fromLngLats(Arrays.asList(
-      Point.fromLngLat(0, 9),
-      Point.fromLngLat(0, 10)
-    ))));
-  }
+    @Test
+    @Throws(TurfException::class)
+    fun wrongFeatureGeometryForGetCoordThrowsException() {
+        thrown.expect(TurfException::class.java)
+        thrown.expectMessage(CoreMatchers.startsWith("A Feature with a Point geometry is required."))
+        getCoord(
+            Feature.fromGeometry(
+                fromLngLats(
+                    Arrays.asList(
+                        fromLngLat(0.0, 9.0),
+                        fromLngLat(0.0, 10.0)
+                    )
+                )
+            )
+        )
+    }
 }

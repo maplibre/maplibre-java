@@ -1,11 +1,9 @@
-package com.mapbox.geojson;
+package com.mapbox.geojson
 
-import androidx.annotation.Keep;
-
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
+import androidx.annotation.Keep
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
+import java.io.IOException
 
 /**
  * TypeAdapter to serialize Point as coordinates, i.e array of doubles and
@@ -14,15 +12,14 @@ import java.io.IOException;
  * @since 4.6.0
  */
 @Keep
-public class PointAsCoordinatesTypeAdapter extends BaseCoordinatesTypeAdapter<Point> {
+class PointAsCoordinatesTypeAdapter : BaseCoordinatesTypeAdapter<Point>() {
+    @Throws(IOException::class)
+    override fun write(out: JsonWriter, value: Point) {
+        writePoint(out, value)
+    }
 
-  @Override
-  public void write(JsonWriter out, Point value) throws IOException {
-    writePoint(out, value);
-  }
-
-  @Override
-  public Point read(JsonReader in) throws IOException {
-    return readPoint(in);
-  }
+    @Throws(IOException::class)
+    override fun read(`in`: JsonReader): Point {
+        return readPoint(`in`)
+    }
 }

@@ -1,54 +1,50 @@
-package com.mapbox.geojson.utils;
+package com.mapbox.geojson.utils
 
-import com.mapbox.geojson.TestUtils;
+import com.mapbox.geojson.TestUtils
+import com.mapbox.geojson.utils.GeoJsonUtils.trim
+import org.junit.Assert
+import org.junit.Test
 
-import static org.junit.Assert.assertEquals;
+class GeoJsonUtilsTest : TestUtils() {
+    @Test
+    fun trimPositiveRoundUp() {
+        val trimmedValue = trim(3.123456789)
+        val expected = 3.1234568
+        Assert.assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8)
+    }
 
-import org.junit.Test;
+    @Test
+    fun trimPositiveRoundDown() {
+        val trimmedValue = trim(3.123456712)
+        val expected = 3.1234567
+        Assert.assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8)
+    }
 
+    @Test
+    fun trimNegative() {
+        val trimmedValue = trim(-3.123456789)
+        val expected = -3.1234568
+        Assert.assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8)
+    }
 
-public class GeoJsonUtilsTest extends TestUtils {
+    @Test
+    fun trimZero() {
+        val trimmedValue = trim(0.0)
+        val expected = 0.0
+        Assert.assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8)
+    }
 
+    @Test
+    fun trimInt() {
+        val trimmedValue = trim(8.0)
+        val expected = 8.0
+        Assert.assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8)
+    }
 
-  @Test
-  public void trimPositiveRoundUp() {
-    double trimmedValue = GeoJsonUtils.trim(3.123456789);
-    double expected = 3.1234568;
-    assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8);
-  }
-
-  @Test
-  public void trimPositiveRoundDown() {
-    double trimmedValue = GeoJsonUtils.trim(3.123456712);
-    double expected = 3.1234567;
-    assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8);
-  }
-
-  @Test
-  public void trimNegative() {
-    double trimmedValue = GeoJsonUtils.trim(-3.123456789);
-    double expected = -3.1234568;
-    assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8);
-  }
-
-  @Test
-  public void trimZero() {
-    double trimmedValue = GeoJsonUtils.trim(0);
-    double expected = 0;
-    assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8);
-  }
-
-  @Test
-  public void trimInt() {
-    double trimmedValue = GeoJsonUtils.trim(8);
-    double expected = 8;
-    assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8);
-  }
-
-  @Test
-  public void trimMaxLong() {
-    double trimmedValue = GeoJsonUtils.trim(Long.MAX_VALUE + 0.1);
-    double expected = Long.MAX_VALUE;
-    assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8);
-  }
+    @Test
+    fun trimMaxLong() {
+        val trimmedValue = trim(Long.MAX_VALUE + 0.1)
+        val expected = Long.MAX_VALUE.toDouble()
+        Assert.assertEquals("trim to 7 digits after period", expected, trimmedValue, 1e-8)
+    }
 }

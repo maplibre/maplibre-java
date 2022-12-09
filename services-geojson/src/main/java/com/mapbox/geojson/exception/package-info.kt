@@ -3,4 +3,4 @@
  *
  * @since 3.0.0
  */
-package com.mapbox.geojson.exception;
+package com.mapbox.geojson.exception

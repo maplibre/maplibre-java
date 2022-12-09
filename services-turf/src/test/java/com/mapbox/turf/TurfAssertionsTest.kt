@@ -1,110 +1,117 @@
-package com.mapbox.turf;
+package com.mapbox.turf
 
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.Point;
-import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.Point
+import com.mapbox.turf.TurfAssertions.collectionOf
+import com.mapbox.turf.TurfAssertions.featureOf
+import com.mapbox.turf.TurfAssertions.geojsonType
+import org.hamcrest.CoreMatchers
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.ExpectedException
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+class TurfAssertionsTest : TestUtils() {
+    @Rule
+    var thrown = ExpectedException.none()
+    @Test
+    @Throws(TurfException::class)
+    fun testInvariantGeojsonType1() {
+        thrown.expect(TurfException::class.java)
+        thrown.expectMessage(CoreMatchers.startsWith("Type and name required"))
+        geojsonType(null, null, null)
+    }
 
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertEquals;
+    @Test
+    @Throws(TurfException::class)
+    fun testInvariantGeojsonType2() {
+        thrown.expect(TurfException::class.java)
+        thrown.expectMessage(CoreMatchers.startsWith("Type and name required"))
+        geojsonType(null, null, "myfn")
+    }
 
-public class TurfAssertionsTest extends TestUtils {
+    @Test
+    @Throws(TurfException::class)
+    fun testInvariantGeojsonType3() {
+        val json = "{ type: 'Point', coordinates: [0, 0] }"
+        thrown.expect(TurfException::class.java)
+        thrown.expectMessage(CoreMatchers.startsWith("Invalid input to myfn: must be a Polygon, given Point"))
+        geojsonType(Point.fromJson(json), "Polygon", "myfn")
+    }
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
+    @Test
+    fun testInvariantGeojsonType4() {
+        val json = "{ type: 'Point', coordinates: [0, 0] }"
+        geojsonType(Point.fromJson(json), "Point", "myfn")
+    }
 
-  @Test
-  public void testInvariantGeojsonType1() throws TurfException {
-    thrown.expect(TurfException.class);
-    thrown.expectMessage(startsWith("Type and name required"));
-    TurfAssertions.geojsonType(null, null, null);
-  }
+    @Test
+    @Throws(TurfException::class)
+    fun testInvariantFeatureOf1() {
+        val json = ("{ type: 'Feature', geometry: { type: 'Point', coordinates: [0, 0] }, "
+                + "properties: {}}")
+        thrown.expect(TurfException::class.java)
+        thrown.expectMessage(CoreMatchers.startsWith(".featureOf() requires a name"))
+        featureOf(Feature.fromJson(json), "Polygon", null)
+    }
 
-  @Test
-  public void testInvariantGeojsonType2() throws TurfException {
-    thrown.expect(TurfException.class);
-    thrown.expectMessage(startsWith("Type and name required"));
-    TurfAssertions.geojsonType(null, null, "myfn");
-  }
+    @Test
+    @Throws(TurfException::class)
+    fun testInvariantFeatureOf2() {
+        val json = "{ type: 'Feature'}"
+        thrown.expect(TurfException::class.java)
+        thrown.expectMessage(CoreMatchers.startsWith("Invalid input to foo, Feature with geometry required"))
+        featureOf(Feature.fromJson(json), "Polygon", "foo")
+    }
 
-  @Test
-  public void testInvariantGeojsonType3() throws TurfException {
-    String json = "{ type: 'Point', coordinates: [0, 0] }";
-    thrown.expect(TurfException.class);
-    thrown.expectMessage(startsWith("Invalid input to myfn: must be a Polygon, given Point"));
-    TurfAssertions.geojsonType(Point.fromJson(json), "Polygon", "myfn");
-  }
+    @Test
+    @Throws(TurfException::class)
+    fun testInvariantFeatureOf3() {
+        val json = "{ type: 'Feature', geometry: { type: 'Point', coordinates: [0, 0] }}"
+        thrown.expect(TurfException::class.java)
+        thrown.expectMessage(CoreMatchers.startsWith("Invalid input to myfn: must be a Polygon, given Point"))
+        featureOf(Feature.fromJson(json), "Polygon", "myfn")
+    }
 
-  @Test
-  public void testInvariantGeojsonType4() {
-    String json = "{ type: 'Point', coordinates: [0, 0] }";
-    TurfAssertions.geojsonType(Point.fromJson(json), "Point", "myfn");
-  }
+    @Test
+    fun testInvariantFeatureOf4() {
+        val json = ("{ type: 'Feature', geometry: { type: 'Point', coordinates: [0, 0]}, "
+                + "properties: {}}")
+        featureOf(Feature.fromJson(json), "Point", "myfn")
+    }
 
-  @Test
-  public void testInvariantFeatureOf1() throws TurfException {
-    String json = "{ type: 'Feature', geometry: { type: 'Point', coordinates: [0, 0] }, "
-      + "properties: {}}";
-    thrown.expect(TurfException.class);
-    thrown.expectMessage(startsWith(".featureOf() requires a name"));
-    TurfAssertions.featureOf(Feature.fromJson(json), "Polygon", null);
-  }
+    @Test
+    @Throws(TurfException::class)
+    fun testInvariantCollectionOf1() {
+        val json = ("{type: 'FeatureCollection', features: [{ type: 'Feature', geometry: { "
+                + "type: 'Point', coordinates: [0, 0]}, properties: {}}]}")
+        thrown.expect(TurfException::class.java)
+        thrown.expectMessage(CoreMatchers.startsWith("Invalid input to myfn: must be a Polygon, given Point"))
+        collectionOf(FeatureCollection.fromJson(json), "Polygon", "myfn")
+    }
 
-  @Test
-  public void testInvariantFeatureOf2() throws TurfException {
-    String json = "{ type: 'Feature'}";
-    thrown.expect(TurfException.class);
-    thrown.expectMessage(startsWith("Invalid input to foo, Feature with geometry required"));
-    TurfAssertions.featureOf(Feature.fromJson(json), "Polygon", "foo");
-  }
+    @Test
+    @Throws(TurfException::class)
+    fun testInvariantCollectionOf2() {
+        val json = "{type: 'FeatureCollection'}"
+        thrown.expect(TurfException::class.java)
+        thrown.expectMessage(CoreMatchers.startsWith("collectionOf() requires a name"))
+        collectionOf(FeatureCollection.fromJson(json), "Polygon", null)
+    }
 
-  @Test
-  public void testInvariantFeatureOf3() throws TurfException {
-    String json = "{ type: 'Feature', geometry: { type: 'Point', coordinates: [0, 0] }}";
-    thrown.expect(TurfException.class);
-    thrown.expectMessage(startsWith("Invalid input to myfn: must be a Polygon, given Point"));
-    TurfAssertions.featureOf(Feature.fromJson(json), "Polygon", "myfn");
-  }
+    @Test
+    @Throws(TurfException::class)
+    fun testInvariantCollectionOf3() {
+        val json = "{type: 'FeatureCollection'}"
+        thrown.expect(TurfException::class.java)
+        thrown.expectMessage(CoreMatchers.startsWith("Invalid input to foo, FeatureCollection required"))
+        collectionOf(FeatureCollection.fromJson(json), "Polygon", "foo")
+    }
 
-  @Test
-  public void testInvariantFeatureOf4() {
-    String json = "{ type: 'Feature', geometry: { type: 'Point', coordinates: [0, 0]}, "
-      + "properties: {}}";
-    TurfAssertions.featureOf(Feature.fromJson(json), "Point", "myfn");
-  }
-
-  @Test
-  public void testInvariantCollectionOf1() throws TurfException {
-    String json = "{type: 'FeatureCollection', features: [{ type: 'Feature', geometry: { "
-      + "type: 'Point', coordinates: [0, 0]}, properties: {}}]}";
-    thrown.expect(TurfException.class);
-    thrown.expectMessage(startsWith("Invalid input to myfn: must be a Polygon, given Point"));
-    TurfAssertions.collectionOf(FeatureCollection.fromJson(json), "Polygon", "myfn");
-  }
-
-  @Test
-  public void testInvariantCollectionOf2() throws TurfException {
-    String json = "{type: 'FeatureCollection'}";
-    thrown.expect(TurfException.class);
-    thrown.expectMessage(startsWith("collectionOf() requires a name"));
-    TurfAssertions.collectionOf(FeatureCollection.fromJson(json), "Polygon", null);
-  }
-
-  @Test
-  public void testInvariantCollectionOf3() throws TurfException {
-    String json = "{type: 'FeatureCollection'}";
-    thrown.expect(TurfException.class);
-    thrown.expectMessage(startsWith("Invalid input to foo, FeatureCollection required"));
-    TurfAssertions.collectionOf(FeatureCollection.fromJson(json), "Polygon", "foo");
-  }
-
-  @Test
-  public void testInvariantCollectionOf4() {
-    String json = "{type: 'FeatureCollection', features: [{ type: 'Feature', geometry: { "
-      + "type: 'Point', coordinates: [0, 0]}, properties: {}}]}";
-    TurfAssertions.collectionOf(FeatureCollection.fromJson(json), "Point", "myfn");
-  }
+    @Test
+    fun testInvariantCollectionOf4() {
+        val json = ("{type: 'FeatureCollection', features: [{ type: 'Feature', geometry: { "
+                + "type: 'Point', coordinates: [0, 0]}, properties: {}}]}")
+        collectionOf(FeatureCollection.fromJson(json), "Point", "myfn")
+    }
 }
