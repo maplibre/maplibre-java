@@ -1,7 +1,6 @@
 package com.mapbox.geojson
 
 import com.mapbox.geojson.BoundingBox.Companion.fromLngLats
-import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point.Companion.fromLngLat
 import org.junit.Assert
 import org.junit.Rule
@@ -39,7 +38,7 @@ class PointTest : TestUtils() {
     fun altitude_doesReturnCorrectValueFromDoubleArray() {
         val coords = doubleArrayOf(1.0, 2.0, 5.0)
         val point = fromLngLat(coords)
-        Assert.assertEquals(5.0, point!!.altitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(5.0, point!!.altitude(), DELTA)
     }
 
     @Test
@@ -54,14 +53,14 @@ class PointTest : TestUtils() {
     @Throws(Exception::class)
     fun longitude_doesReturnCorrectValue() {
         val point = fromLngLat(1.0, 2.0, 5.0)
-        Assert.assertEquals(1.0, point.longitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, point.longitude(), DELTA)
     }
 
     @Test
     @Throws(Exception::class)
     fun latitude_doesReturnCorrectValue() {
         val point = fromLngLat(1.0, 2.0, 5.0)
-        Assert.assertEquals(2.0, point.latitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(2.0, point.latitude(), DELTA)
     }
 
     @Test
@@ -91,10 +90,10 @@ class PointTest : TestUtils() {
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
         val lineString = LineString.fromLngLats(points, bbox)
         Assert.assertNotNull(lineString.bbox())
-        Assert.assertEquals(1.0, lineString.bbox()!!.west(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, lineString.bbox()!!.south(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, lineString.bbox()!!.east(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, lineString.bbox()!!.north(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, lineString.bbox()!!.west(), DELTA)
+        Assert.assertEquals(2.0, lineString.bbox()!!.south(), DELTA)
+        Assert.assertEquals(3.0, lineString.bbox()!!.east(), DELTA)
+        Assert.assertEquals(4.0, lineString.bbox()!!.north(), DELTA)
     }
 
     @Test
@@ -117,13 +116,13 @@ class PointTest : TestUtils() {
         )
         Assert.assertNotNull(point)
         Assert.assertNotNull(point.bbox())
-        Assert.assertEquals(1.0, point.bbox()!!.southwest().longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, point.bbox()!!.southwest().latitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, point.bbox()!!.northeast().longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, point.bbox()!!.northeast().latitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, point.bbox()!!.southwest().longitude(), DELTA)
+        Assert.assertEquals(2.0, point.bbox()!!.southwest().latitude(), DELTA)
+        Assert.assertEquals(3.0, point.bbox()!!.northeast().longitude(), DELTA)
+        Assert.assertEquals(4.0, point.bbox()!!.northeast().latitude(), DELTA)
         Assert.assertNotNull(point.coordinates())
-        Assert.assertEquals(2.0, point.longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, point.latitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(2.0, point.longitude(), DELTA)
+        Assert.assertEquals(3.0, point.latitude(), DELTA)
     }
 
     @Test
@@ -135,10 +134,10 @@ class PointTest : TestUtils() {
         points.add(fromLngLat(3.0, 3.0))
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
         val lineString = LineString.fromLngLats(points, bbox)
-        val bytes: ByteArray = TestUtils.Companion.serialize<LineString>(lineString)
+        val bytes: ByteArray = serialize(lineString)
         Assert.assertEquals(
             lineString,
-            TestUtils.Companion.deserialize<LineString>(bytes, LineString::class.java)
+            deserialize(bytes, LineString::class.java)
         )
     }
 
@@ -148,11 +147,11 @@ class PointTest : TestUtils() {
         val json = "{ \"type\": \"Point\", \"coordinates\": [ 100, 0] }"
         val geo = Point.fromJson(json)
         Assert.assertEquals(geo.type(), "Point")
-        Assert.assertEquals(geo.longitude(), 100.0, TestUtils.Companion.DELTA)
-        Assert.assertEquals(geo.latitude(), 0.0, TestUtils.Companion.DELTA)
-        Assert.assertEquals(geo.altitude(), Double.NaN, TestUtils.Companion.DELTA)
-        Assert.assertEquals(geo.coordinates()[0], 100.0, TestUtils.Companion.DELTA)
-        Assert.assertEquals(geo.coordinates()[1], 0.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(geo.longitude(), 100.0, DELTA)
+        Assert.assertEquals(geo.latitude(), 0.0, DELTA)
+        Assert.assertEquals(geo.altitude(), Double.NaN, DELTA)
+        Assert.assertEquals(geo.coordinates()[0], 100.0, DELTA)
+        Assert.assertEquals(geo.coordinates()[1], 0.0, DELTA)
         Assert.assertEquals(geo.coordinates().size.toLong(), 2)
         Assert.assertFalse(geo.hasAltitude())
     }
@@ -170,9 +169,5 @@ class PointTest : TestUtils() {
     fun fromJson_coordinatesPresent() {
         thrown.expect(NullPointerException::class.java)
         Point.fromJson("{\"type\":\"Point\",\"coordinates\":null}")
-    }
-
-    companion object {
-        private const val SAMPLE_POINT = "sample-point.json"
     }
 }

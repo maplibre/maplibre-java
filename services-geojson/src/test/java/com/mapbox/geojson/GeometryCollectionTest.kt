@@ -1,7 +1,6 @@
 package com.mapbox.geojson
 
 import com.mapbox.geojson.BoundingBox.Companion.fromLngLats
-import com.mapbox.geojson.GeometryCollection
 import com.mapbox.geojson.GeometryCollection.Companion.fromGeometries
 import com.mapbox.geojson.GeometryCollection.Companion.fromGeometry
 import com.mapbox.geojson.Point.Companion.fromLngLat
@@ -70,10 +69,10 @@ class GeometryCollectionTest : TestUtils() {
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
         val geometryCollection = fromGeometries(geometries, bbox)
         Assert.assertNotNull(geometryCollection.bbox())
-        Assert.assertEquals(1.0, geometryCollection.bbox()!!.west(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, geometryCollection.bbox()!!.south(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, geometryCollection.bbox()!!.east(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, geometryCollection.bbox()!!.north(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, geometryCollection.bbox()!!.west(), DELTA)
+        Assert.assertEquals(2.0, geometryCollection.bbox()!!.south(), DELTA)
+        Assert.assertEquals(3.0, geometryCollection.bbox()!!.east(), DELTA)
+        Assert.assertEquals(4.0, geometryCollection.bbox()!!.north(), DELTA)
     }
 
     @Test
@@ -86,7 +85,7 @@ class GeometryCollectionTest : TestUtils() {
         Assert.assertEquals(
             2.0,
             (collection.geometries()[0] as Point).latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
     }
 
@@ -122,10 +121,10 @@ class GeometryCollectionTest : TestUtils() {
         geometries.add(lineString)
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
         val geometryCollection = fromGeometries(geometries, bbox)
-        val bytes: ByteArray = TestUtils.Companion.serialize<GeometryCollection>(geometryCollection)
+        val bytes: ByteArray = serialize(geometryCollection)
         Assert.assertEquals(
             geometryCollection,
-            TestUtils.Companion.deserialize<GeometryCollection>(
+            deserialize(
                 bytes,
                 GeometryCollection::class.java
             )
@@ -171,7 +170,7 @@ class GeometryCollectionTest : TestUtils() {
         )
         geometries.add(
             LineString.fromLngLats(
-                Arrays.asList(
+                listOf(
                     fromLngLat(101.0, 0.0),
                     fromLngLat(102.0, 1.0)
                 ),
@@ -185,8 +184,5 @@ class GeometryCollectionTest : TestUtils() {
         val jsonString = geometryCollection.toJson()
         compareJson(jsonOriginal, jsonString)
     }
-
-    companion object {
-        private const val SAMPLE_GEOMETRYCOLLECTION = "sample-geometrycollection.json"
-    }
+    
 }

@@ -16,7 +16,7 @@ class FeatureTest : TestUtils() {
         points.add(fromLngLat(1.0, 2.0))
         points.add(fromLngLat(2.0, 3.0))
         val lineString = LineString.fromLngLats(points)
-        val feature = Feature.fromGeometry(lineString)
+        val feature = fromGeometry(lineString)
         Assert.assertNotNull(feature)
     }
 
@@ -27,7 +27,7 @@ class FeatureTest : TestUtils() {
         points.add(fromLngLat(1.0, 2.0))
         points.add(fromLngLat(2.0, 3.0))
         val lineString = LineString.fromLngLats(points)
-        val feature = Feature.fromGeometry(lineString)
+        val feature = fromGeometry(lineString)
         Assert.assertNull(feature.bbox())
     }
 
@@ -38,7 +38,7 @@ class FeatureTest : TestUtils() {
         points.add(fromLngLat(1.0, 2.0))
         points.add(fromLngLat(2.0, 3.0))
         val lineString = LineString.fromLngLats(points)
-        val feature = Feature.fromGeometry(lineString)
+        val feature = fromGeometry(lineString)
         val featureJsonString = feature.toJson()
         compareJson(
             featureJsonString, "{\"type\":\"Feature\",\"geometry\":{\"type\":"
@@ -54,12 +54,12 @@ class FeatureTest : TestUtils() {
         points.add(fromLngLat(2.0, 3.0))
         val lineString = LineString.fromLngLats(points)
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
-        val feature = Feature.fromGeometry(lineString, bbox)
+        val feature = fromGeometry(lineString, bbox)
         Assert.assertNotNull(feature.bbox())
-        Assert.assertEquals(1.0, feature.bbox()!!.west(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, feature.bbox()!!.south(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, feature.bbox()!!.east(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, feature.bbox()!!.north(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, feature.bbox()!!.west(), DELTA)
+        Assert.assertEquals(2.0, feature.bbox()!!.south(), DELTA)
+        Assert.assertEquals(3.0, feature.bbox()!!.east(), DELTA)
+        Assert.assertEquals(4.0, feature.bbox()!!.north(), DELTA)
     }
 
     @Test
@@ -70,7 +70,7 @@ class FeatureTest : TestUtils() {
         points.add(fromLngLat(2.0, 3.0))
         val lineString = LineString.fromLngLats(points)
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
-        val feature = Feature.fromGeometry(lineString, bbox)
+        val feature = fromGeometry(lineString, bbox)
         val featureJsonString = feature.toJson()
         compareJson(
             "{\"type\":\"Feature\",\"bbox\":[1.0,2.0,3.0,4.0],\"geometry\":"
@@ -91,12 +91,12 @@ class FeatureTest : TestUtils() {
         Assert.assertEquals(
             (geo.geometry() as Point?)!!.longitude(),
             125.6,
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             (geo.geometry() as Point?)!!.latitude(),
             10.1,
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(geo.properties()["name"].asString, "Dinagat Islands")
     }
@@ -115,8 +115,8 @@ class FeatureTest : TestUtils() {
         val coordinates = (geo.geometry() as LineString?)!!.coordinates()
         Assert.assertNotNull(coordinates)
         Assert.assertEquals(4, coordinates.size.toLong())
-        Assert.assertEquals(105.0, coordinates[3].longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(5.0, coordinates[3].latitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(105.0, coordinates[3].longitude(), DELTA)
+        Assert.assertEquals(5.0, coordinates[3].latitude(), DELTA)
         Assert.assertEquals("line name", geo.properties()["name"].asString)
     }
 
@@ -160,7 +160,7 @@ class FeatureTest : TestUtils() {
         coordinates.add(fromLngLat(0.1, 2.3))
         coordinates.add(fromLngLat(4.5, 6.7))
         val line = LineString.fromLngLats(coordinates)
-        val feature = Feature.fromGeometry(line)
+        val feature = fromGeometry(line)
         val jsonString = feature.toJson()
         Assert.assertFalse(jsonString!!.contains("\"properties\":{}"))
 
@@ -245,7 +245,4 @@ class FeatureTest : TestUtils() {
         Assert.assertNull(value)
     }
 
-    companion object {
-        private const val SAMPLE_FEATURE_POINT = "sample-feature-point-all.json"
-    }
 }

@@ -13,7 +13,8 @@ import org.junit.rules.ExpectedException
 
 class TurfAssertionsTest : TestUtils() {
     @Rule
-    var thrown = ExpectedException.none()
+    @JvmField
+    var thrown : ExpectedException = ExpectedException.none()
     @Test
     @Throws(TurfException::class)
     fun testInvariantGeojsonType1() {

@@ -1,3 +1,10 @@
+@file:Suppress("unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused"
+)
+
 package com.mapbox.geojson
 
 import androidx.annotation.Keep
@@ -48,6 +55,12 @@ import java.io.IOException
  *
  * @since 1.0.0
  */
+@Suppress("unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused"
+)
 @Keep
 class Feature internal constructor(
     type: String?, bbox: BoundingBox?, id: String?,
@@ -260,6 +273,7 @@ class Feature internal constructor(
     )
     fun getCharacterProperty(key: String?): Char? {
         val propertyKey = properties()[key]
+        @Suppress("DEPRECATION")
         return propertyKey?.asCharacter
     }
 
@@ -270,6 +284,7 @@ class Feature internal constructor(
      * @return the value of the member, null if it doesn't exist
      * @since 1.0.0
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun getProperty(key: String?): JsonElement {
         return properties()[key]
     }
@@ -292,6 +307,7 @@ class Feature internal constructor(
      * @return true if there is the member has the specified name, false otherwise.
      * @since 1.0.0
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun hasProperty(key: String?): Boolean {
         return properties().has(key)
     }
@@ -317,17 +333,16 @@ class Feature internal constructor(
                 + "}")
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
         }
-        if (obj is Feature) {
-            val that = obj
-            return (type == that.type()
-                    && (if (bbox == null) that.bbox() == null else bbox == that.bbox())
-                    && (if (id == null) that.id() == null else id == that.id())
-                    && (if (geometry == null) that.geometry() == null else geometry == that.geometry())
-                    && if (properties == null) that.properties == null else properties == that.properties())
+        if (other is Feature) {
+            return (type == other.type()
+                    && (if (bbox == null) other.bbox() == null else bbox == other.bbox())
+                    && (if (id == null) other.id() == null else id == other.id())
+                    && (if (geometry == null) other.geometry() == null else geometry == other.geometry())
+                    && if (properties == null) other.properties == null else properties == other.properties())
         }
         return false
     }
@@ -505,7 +520,7 @@ class Feature internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromJson(json: String): Feature {
             val gson = GsonBuilder()
             gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.create())
@@ -531,7 +546,7 @@ class Feature internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromGeometry(geometry: Geometry?): Feature {
             return Feature(TYPE, null, null, geometry, JsonObject())
         }
@@ -546,7 +561,7 @@ class Feature internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromGeometry(geometry: Geometry?, bbox: BoundingBox?): Feature {
             return Feature(TYPE, bbox, null, geometry, JsonObject())
         }
@@ -561,7 +576,7 @@ class Feature internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromGeometry(geometry: Geometry?, properties: JsonObject?): Feature {
             return Feature(
                 TYPE, null, null, geometry,
@@ -580,7 +595,7 @@ class Feature internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromGeometry(
             geometry: Geometry?, properties: JsonObject?,
             bbox: BoundingBox?
@@ -601,7 +616,7 @@ class Feature internal constructor(
          * @return [Feature]
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromGeometry(
             geometry: Geometry?, properties: JsonObject?,
             id: String?
@@ -623,7 +638,7 @@ class Feature internal constructor(
          * @return [Feature]
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromGeometry(
             geometry: Geometry?, properties: JsonObject?,
             id: String?, bbox: BoundingBox?
@@ -641,7 +656,7 @@ class Feature internal constructor(
          * @return the TYPE adapter for this class
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun typeAdapter(gson: Gson): TypeAdapter<Feature> {
             return GsonTypeAdapter(gson)
         }

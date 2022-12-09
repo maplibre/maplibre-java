@@ -48,13 +48,13 @@ class BoundingBoxTypeAdapter : TypeAdapter<BoundingBox>() {
     }
 
     @Throws(IOException::class)
-    override fun read(`in`: JsonReader): BoundingBox? {
+    override fun read(inReader: JsonReader): BoundingBox {
         val rawCoordinates: MutableList<Double> = ArrayList()
-        `in`.beginArray()
-        while (`in`.hasNext()) {
-            rawCoordinates.add(`in`.nextDouble())
+        inReader.beginArray()
+        while (inReader.hasNext()) {
+            rawCoordinates.add(inReader.nextDouble())
         }
-        `in`.endArray()
+        inReader.endArray()
         if (rawCoordinates.size == 6) {
             return fromLngLats(
                 rawCoordinates[0],

@@ -23,7 +23,7 @@ object TurfAssertions {
      *
      * @since 1.2.0
      */
-    @Deprecated("use {@link TurfMeta#getCoord(Feature)}")
+    @Deprecated("", ReplaceWith("{@link TurfMeta#getCoord(Feature)}"))
     fun getCoord(obj: Feature): Point? {
         return TurfMeta.getCoord(obj)
     }
@@ -40,7 +40,7 @@ object TurfAssertions {
      */
     @JvmStatic
     fun geojsonType(value: GeoJson?, type: String?, name: String?) {
-        if (type == null || type.length == 0 || name == null || name.length == 0) {
+        if (type.isNullOrEmpty() || name.isNullOrEmpty()) {
             throw TurfException("Type and name required")
         }
         if (value == null || value.type() != type) {
@@ -64,7 +64,7 @@ object TurfAssertions {
      */
     @JvmStatic
     fun featureOf(feature: Feature?, type: String, name: String?) {
-        if (name == null || name.length == 0) {
+        if (name.isNullOrEmpty()) {
             throw TurfException(".featureOf() requires a name")
         }
         if (feature == null || feature.type() != "Feature" || feature.geometry() == null) {
@@ -99,7 +99,7 @@ object TurfAssertions {
      */
     @JvmStatic
     fun collectionOf(featureCollection: FeatureCollection?, type: String, name: String?) {
-        if (name == null || name.length == 0) {
+        if (name.isNullOrEmpty()) {
             throw TurfException("collectionOf() requires a name")
         }
         if (featureCollection == null || featureCollection.type() != "FeatureCollection"
@@ -112,7 +112,7 @@ object TurfAssertions {
             )
         }
         for (feature in featureCollection.features()!!) {
-            if (feature == null || feature.type() != "Feature" || feature.geometry() == null) {
+            if (feature.type() != "Feature" || feature.geometry() == null) {
                 throw TurfException(
                     String.format(
                         "Invalid input to %s, Feature with geometry required", name

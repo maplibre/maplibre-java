@@ -1,7 +1,6 @@
 package com.mapbox.geojson
 
 import com.mapbox.geojson.BoundingBox.Companion.fromLngLats
-import com.mapbox.geojson.MultiPolygon
 import com.mapbox.geojson.MultiPolygon.Companion.fromPolygon
 import com.mapbox.geojson.MultiPolygon.Companion.fromPolygons
 import com.mapbox.geojson.Point.Companion.fromLngLat
@@ -83,10 +82,10 @@ class MultiPolygonTest : TestUtils() {
         polygons.add(fromOuterInner(outer))
         val multiPolygon = fromPolygons(polygons, bbox)
         Assert.assertNotNull(multiPolygon.bbox())
-        Assert.assertEquals(1.0, multiPolygon.bbox()!!.west(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, multiPolygon.bbox()!!.south(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, multiPolygon.bbox()!!.east(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, multiPolygon.bbox()!!.north(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, multiPolygon.bbox()!!.west(), DELTA)
+        Assert.assertEquals(2.0, multiPolygon.bbox()!!.south(), DELTA)
+        Assert.assertEquals(3.0, multiPolygon.bbox()!!.east(), DELTA)
+        Assert.assertEquals(4.0, multiPolygon.bbox()!!.north(), DELTA)
     }
 
     @Test
@@ -104,7 +103,7 @@ class MultiPolygonTest : TestUtils() {
         Assert.assertEquals(
             2.0,
             multiPolygon.polygons()[0].coordinates()[0][0].latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
     }
 
@@ -142,10 +141,10 @@ class MultiPolygonTest : TestUtils() {
         polygons.add(fromOuterInner(outer))
         polygons.add(fromOuterInner(outer))
         val multiPolygon = fromPolygons(polygons, bbox)
-        val bytes: ByteArray = TestUtils.Companion.serialize<MultiPolygon>(multiPolygon)
+        val bytes: ByteArray = serialize(multiPolygon)
         Assert.assertEquals(
             multiPolygon,
-            TestUtils.Companion.deserialize<MultiPolygon>(bytes, MultiPolygon::class.java)
+            deserialize(bytes, MultiPolygon::class.java)
         )
     }
 
@@ -161,9 +160,9 @@ class MultiPolygonTest : TestUtils() {
         Assert.assertEquals(
             geo.coordinates()!![0][0][0].longitude(),
             102.0,
-            TestUtils.Companion.DELTA
+            DELTA
         )
-        Assert.assertEquals(geo.coordinates()!![0][0][0].latitude(), 2.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(geo.coordinates()!![0][0][0].latitude(), 2.0, DELTA)
         Assert.assertFalse(geo.coordinates()!![0][0][0].hasAltitude())
     }
 
@@ -183,9 +182,5 @@ class MultiPolygonTest : TestUtils() {
     fun fromJson_coordinatesPresent() {
         thrown.expect(NullPointerException::class.java)
         MultiPolygon.fromJson("{\"type\":\"MultiPolygon\",\"coordinates\":null}")
-    }
-
-    companion object {
-        private const val SAMPLE_MULTIPOLYGON = "sample-multipolygon.json"
     }
 }

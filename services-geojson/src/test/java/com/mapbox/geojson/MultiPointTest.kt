@@ -1,7 +1,6 @@
 package com.mapbox.geojson
 
 import com.mapbox.geojson.BoundingBox.Companion.fromLngLats
-import com.mapbox.geojson.MultiPoint
 import com.mapbox.geojson.Point.Companion.fromLngLat
 import org.junit.Assert
 import org.junit.Rule
@@ -55,10 +54,10 @@ class MultiPointTest : TestUtils() {
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
         val multiPoint = MultiPoint.fromLngLats(points, bbox)
         Assert.assertNotNull(multiPoint.bbox())
-        Assert.assertEquals(1.0, multiPoint.bbox()!!.west(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, multiPoint.bbox()!!.south(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, multiPoint.bbox()!!.east(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, multiPoint.bbox()!!.north(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, multiPoint.bbox()!!.west(), DELTA)
+        Assert.assertEquals(2.0, multiPoint.bbox()!!.south(), DELTA)
+        Assert.assertEquals(3.0, multiPoint.bbox()!!.east(), DELTA)
+        Assert.assertEquals(4.0, multiPoint.bbox()!!.north(), DELTA)
     }
 
     @Test
@@ -83,10 +82,10 @@ class MultiPointTest : TestUtils() {
         points.add(fromLngLat(2.0, 3.0))
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
         val multiPoint = MultiPoint.fromLngLats(points, bbox)
-        val bytes: ByteArray = TestUtils.Companion.serialize<MultiPoint>(multiPoint)
+        val bytes: ByteArray = serialize(multiPoint)
         Assert.assertEquals(
             multiPoint,
-            TestUtils.Companion.deserialize<MultiPoint>(bytes, MultiPoint::class.java)
+            deserialize(bytes, MultiPoint::class.java)
         )
     }
 
@@ -97,12 +96,12 @@ class MultiPointTest : TestUtils() {
                 "\"coordinates\": [ [100, 0], [101, 1] ] } "
         val geo = MultiPoint.fromJson(json)
         Assert.assertEquals(geo.type(), "MultiPoint")
-        Assert.assertEquals(geo.coordinates()[0].longitude(), 100.0, TestUtils.Companion.DELTA)
-        Assert.assertEquals(geo.coordinates()[0].latitude(), 0.0, TestUtils.Companion.DELTA)
-        Assert.assertEquals(geo.coordinates()[1].longitude(), 101.0, TestUtils.Companion.DELTA)
-        Assert.assertEquals(geo.coordinates()[1].latitude(), 1.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(geo.coordinates()[0].longitude(), 100.0, DELTA)
+        Assert.assertEquals(geo.coordinates()[0].latitude(), 0.0, DELTA)
+        Assert.assertEquals(geo.coordinates()[1].longitude(), 101.0, DELTA)
+        Assert.assertEquals(geo.coordinates()[1].latitude(), 1.0, DELTA)
         Assert.assertFalse(geo.coordinates()[0].hasAltitude())
-        Assert.assertEquals(Double.NaN, geo.coordinates()[0].altitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(Double.NaN, geo.coordinates()[0].altitude(), DELTA)
     }
 
     @Test
@@ -121,7 +120,4 @@ class MultiPointTest : TestUtils() {
         MultiPoint.fromJson("{\"type\":\"MultiPoint\",\"coordinates\":null}")
     }
 
-    companion object {
-        private const val SAMPLE_MULTIPOINT = "sample-multipoint.json"
-    }
 }

@@ -42,29 +42,26 @@ class GeoJsonTest : TestUtils() {
         val roundLon2 = featureCollectionRounded[4].geometry() as Point?
         val largeRound2 = featureCollectionRounded[5].geometry() as Point?
         val negRound2 = featureCollectionRounded[6].geometry() as Point?
-        Assert.assertEquals(1.1234568, roundDown2!!.longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(1.1234568, roundDown2.latitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.1234568, roundDown2!!.longitude(), DELTA)
+        Assert.assertEquals(1.1234568, roundDown2.latitude(), DELTA)
         Assert.assertEquals(noRound, noRound2)
         Assert.assertEquals(matchRound, matchRound2)
         Assert.assertEquals(
             roundLat.longitude(),
             roundLat2!!.longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
-        Assert.assertEquals(1.1234568, roundLat2.latitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(1.1234568, roundLon2!!.longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(roundLon.latitude(), roundLon2.latitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(105.1234568, largeRound2!!.longitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.1234568, roundLat2.latitude(), DELTA)
+        Assert.assertEquals(1.1234568, roundLon2!!.longitude(), DELTA)
+        Assert.assertEquals(roundLon.latitude(), roundLon2.latitude(), DELTA)
+        Assert.assertEquals(105.1234568, largeRound2!!.longitude(), DELTA)
         Assert.assertEquals(
             largeRound.latitude(),
             largeRound2.latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
-        Assert.assertEquals(-105.1234568, negRound2!!.longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(negRound.latitude(), negRound2.latitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(-105.1234568, negRound2!!.longitude(), DELTA)
+        Assert.assertEquals(negRound.latitude(), negRound2.latitude(), DELTA)
     }
 
-    companion object {
-        private const val GEOJSON_FIXTURE = "sample-geojson-result.json"
-    }
 }

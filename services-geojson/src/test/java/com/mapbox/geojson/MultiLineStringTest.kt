@@ -1,7 +1,6 @@
 package com.mapbox.geojson
 
 import com.mapbox.geojson.BoundingBox.Companion.fromLngLats
-import com.mapbox.geojson.MultiLineString
 import com.mapbox.geojson.MultiLineString.Companion.fromLineString
 import com.mapbox.geojson.MultiLineString.Companion.fromLineStrings
 import com.mapbox.geojson.Point.Companion.fromLngLat
@@ -69,10 +68,10 @@ class MultiLineStringTest : TestUtils() {
         lineStrings.add(LineString.fromLngLats(points))
         val multiLineString = fromLineStrings(lineStrings, bbox)
         Assert.assertNotNull(multiLineString.bbox())
-        Assert.assertEquals(1.0, multiLineString.bbox()!!.west(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, multiLineString.bbox()!!.south(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, multiLineString.bbox()!!.east(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, multiLineString.bbox()!!.north(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, multiLineString.bbox()!!.west(), DELTA)
+        Assert.assertEquals(2.0, multiLineString.bbox()!!.south(), DELTA)
+        Assert.assertEquals(3.0, multiLineString.bbox()!!.east(), DELTA)
+        Assert.assertEquals(4.0, multiLineString.bbox()!!.north(), DELTA)
     }
 
     @Test
@@ -88,7 +87,7 @@ class MultiLineStringTest : TestUtils() {
         Assert.assertEquals(
             2.0,
             multiLineString.lineStrings()[0].coordinates()[0].latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
     }
 
@@ -120,10 +119,10 @@ class MultiLineStringTest : TestUtils() {
         lineStrings.add(LineString.fromLngLats(points))
         lineStrings.add(LineString.fromLngLats(points))
         val multiLineString = fromLineStrings(lineStrings, bbox)
-        val bytes: ByteArray = TestUtils.Companion.serialize<MultiLineString>(multiLineString)
+        val bytes: ByteArray = serialize(multiLineString)
         Assert.assertEquals(
             multiLineString,
-            TestUtils.Companion.deserialize<MultiLineString>(bytes, MultiLineString::class.java)
+            deserialize(bytes, MultiLineString::class.java)
         )
     }
 
@@ -134,8 +133,8 @@ class MultiLineStringTest : TestUtils() {
                 "\"coordinates\": [[[100, 0],[101, 1]],[[102, 2],[103, 3]]] }"
         val geo = MultiLineString.fromJson(json)
         Assert.assertEquals("MultiLineString", geo.type())
-        Assert.assertEquals(geo.coordinates()[0][0].longitude(), 100.0, TestUtils.Companion.DELTA)
-        Assert.assertEquals(geo.coordinates()[0][0].latitude(), 0.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(geo.coordinates()[0][0].longitude(), 100.0, DELTA)
+        Assert.assertEquals(geo.coordinates()[0][0].latitude(), 0.0, DELTA)
         Assert.assertFalse(geo.coordinates()[0][0].hasAltitude())
     }
 
@@ -153,11 +152,5 @@ class MultiLineStringTest : TestUtils() {
     fun fromJson_coordinatesPresent() {
         thrown.expect(NullPointerException::class.java)
         MultiLineString.fromJson("{\"type\":\"MultiLineString\",\"coordinates\":null}")
-    }
-
-    companion object {
-        private const val SAMPLE_MULTILINESTRING = "sample-multilinestring.json"
-        private const val PRECISION_6 = 6
-        private const val PRECISION_5 = 5
     }
 }

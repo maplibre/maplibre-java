@@ -1,21 +1,26 @@
 package com.mapbox.geojson.shifter
 
 import com.mapbox.geojson.Point
-import java.util.*
 
 /**
  * CoordinateShifterManager keeps track of currently set CoordinateShifter.
  *
  * @since 4.2.0
  */
+@Suppress("unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused"
+)
 object CoordinateShifterManager {
     private val DEFAULT: CoordinateShifter = object : CoordinateShifter {
         override fun shiftLonLat(lon: Double, lat: Double): List<Double> {
-            return Arrays.asList(lon, lat)
+            return listOf(lon, lat)
         }
 
         override fun shiftLonLatAlt(lon: Double, lat: Double, altitude: Double): List<Double> {
-            return if (java.lang.Double.isNaN(altitude)) Arrays.asList(lon, lat) else Arrays.asList(
+            return if (java.lang.Double.isNaN(altitude)) listOf(lon, lat) else listOf(
                 lon,
                 lat,
                 altitude
@@ -59,7 +64,7 @@ object CoordinateShifterManager {
      * Check whether the current shifter is the default one.
      * @return true if using default shifter.
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     val isUsingDefaultShifter: Boolean
         get() = coordinateShifter === DEFAULT
 }

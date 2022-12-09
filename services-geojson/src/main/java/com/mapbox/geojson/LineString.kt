@@ -142,15 +142,14 @@ class LineString internal constructor(
                 + "}")
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
         }
-        if (obj is LineString) {
-            val that = obj
-            return (type == that.type()
-                    && (if (bbox == null) that.bbox() == null else bbox == that.bbox())
-                    && coordinates == that.coordinates())
+        if (other is LineString) {
+            return (type == other.type()
+                    && (if (bbox == null) other.bbox() == null else bbox == other.bbox())
+                    && coordinates == other.coordinates())
         }
         return false
     }
@@ -186,7 +185,7 @@ class LineString internal constructor(
             return readCoordinateContainer(jsonReader) as LineString
         }
 
-        public override fun createCoordinateContainer(
+        override fun createCoordinateContainer(
             type: String?,
             bbox: BoundingBox?,
             coordinates: List<Point>?
@@ -210,7 +209,7 @@ class LineString internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromJson(json: String?): LineString {
             val gson = GsonBuilder()
             gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.create())
@@ -226,7 +225,7 @@ class LineString internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(multiPoint: MultiPoint): LineString {
             return LineString(TYPE, null, multiPoint.coordinates())
         }
@@ -246,7 +245,7 @@ class LineString internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(points: List<Point>): LineString {
             return LineString(TYPE, null, points)
         }
@@ -267,7 +266,7 @@ class LineString internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(points: List<Point>, bbox: BoundingBox?): LineString {
             return LineString(TYPE, bbox, points)
         }
@@ -282,16 +281,16 @@ class LineString internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(multiPoint: MultiPoint, bbox: BoundingBox?): LineString {
             return LineString(TYPE, bbox, multiPoint.coordinates())
         }
 
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(coordinates: Array<DoubleArray>): LineString {
             val converted = ArrayList<Point>(coordinates.size)
             for (coordinate in coordinates) {
-                converted.add(Point.Companion.fromLngLat(coordinate)!!)
+                converted.add(Point.fromLngLat(coordinate)!!)
             }
             return fromLngLats(converted)
         }
@@ -310,7 +309,8 @@ class LineString internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @Suppress("unused")
+        @JvmStatic
         fun fromPolyline(polyline: String, precision: Int): LineString {
             return fromLngLats(PolylineUtils.decode(polyline, precision), null)
         }
@@ -322,7 +322,7 @@ class LineString internal constructor(
          * @return the TYPE adapter for this class
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun typeAdapter(gson: Gson): TypeAdapter<LineString> {
             return GsonTypeAdapter(gson)
         }

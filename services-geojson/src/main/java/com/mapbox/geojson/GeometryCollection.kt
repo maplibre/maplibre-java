@@ -8,9 +8,6 @@ import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
-import com.mapbox.geojson.BoundingBox
-import com.mapbox.geojson.Geometry
-import com.mapbox.geojson.GeometryCollection
 import com.mapbox.geojson.gson.GeoJsonAdapterFactory
 import java.io.IOException
 import java.util.*
@@ -62,24 +59,24 @@ import java.util.*
  *
  * @since 1.0.0
  */
+
+/**
+ * Create a new instance of this class by giving the collection a list of [Geometry] and
+ * bounding box.
+ *
+ * @param geometries a non-null list of geometry which makes up this collection
+ * @param bbox       optionally include a bbox definition as a double array
+ * @since 4.6.0
+ */
 @Keep
-class GeometryCollection internal constructor(
+class GeometryCollection constructor(
     type: String?,
     bbox: BoundingBox?,
-    geometries: List<Geometry>?
-) : Geometry {
+    geometries: List<Geometry>?) : Geometry {
     private val type: String
     private val bbox: BoundingBox?
     private val geometries: List<Geometry>
 
-    /**
-     * Create a new instance of this class by giving the collection a list of [Geometry] and
-     * bounding box.
-     *
-     * @param geometries a non-null list of geometry which makes up this collection
-     * @param bbox       optionally include a bbox definition as a double array
-     * @since 4.6.0
-     */
     init {
         if (type == null) {
             throw NullPointerException("Null type")
@@ -152,15 +149,14 @@ class GeometryCollection internal constructor(
                 + "}")
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
         }
-        if (obj is GeometryCollection) {
-            val that = obj
-            return (type == that.type()
-                    && (if (bbox == null) that.bbox() == null else bbox == that.bbox())
-                    && geometries == that.geometries())
+        if (other is GeometryCollection) {
+            return (type == other.type()
+                    && (if (bbox == null) other.bbox() == null else bbox == other.bbox())
+                    && geometries == other.geometries())
         }
         return false
     }
@@ -191,25 +187,21 @@ class GeometryCollection internal constructor(
         @Volatile
         private var listGeometryAdapter: TypeAdapter<List<Geometry>?>? = null
         @Throws(IOException::class)
-        override fun write(jsonWriter: JsonWriter, `object`: GeometryCollection?) {
-            if (`object` == null) {
+        override fun write(jsonWriter: JsonWriter, obj: GeometryCollection?) {
+            if (obj == null) {
                 jsonWriter.nullValue()
                 return
             }
             jsonWriter.beginObject()
             jsonWriter.name("type")
-            if (`object`.type() == null) {
-                jsonWriter.nullValue()
-            } else {
-                var stringTypeAdapter = stringTypeAdapter
-                if (stringTypeAdapter == null) {
-                    stringTypeAdapter = gson.getAdapter(String::class.java)
-                    this.stringTypeAdapter = stringTypeAdapter
-                }
-                stringTypeAdapter!!.write(jsonWriter, `object`.type())
+            var stringTypeAdapter = stringTypeAdapter
+            if (stringTypeAdapter == null) {
+                stringTypeAdapter = gson.getAdapter(String::class.java)
+                this.stringTypeAdapter = stringTypeAdapter
             }
+            stringTypeAdapter!!.write(jsonWriter, obj.type())
             jsonWriter.name("bbox")
-            if (`object`.bbox() == null) {
+            if (obj.bbox() == null) {
                 jsonWriter.nullValue()
             } else {
                 var boundingBoxTypeAdapter = boundingBoxTypeAdapter
@@ -217,22 +209,19 @@ class GeometryCollection internal constructor(
                     boundingBoxTypeAdapter = gson.getAdapter(BoundingBox::class.java)
                     this.boundingBoxTypeAdapter = boundingBoxTypeAdapter
                 }
-                boundingBoxTypeAdapter!!.write(jsonWriter, `object`.bbox())
+                boundingBoxTypeAdapter!!.write(jsonWriter, obj.bbox())
             }
             jsonWriter.name("geometries")
-            if (`object`.geometries() == null) {
-                jsonWriter.nullValue()
-            } else {
-                var listGeometryAdapter = listGeometryAdapter
-                if (listGeometryAdapter == null) {
-                    val typeToken = TypeToken.getParameterized(
-                        MutableList::class.java, Geometry::class.java
-                    )
-                    listGeometryAdapter = gson.getAdapter(typeToken) as TypeAdapter<List<Geometry>?>
-                    this.listGeometryAdapter = listGeometryAdapter
-                }
-                listGeometryAdapter!!.write(jsonWriter, `object`.geometries())
+            var listGeometryAdapter = listGeometryAdapter
+            if (listGeometryAdapter == null) {
+                val typeToken = TypeToken.getParameterized(
+                    MutableList::class.java, Geometry::class.java
+                )
+                @Suppress("UNCHECKED_CAST")
+                listGeometryAdapter = gson.getAdapter(typeToken) as TypeAdapter<List<Geometry>?>
+                this.listGeometryAdapter = listGeometryAdapter
             }
+            listGeometryAdapter.write(jsonWriter, obj.geometries())
             jsonWriter.endObject()
         }
 
@@ -275,11 +264,12 @@ class GeometryCollection internal constructor(
                             val typeToken = TypeToken.getParameterized(
                                 MutableList::class.java, Geometry::class.java
                             )
+                            @Suppress("UNCHECKED_CAST")
                             listGeometryAdapter =
                                 gson.getAdapter(typeToken) as TypeAdapter<List<Geometry>?>
                             this.listGeometryAdapter = listGeometryAdapter
                         }
-                        geometries = listGeometryAdapter!!.read(jsonReader)
+                        geometries = listGeometryAdapter.read(jsonReader)
                     }
                     else -> jsonReader.skipValue()
                 }
@@ -302,7 +292,7 @@ class GeometryCollection internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromJson(json: String?): GeometryCollection {
             val gson = GsonBuilder()
             gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.create())
@@ -318,7 +308,7 @@ class GeometryCollection internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromGeometries(geometries: List<Geometry>): GeometryCollection {
             return GeometryCollection(TYPE, null, geometries)
         }
@@ -332,7 +322,7 @@ class GeometryCollection internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromGeometries(
             geometries: List<Geometry>,
             bbox: BoundingBox?
@@ -348,9 +338,9 @@ class GeometryCollection internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromGeometry(geometry: Geometry): GeometryCollection {
-            val geometries = Arrays.asList(geometry)
+            val geometries = listOf(geometry)
             return GeometryCollection(TYPE, null, geometries)
         }
 
@@ -363,12 +353,12 @@ class GeometryCollection internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromGeometry(
             geometry: Geometry,
             bbox: BoundingBox?
         ): GeometryCollection {
-            val geometries = Arrays.asList(geometry)
+            val geometries = listOf(geometry)
             return GeometryCollection(TYPE, bbox, geometries)
         }
 
@@ -379,7 +369,7 @@ class GeometryCollection internal constructor(
          * @return the TYPE adapter for this class
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun typeAdapter(gson: Gson): TypeAdapter<GeometryCollection> {
             return GsonTypeAdapter(gson)
         }

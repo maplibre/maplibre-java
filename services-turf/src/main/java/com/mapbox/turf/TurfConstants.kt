@@ -145,7 +145,7 @@ object TurfConstants {
      *
      * @since 3.0.0
      */
-    @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
+    @Retention(AnnotationRetention.SOURCE)
     @StringDef(
         UNIT_KILOMETRES,
         UNIT_METRES,

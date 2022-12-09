@@ -220,10 +220,10 @@ class PolygonTest : TestUtils() {
         inner.add(LineString.fromLngLats(points))
         inner.add(LineString.fromLngLats(points))
         val polygon = fromOuterInner(outer, bbox, inner)
-        val bytes: ByteArray = serialize<Polygon>(polygon)
+        val bytes: ByteArray = serialize(polygon)
         Assert.assertEquals(
             polygon,
-            deserialize<Polygon>(bytes, Polygon::class.java)
+            deserialize(bytes, Polygon::class.java)
         )
     }
 

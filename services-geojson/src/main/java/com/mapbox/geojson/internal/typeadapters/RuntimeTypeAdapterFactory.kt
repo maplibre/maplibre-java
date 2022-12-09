@@ -17,7 +17,6 @@ package com.mapbox.geojson.internal.typeadapters
 
 import androidx.annotation.Keep
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonPrimitive
@@ -135,6 +134,7 @@ class RuntimeTypeAdapterFactory<T> private constructor(
         this.typeFieldName = typeFieldName
         this.maintainType = maintainType
     }
+    
     /**
      * Registers `type` identified by `label`. Labels are case
      * sensitive.
@@ -142,14 +142,6 @@ class RuntimeTypeAdapterFactory<T> private constructor(
      * @param type class of subtype of base type
      * @param label string value for field that distinguishes subtypes
      * @throws IllegalArgumentException if either `type` or `label`
-     * have already been registered on this type adapter.
-     * @return The same object it is called on, so the calls can be chained
-     */
-    /**
-     * Registers `type` identified by its [simple][Class.getSimpleName]. Labels are case sensitive.
-     *
-     * @param type type name
-     * @throws IllegalArgumentException if either `type` or its simple name
      * have already been registered on this type adapter.
      * @return The same object it is called on, so the calls can be chained
      */
@@ -167,6 +159,7 @@ class RuntimeTypeAdapterFactory<T> private constructor(
         return this
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <R> create(gson: Gson, type: TypeToken<R>): TypeAdapter<R>? {
         if (type.rawType != baseType) {
             return null
@@ -186,8 +179,7 @@ class RuntimeTypeAdapterFactory<T> private constructor(
             @Throws(IOException::class)
             override fun read(`in`: JsonReader): R {
                 val jsonElement = Streams.parse(`in`)
-                val labelJsonElement: JsonElement?
-                labelJsonElement = if (maintainType) {
+                val labelJsonElement = if (maintainType) {
                     jsonElement.asJsonObject[typeFieldName]
                 } else {
                     jsonElement.asJsonObject.remove(typeFieldName)

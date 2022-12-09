@@ -1,7 +1,6 @@
 package com.mapbox.geojson
 
 import com.mapbox.geojson.BoundingBox.Companion.fromLngLats
-import com.mapbox.geojson.LineString
 import com.mapbox.geojson.LineString.Companion.fromLngLats
 import com.mapbox.geojson.Point.Companion.fromLngLat
 import org.junit.Assert
@@ -21,7 +20,7 @@ class LineStringTest : TestUtils() {
         points.add(fromLngLat(1.0, 1.0))
         points.add(fromLngLat(2.0, 2.0))
         points.add(fromLngLat(3.0, 3.0))
-        val lineString = LineString.fromLngLats(points)
+        val lineString = fromLngLats(points)
         Assert.assertNotNull(lineString)
     }
 
@@ -43,7 +42,7 @@ class LineStringTest : TestUtils() {
         points.add(fromLngLat(1.0, 1.0))
         points.add(fromLngLat(2.0, 2.0))
         points.add(fromLngLat(3.0, 3.0))
-        val lineString = LineString.fromLngLats(points)
+        val lineString = fromLngLats(points)
         Assert.assertNull(lineString.bbox())
     }
 
@@ -54,7 +53,7 @@ class LineStringTest : TestUtils() {
         points.add(fromLngLat(1.0, 1.0))
         points.add(fromLngLat(2.0, 2.0))
         points.add(fromLngLat(3.0, 3.0))
-        val lineString = LineString.fromLngLats(points)
+        val lineString = fromLngLats(points)
         compareJson(
             lineString.toJson(),
             "{\"coordinates\":[[1,1],[2,2],[3,3]],\"type\":\"LineString\"}"
@@ -69,12 +68,12 @@ class LineStringTest : TestUtils() {
         points.add(fromLngLat(2.0, 2.0))
         points.add(fromLngLat(3.0, 3.0))
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
-        val lineString = LineString.fromLngLats(points, bbox)
+        val lineString = fromLngLats(points, bbox)
         Assert.assertNotNull(lineString.bbox())
-        Assert.assertEquals(1.0, lineString.bbox()!!.west(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, lineString.bbox()!!.south(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, lineString.bbox()!!.east(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, lineString.bbox()!!.north(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, lineString.bbox()!!.west(), DELTA)
+        Assert.assertEquals(2.0, lineString.bbox()!!.south(), DELTA)
+        Assert.assertEquals(3.0, lineString.bbox()!!.east(), DELTA)
+        Assert.assertEquals(4.0, lineString.bbox()!!.north(), DELTA)
     }
 
     @Test
@@ -85,7 +84,7 @@ class LineStringTest : TestUtils() {
         points.add(fromLngLat(2.0, 2.0))
         points.add(fromLngLat(3.0, 3.0))
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
-        val lineString = LineString.fromLngLats(points, bbox)
+        val lineString = fromLngLats(points, bbox)
         val lineStringJson = lineString.toJson()
         compareJson(
             "{\"coordinates\":[[1,1],[2,2],[3,3]],"
@@ -106,30 +105,30 @@ class LineStringTest : TestUtils() {
         Assert.assertEquals(
             1.0,
             lineString.bbox()!!.southwest().longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             2.0,
             lineString.bbox()!!.southwest().latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             3.0,
             lineString.bbox()!!.northeast().longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             4.0,
             lineString.bbox()!!.northeast().latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertNotNull(lineString.coordinates())
-        Assert.assertEquals(1.0, lineString.coordinates()[0].longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, lineString.coordinates()[0].latitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, lineString.coordinates()[1].longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, lineString.coordinates()[1].latitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, lineString.coordinates()[2].longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, lineString.coordinates()[2].latitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, lineString.coordinates()[0].longitude(), DELTA)
+        Assert.assertEquals(2.0, lineString.coordinates()[0].latitude(), DELTA)
+        Assert.assertEquals(2.0, lineString.coordinates()[1].longitude(), DELTA)
+        Assert.assertEquals(3.0, lineString.coordinates()[1].latitude(), DELTA)
+        Assert.assertEquals(3.0, lineString.coordinates()[2].longitude(), DELTA)
+        Assert.assertEquals(4.0, lineString.coordinates()[2].latitude(), DELTA)
     }
 
     @Test
@@ -140,11 +139,11 @@ class LineStringTest : TestUtils() {
         points.add(fromLngLat(2.0, 2.0))
         points.add(fromLngLat(3.0, 3.0))
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
-        val lineString = LineString.fromLngLats(points, bbox)
-        val bytes: ByteArray = TestUtils.Companion.serialize<LineString>(lineString)
+        val lineString = fromLngLats(points, bbox)
+        val bytes: ByteArray = serialize(lineString)
         Assert.assertEquals(
             lineString,
-            TestUtils.Companion.deserialize<LineString>(bytes, LineString::class.java)
+            deserialize(bytes, LineString::class.java)
         )
     }
 
@@ -178,8 +177,6 @@ class LineStringTest : TestUtils() {
     }
 
     companion object {
-        private const val SAMPLE_LINESTRING_FIXTURE = "sample-linestring.json"
         private const val PRECISION_6 = 6
-        private const val PRECISION_5 = 5
     }
 }

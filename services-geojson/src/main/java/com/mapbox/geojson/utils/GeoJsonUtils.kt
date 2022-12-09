@@ -1,5 +1,7 @@
 package com.mapbox.geojson.utils
 
+import kotlin.math.roundToInt
+
 /**
  * GeoJson utils class contains method that can be used throughout geojson package.
  *
@@ -19,6 +21,6 @@ object GeoJsonUtils {
     fun trim(value: Double): Double {
         return if (value > MAX_DOUBLE_TO_ROUND || value < -MAX_DOUBLE_TO_ROUND) {
             value
-        } else Math.round(value * ROUND_PRECISION) / ROUND_PRECISION
+        } else (value * ROUND_PRECISION).roundToInt() / ROUND_PRECISION
     }
 }

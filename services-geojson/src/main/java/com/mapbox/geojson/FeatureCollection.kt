@@ -9,8 +9,6 @@ import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
-import com.mapbox.geojson.BoundingBox
-import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.gson.BoundingBoxTypeAdapter
 import com.mapbox.geojson.gson.GeoJsonAdapterFactory
 import java.io.IOException
@@ -119,15 +117,14 @@ class FeatureCollection internal constructor(
                 + "}")
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
         }
-        if (obj is FeatureCollection) {
-            val that = obj
-            return (type == that.type()
-                    && (if (bbox == null) that.bbox() == null else bbox == that.bbox())
-                    && if (features == null) that.features() == null else features == that.features())
+        if (other is FeatureCollection) {
+            return (type == other.type()
+                    && (if (bbox == null) other.bbox() == null else bbox == other.bbox())
+                    && if (features == null) other.features() == null else features == other.features())
         }
         return false
     }
@@ -165,16 +162,12 @@ class FeatureCollection internal constructor(
             }
             jsonWriter.beginObject()
             jsonWriter.name("type")
-            if (obj.type() == null) {
-                jsonWriter.nullValue()
-            } else {
-                var stringAdapter = stringAdapter
-                if (stringAdapter == null) {
-                    stringAdapter = gson.getAdapter(String::class.java)
-                    this.stringAdapter = stringAdapter
-                }
-                stringAdapter!!.write(jsonWriter, obj.type())
+            var stringAdapter = stringAdapter
+            if (stringAdapter == null) {
+                stringAdapter = gson.getAdapter(String::class.java)
+                this.stringAdapter = stringAdapter
             }
+            stringAdapter!!.write(jsonWriter, obj.type())
             jsonWriter.name("bbox")
             if (obj.bbox() == null) {
                 jsonWriter.nullValue()
@@ -195,10 +188,11 @@ class FeatureCollection internal constructor(
                     val typeToken = TypeToken.getParameterized(
                         MutableList::class.java, Feature::class.java
                     )
+                    @Suppress("UNCHECKED_CAST")
                     listFeatureAdapter = gson.getAdapter(typeToken) as TypeAdapter<List<Feature>?>
                     this.listFeatureAdapter = listFeatureAdapter
                 }
-                listFeatureAdapter!!.write(jsonWriter, obj.features())
+                listFeatureAdapter.write(jsonWriter, obj.features())
             }
             jsonWriter.endObject()
         }
@@ -242,11 +236,12 @@ class FeatureCollection internal constructor(
                             val typeToken = TypeToken.getParameterized(
                                 MutableList::class.java, Feature::class.java
                             )
+                            @Suppress("UNCHECKED_CAST")
                             listFeatureAdapter =
                                 gson.getAdapter(typeToken) as TypeAdapter<List<Feature>?>
                             this.listFeatureAdapter = listFeatureAdapter
                         }
-                        features = listFeatureAdapter!!.read(jsonReader)
+                        features = listFeatureAdapter.read(jsonReader)
                     }
                     else -> jsonReader.skipValue()
                 }
@@ -269,7 +264,7 @@ class FeatureCollection internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromJson(json: String): FeatureCollection {
             val gson = GsonBuilder()
             gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.create())
@@ -287,9 +282,9 @@ class FeatureCollection internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromFeatures(features: Array<Feature>): FeatureCollection {
-            return FeatureCollection(TYPE, null, Arrays.asList(*features))
+            return FeatureCollection(TYPE, null, listOf(*features))
         }
 
         /**
@@ -301,7 +296,7 @@ class FeatureCollection internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromFeatures(features: List<Feature>): FeatureCollection {
             return FeatureCollection(TYPE, null, features)
         }
@@ -317,12 +312,13 @@ class FeatureCollection internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @Suppress("unused")
+        @JvmStatic
         fun fromFeatures(
             features: Array<Feature>,
             bbox: BoundingBox?
         ): FeatureCollection {
-            return FeatureCollection(TYPE, bbox, Arrays.asList(*features))
+            return FeatureCollection(TYPE, bbox, listOf(*features))
         }
 
         /**
@@ -336,7 +332,7 @@ class FeatureCollection internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromFeatures(
             features: List<Feature>,
             bbox: BoundingBox?
@@ -352,9 +348,9 @@ class FeatureCollection internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromFeature(feature: Feature): FeatureCollection {
-            val featureList = Arrays.asList(feature)
+            val featureList = listOf(feature)
             return FeatureCollection(TYPE, null, featureList)
         }
 
@@ -367,12 +363,13 @@ class FeatureCollection internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @Suppress("unused")
+        @JvmStatic
         fun fromFeature(
             feature: Feature,
             bbox: BoundingBox?
         ): FeatureCollection {
-            val featureList = Arrays.asList(feature)
+            val featureList = listOf(feature)
             return FeatureCollection(TYPE, bbox, featureList)
         }
 
@@ -383,7 +380,7 @@ class FeatureCollection internal constructor(
          * @return the TYPE adapter for this class
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun typeAdapter(gson: Gson): TypeAdapter<FeatureCollection> {
             return GsonTypeAdapter(gson)
         }

@@ -30,6 +30,7 @@ abstract class GeoJsonAdapterFactory : TypeAdapterFactory {
      * @since 3.0.0
      */
     class GeoJsonAdapterFactoryIml : GeoJsonAdapterFactory() {
+        @Suppress("UNCHECKED_CAST")
         override fun <T> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
             val rawType: Class<*> = type.rawType
             if (BoundingBox::class.java.isAssignableFrom(rawType)) {

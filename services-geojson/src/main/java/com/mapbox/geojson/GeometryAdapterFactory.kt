@@ -2,11 +2,6 @@ package com.mapbox.geojson
 
 import androidx.annotation.Keep
 import com.google.gson.TypeAdapterFactory
-import com.mapbox.geojson.GeometryCollection
-import com.mapbox.geojson.LineString
-import com.mapbox.geojson.MultiLineString
-import com.mapbox.geojson.MultiPoint
-import com.mapbox.geojson.MultiPolygon
 import com.mapbox.geojson.internal.typeadapters.RuntimeTypeAdapterFactory
 
 /**
@@ -25,7 +20,7 @@ abstract class GeometryAdapterFactory : TypeAdapterFactory {
          * @return a new GSON TypeAdapterFactory
          * @since 4.4.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun create(): TypeAdapterFactory? {
             if (geometryTypeFactory == null) {
                 geometryTypeFactory = RuntimeTypeAdapterFactory.of(

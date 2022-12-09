@@ -2,6 +2,8 @@ package com.mapbox.geojson.utils
 
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Point.Companion.fromLngLat
+import kotlin.math.pow
+import kotlin.math.roundToLong
 
 /**
  * Polyline utils class contains method that can decode/encode a polyline, simplify a line, and
@@ -34,7 +36,7 @@ object PolylineUtils {
         val len = encodedPath.length
 
         // OSRM uses precision=6, the default Polyline spec divides by 1E5, capping at precision=5
-        val factor = Math.pow(10.0, precision.toDouble())
+        val factor = 10.0.pow(precision.toDouble())
 
         // For speed we preallocate to an upper bound on the final length, then
         // truncate the array before returning.
@@ -79,10 +81,10 @@ object PolylineUtils {
         val result = StringBuilder()
 
         // OSRM uses precision=6, the default Polyline spec divides by 1E5, capping at precision=5
-        val factor = Math.pow(10.0, precision.toDouble())
+        val factor = 10.0.pow(precision.toDouble())
         for (point in path) {
-            val lat = Math.round(point.latitude() * factor)
-            val lng = Math.round(point.longitude() * factor)
+            val lat = (point.latitude() * factor).roundToLong()
+            val lng = (point.longitude() * factor).roundToLong()
             val varLat = lat - lastLat
             val varLng = lng - lastLng
             encode(varLat, result)
@@ -114,9 +116,11 @@ object PolylineUtils {
      *
      * @since 1.2.0
      */
+    @Suppress("unused")
     fun simplify(points: List<Point>, highestQuality: Boolean): List<Point> {
         return simplify(points, SIMPLIFY_DEFAULT_TOLERANCE, highestQuality)
     }
+    
     /**
      * Reduces the number of points in a polyline while retaining its shape, giving a performance
      * boost when processing it and also reducing visual noise.
@@ -131,46 +135,18 @@ object PolylineUtils {
      *
      * @since 1.2.0
      */
-    /*
-   * Polyline simplification method. It's a direct port of simplify.js to Java.
-   * See: https://github.com/mourner/simplify-js/blob/master/simplify.js
-   */
-    /**
-     * Reduces the number of points in a polyline while retaining its shape, giving a performance
-     * boost when processing it and also reducing visual noise.
-     *
-     * @param points an array of points
-     * @return an array of simplified points
-     * @see [JavaScript implementation](http://mourner.github.io/simplify-js/)
-     *
-     * @since 1.2.0
-     */
-    /**
-     * Reduces the number of points in a polyline while retaining its shape, giving a performance
-     * boost when processing it and also reducing visual noise.
-     *
-     * @param points    an array of points
-     * @param tolerance affects the amount of simplification (in the same metric as the point
-     * coordinates)
-     * @return an array of simplified points
-     * @see [JavaScript implementation](http://mourner.github.io/simplify-js/)
-     *
-     * @since 1.2.0
-     */
     @JvmStatic
     @JvmOverloads
     fun simplify(
         points: List<Point>, tolerance: Double = SIMPLIFY_DEFAULT_TOLERANCE,
         highestQuality: Boolean = SIMPLIFY_DEFAULT_HIGHEST_QUALITY
     ): List<Point> {
-        var points = points
         if (points.size <= 2) {
             return points
         }
         val sqTolerance = tolerance * tolerance
-        points = if (highestQuality) points else simplifyRadialDist(points, sqTolerance) as List<Point>
-        points = simplifyDouglasPeucker(points, sqTolerance)
-        return points
+        val pointsSimplified = if (highestQuality) points else simplifyRadialDist(points, sqTolerance)
+        return simplifyDouglasPeucker(pointsSimplified, sqTolerance)
     }
 
     /**
@@ -239,7 +215,7 @@ object PolylineUtils {
             lastPoint = point
             i++
         }
-        if (lastPoint != null && !prevPoint.equals(lastPoint)) {
+        if (lastPoint != null && prevPoint != lastPoint) {
             newPoints.add(lastPoint)
         }
         

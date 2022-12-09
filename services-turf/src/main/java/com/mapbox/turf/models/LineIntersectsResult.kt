@@ -63,16 +63,15 @@ class LineIntersectsResult private constructor(
                 + "}")
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
         }
-        if (obj is LineIntersectsResult) {
-            val that = obj
-            return ((if (horizontalIntersection == null) that.horizontalIntersection() == null else horizontalIntersection == that.horizontalIntersection())
-                    && (if (verticalIntersection == null) that.verticalIntersection() == null else verticalIntersection == that.verticalIntersection())
-                    && onLine1 == that.onLine1()
-                    && onLine2 == that.onLine2())
+        if (other is LineIntersectsResult) {
+            return ((if (horizontalIntersection == null) other.horizontalIntersection() == null else horizontalIntersection == other.horizontalIntersection())
+                    && (if (verticalIntersection == null) other.verticalIntersection() == null else verticalIntersection == other.verticalIntersection())
+                    && onLine1 == other.onLine1()
+                    && onLine2 == other.onLine2())
         }
         return false
     }
@@ -112,7 +111,7 @@ class LineIntersectsResult private constructor(
         private var onLine1 = false
         private var onLine2 = false
 
-        internal constructor() {}
+        internal constructor()
         constructor(source: LineIntersectsResult) {
             horizontalIntersection = source.horizontalIntersection()
             verticalIntersection = source.verticalIntersection()
@@ -175,14 +174,6 @@ class LineIntersectsResult private constructor(
          * @since 3.0.0
          */
         fun build(): LineIntersectsResult {
-            var missing = ""
-            if (onLine1 == null) {
-                missing += " onLine1"
-            }
-            if (onLine2 == null) {
-                missing += " onLine2"
-            }
-            check(missing.isEmpty()) { "Missing required properties:$missing" }
             return LineIntersectsResult(
                 horizontalIntersection,
                 verticalIntersection,

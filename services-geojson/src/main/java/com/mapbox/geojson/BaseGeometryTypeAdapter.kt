@@ -6,7 +6,6 @@ import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
-import com.mapbox.geojson.exception.GeoJsonException
 import com.mapbox.geojson.gson.BoundingBoxTypeAdapter
 import java.io.IOException
 
@@ -63,8 +62,6 @@ internal abstract class BaseGeometryTypeAdapter<G, T>(
         if (obj.coordinates() == null) {
             jsonWriter.nullValue()
         } else {
-            val coordinatesAdapter = coordinatesAdapter
-                ?: throw GeoJsonException("Coordinates type adapter is null")
             coordinatesAdapter.write(jsonWriter, obj.coordinates())
         }
         jsonWriter.endObject()
@@ -104,8 +101,6 @@ internal abstract class BaseGeometryTypeAdapter<G, T>(
                     bbox = boundingBoxAdapter!!.read(jsonReader)
                 }
                 "coordinates" -> {
-                    val coordinatesAdapter = coordinatesAdapter
-                        ?: throw GeoJsonException("Coordinates type adapter is null")
                     coordinates = coordinatesAdapter.read(jsonReader)
                 }
                 else -> jsonReader.skipValue()

@@ -56,7 +56,7 @@ class Point internal constructor(type: String, bbox: BoundingBox?, coordinates: 
     init {
         this.type = type
         this.bbox = bbox
-        if (coordinates == null || coordinates.size == 0) {
+        if (coordinates.isNullOrEmpty()) {
             throw NullPointerException("Null coordinates")
         }
         this.coordinates = coordinates
@@ -174,15 +174,14 @@ class Point internal constructor(type: String, bbox: BoundingBox?, coordinates: 
                 + "}")
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
         }
-        if (obj is Point) {
-            val that = obj
-            return (type == that.type()
-                    && (if (bbox == null) that.bbox() == null else bbox == that.bbox())
-                    && coordinates == that.coordinates())
+        if (other is Point) {
+            return (type == other.type()
+                    && (if (bbox == null) other.bbox() == null else bbox == other.bbox())
+                    && coordinates == other.coordinates())
         }
         return false
     }
@@ -215,7 +214,7 @@ class Point internal constructor(type: String, bbox: BoundingBox?, coordinates: 
             return readCoordinateContainer(jsonReader) as Point
         }
 
-        public override fun createCoordinateContainer(
+        override fun createCoordinateContainer(
             type: String?,
             bbox: BoundingBox?,
             coordinates: List<Double>?
@@ -240,7 +239,7 @@ class Point internal constructor(type: String, bbox: BoundingBox?, coordinates: 
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromJson(json: String): Point {
             val gson = GsonBuilder()
             gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.create())
@@ -259,7 +258,7 @@ class Point internal constructor(type: String, bbox: BoundingBox?, coordinates: 
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLat(longitude: Double, latitude: Double): Point {
             val coordinates =
                 CoordinateShifterManager.getCoordinateShifter().shiftLonLat(longitude, latitude)
@@ -280,7 +279,7 @@ class Point internal constructor(type: String, bbox: BoundingBox?, coordinates: 
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLat(
             longitude: Double, latitude: Double,
             bbox: BoundingBox?
@@ -305,7 +304,7 @@ class Point internal constructor(type: String, bbox: BoundingBox?, coordinates: 
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLat(longitude: Double, latitude: Double, altitude: Double): Point {
             val coordinates = CoordinateShifterManager.getCoordinateShifter()
                 .shiftLonLatAlt(longitude, latitude, altitude)
@@ -328,7 +327,7 @@ class Point internal constructor(type: String, bbox: BoundingBox?, coordinates: 
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLat(
             longitude: Double, latitude: Double,
             altitude: Double, bbox: BoundingBox?
@@ -338,7 +337,7 @@ class Point internal constructor(type: String, bbox: BoundingBox?, coordinates: 
             return Point(TYPE, bbox, coordinates)
         }
 
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLat(coords: DoubleArray): Point? {
             if (coords.size == 2) {
                 return fromLngLat(coords[0], coords[1])
@@ -355,7 +354,7 @@ class Point internal constructor(type: String, bbox: BoundingBox?, coordinates: 
          * @return the TYPE adapter for this class
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun typeAdapter(gson: Gson): TypeAdapter<Point> {
             return GsonTypeAdapter(gson)
         }

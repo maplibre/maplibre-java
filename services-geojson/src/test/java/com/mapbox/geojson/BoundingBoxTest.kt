@@ -21,7 +21,7 @@ class BoundingBoxTest : TestUtils() {
         val southwest = fromLngLat(1.0, 2.0)
         val northeast = fromLngLat(3.0, 4.0)
         val boundingBox = fromPoints(southwest, northeast)
-        Assert.assertTrue(southwest.equals(boundingBox.southwest()))
+        Assert.assertTrue(southwest == boundingBox.southwest())
     }
 
     @Test
@@ -30,7 +30,7 @@ class BoundingBoxTest : TestUtils() {
         val southwest = fromLngLat(1.0, 2.0)
         val northeast = fromLngLat(3.0, 4.0)
         val boundingBox = fromPoints(southwest, northeast)
-        Assert.assertTrue(northeast.equals(boundingBox.northeast()))
+        Assert.assertTrue(northeast == boundingBox.northeast())
     }
 
     @Test
@@ -39,7 +39,7 @@ class BoundingBoxTest : TestUtils() {
         val southwest = fromLngLat(1.0, 2.0)
         val northeast = fromLngLat(3.0, 4.0)
         val boundingBox = fromPoints(southwest, northeast)
-        Assert.assertEquals(1.0, boundingBox.west(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, boundingBox.west(), DELTA)
     }
 
     @Test
@@ -48,7 +48,7 @@ class BoundingBoxTest : TestUtils() {
         val southwest = fromLngLat(1.0, 2.0)
         val northeast = fromLngLat(3.0, 4.0)
         val boundingBox = fromPoints(southwest, northeast)
-        Assert.assertEquals(2.0, boundingBox.south(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(2.0, boundingBox.south(), DELTA)
     }
 
     @Test
@@ -57,7 +57,7 @@ class BoundingBoxTest : TestUtils() {
         val southwest = fromLngLat(1.0, 2.0)
         val northeast = fromLngLat(3.0, 4.0)
         val boundingBox = fromPoints(southwest, northeast)
-        Assert.assertEquals(3.0, boundingBox.east(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(3.0, boundingBox.east(), DELTA)
     }
 
     @Test
@@ -66,6 +66,6 @@ class BoundingBoxTest : TestUtils() {
         val southwest = fromLngLat(1.0, 2.0)
         val northeast = fromLngLat(3.0, 4.0)
         val boundingBox = fromPoints(southwest, northeast)
-        Assert.assertEquals(4.0, boundingBox.north(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(4.0, boundingBox.north(), DELTA)
     }
 }

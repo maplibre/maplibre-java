@@ -9,7 +9,6 @@ import com.google.gson.stream.JsonReader
 import java.lang.NullPointerException
 import com.google.gson.GsonBuilder
 import com.mapbox.geojson.gson.GeoJsonAdapterFactory
-import java.util.Arrays
 import java.util.ArrayList
 
 /**
@@ -99,7 +98,7 @@ class MultiPolygon internal constructor(
         val coordinates = coordinates()
         val polygons: MutableList<Polygon> = ArrayList(coordinates!!.size)
         for (points in coordinates) {
-            polygons.add(Polygon.Companion.fromLngLats(points))
+            polygons.add(Polygon.fromLngLats(points))
         }
         return polygons
     }
@@ -161,15 +160,14 @@ class MultiPolygon internal constructor(
                 + "}")
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
         }
-        if (obj is MultiPolygon) {
-            val that = obj
-            return (type == that.type()
-                    && (if (bbox == null) that.bbox() == null else bbox == that.bbox())
-                    && coordinates == that.coordinates())
+        if (other is MultiPolygon) {
+            return (type == other.type()
+                    && (if (bbox == null) other.bbox() == null else bbox == other.bbox())
+                    && coordinates == other.coordinates())
         }
         return false
     }
@@ -205,12 +203,12 @@ class MultiPolygon internal constructor(
             return readCoordinateContainer(jsonReader) as MultiPolygon
         }
 
-        public override fun createCoordinateContainer(
+        override fun createCoordinateContainer(
             type: String?,
             bbox: BoundingBox?,
-            coords: List<List<List<Point>>>?
+            coordinates: List<List<List<Point>>>?
         ): CoordinateContainer<List<List<List<Point>>>?> {
-            return MultiPolygon(type ?: "MultiPolygon", bbox, coords)
+            return MultiPolygon(type ?: "MultiPolygon", bbox, coordinates)
         }
         
     }
@@ -228,7 +226,7 @@ class MultiPolygon internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromJson(json: String?): MultiPolygon {
             val gson = GsonBuilder()
             gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.create())
@@ -245,7 +243,7 @@ class MultiPolygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromPolygons(polygons: List<Polygon>): MultiPolygon {
             val coordinates: MutableList<List<List<Point>>> = ArrayList(polygons.size)
             for (polygon in polygons) {
@@ -266,7 +264,7 @@ class MultiPolygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromPolygons(
             polygons: List<Polygon>,
             bbox: BoundingBox?
@@ -288,9 +286,9 @@ class MultiPolygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromPolygon(polygon: Polygon): MultiPolygon {
-            val coordinates = Arrays.asList(polygon.coordinates())
+            val coordinates = listOf(polygon.coordinates())
             return MultiPolygon(TYPE, null, coordinates)
         }
 
@@ -305,9 +303,10 @@ class MultiPolygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @Suppress("unused")
+        @JvmStatic
         fun fromPolygon(polygon: Polygon, bbox: BoundingBox?): MultiPolygon {
-            val coordinates = Arrays.asList(polygon.coordinates())
+            val coordinates = listOf(polygon.coordinates())
             return MultiPolygon(TYPE, bbox, coordinates)
         }
 
@@ -320,7 +319,7 @@ class MultiPolygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(points: List<List<List<Point>>>): MultiPolygon {
             return MultiPolygon(TYPE, null, points)
         }
@@ -335,7 +334,7 @@ class MultiPolygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(
             points: List<List<List<Point>>>,
             bbox: BoundingBox?
@@ -343,7 +342,7 @@ class MultiPolygon internal constructor(
             return MultiPolygon(TYPE, bbox, points)
         }
 
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(coordinates: Array<Array<Array<DoubleArray>>>): MultiPolygon {
             val converted: MutableList<List<List<Point>>> = ArrayList(coordinates.size)
             for (i in coordinates.indices) {
@@ -355,7 +354,7 @@ class MultiPolygon internal constructor(
                         coordinates[i][j].size
                     )
                     for (k in coordinates[i][j].indices) {
-                        innerTwoList.add(Point.Companion.fromLngLat(coordinates[i][j][k])!!)
+                        innerTwoList.add(Point.fromLngLat(coordinates[i][j][k])!!)
                     }
                     innerOneList.add(innerTwoList)
                 }
@@ -371,7 +370,7 @@ class MultiPolygon internal constructor(
          * @return the TYPE adapter for this class
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun typeAdapter(gson: Gson): TypeAdapter<MultiPolygon> {
             return GsonTypeAdapter(gson)
         }

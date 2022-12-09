@@ -22,7 +22,8 @@ import java.util.*
 
 class TurfMiscTest : TestUtils() {
     @Rule
-    var thrown = ExpectedException.none()
+    @JvmField
+    var thrown : ExpectedException = ExpectedException.none()
     @Test
     @Throws(Exception::class)
     fun lineSlice_throwsStartStopPointException() {
@@ -278,15 +279,15 @@ class TurfMiscTest : TestUtils() {
         line.add(fromLngLat(-0.10814666748046874, 51.51928513164789))
         line.add(fromLngLat(-0.10789990425109863, 51.518624199789016))
         line.add(fromLngLat(-0.10759949684143065, 51.51778299991493))
-        val dist: Double = length(LineString.fromLngLats(line), TurfConstants.UNIT_MILES)
+        val dist: Double = length(fromLngLats(line), TurfConstants.UNIT_MILES)
         val increment = dist / 10
         for (i in 0..9) {
             val pt: Point = along(
-                LineString.fromLngLats(line), increment * i, TurfConstants.UNIT_MILES
+                fromLngLats(line), increment * i, TurfConstants.UNIT_MILES
             )
             val snappedFeature = nearestPointOnLine(pt, line)
             val snapped = snappedFeature.geometry() as Point
-            val shift = distance(pt, snapped!!, TurfConstants.UNIT_MILES)
+            val shift = distance(pt, snapped, TurfConstants.UNIT_MILES)
 
             // pt did not shift far
             Assert.assertTrue(shift < 0.000001)
@@ -300,7 +301,7 @@ class TurfMiscTest : TestUtils() {
         line.add(fromLngLat(-122.45717525482178, 37.7200330638563))
         line.add(fromLngLat(-122.45717525482178, 37.718242366859215))
         val pt: Point = along(
-            LineString.fromLngLats(line), 0.019, TurfConstants.UNIT_MILES
+            fromLngLats(line), 0.019, TurfConstants.UNIT_MILES
         )
         val snappedFeature = nearestPointOnLine(pt, line)
         val snapped = snappedFeature.geometry() as Point
@@ -363,16 +364,16 @@ class TurfMiscTest : TestUtils() {
         val lineStringLine1 = line1.geometry() as LineString?
         val start = 500.0
         val stop = 750.0
-        val start_point = along(lineStringLine1!!, start, TurfConstants.UNIT_MILES)
-        val end_point = along(lineStringLine1, stop, TurfConstants.UNIT_MILES)
+        val startPoint = along(lineStringLine1!!, start, TurfConstants.UNIT_MILES)
+        val endPoint = along(lineStringLine1, stop, TurfConstants.UNIT_MILES)
         val sliced = lineSliceAlong(line1, start, stop, TurfConstants.UNIT_MILES)
         Assert.assertEquals(
             sliced.coordinates()[0].coordinates(),
-            start_point.coordinates()
+            startPoint.coordinates()
         )
         Assert.assertEquals(
             sliced.coordinates()[sliced.coordinates().size - 1].coordinates(),
-            end_point.coordinates()
+            endPoint.coordinates()
         )
     }
 
@@ -383,16 +384,16 @@ class TurfMiscTest : TestUtils() {
         val lineStringLine1 = line1.geometry() as LineString?
         val start = 500.0
         val stop = 1500.0
-        val start_point = along(lineStringLine1!!, start, TurfConstants.UNIT_MILES)
-        val end_point = along(lineStringLine1, stop, TurfConstants.UNIT_MILES)
+        val startPoint = along(lineStringLine1!!, start, TurfConstants.UNIT_MILES)
+        val endPoint = along(lineStringLine1, stop, TurfConstants.UNIT_MILES)
         val sliced = lineSliceAlong(line1, start, stop, TurfConstants.UNIT_MILES)
         Assert.assertEquals(
             sliced.coordinates()[0].coordinates(),
-            start_point.coordinates()
+            startPoint.coordinates()
         )
         Assert.assertEquals(
             sliced.coordinates()[sliced.coordinates().size - 1].coordinates(),
-            end_point.coordinates()
+            endPoint.coordinates()
         )
     }
 
@@ -403,16 +404,16 @@ class TurfMiscTest : TestUtils() {
         val lineStringRoute1 = route1.geometry() as LineString?
         val start = 500.0
         val stop = 750.0
-        val start_point = along(lineStringRoute1!!, start, TurfConstants.UNIT_MILES)
-        val end_point = along(lineStringRoute1, stop, TurfConstants.UNIT_MILES)
+        val startPoint = along(lineStringRoute1!!, start, TurfConstants.UNIT_MILES)
+        val endPoint = along(lineStringRoute1, stop, TurfConstants.UNIT_MILES)
         val sliced = lineSliceAlong(route1, start, stop, TurfConstants.UNIT_MILES)
         Assert.assertEquals(
             sliced.coordinates()[0].coordinates(),
-            start_point.coordinates()
+            startPoint.coordinates()
         )
         Assert.assertEquals(
             sliced.coordinates()[sliced.coordinates().size - 1].coordinates(),
-            end_point.coordinates()
+            endPoint.coordinates()
         )
     }
 
@@ -423,16 +424,16 @@ class TurfMiscTest : TestUtils() {
         val lineStringRoute2 = route2.geometry() as LineString?
         val start = 25.0
         val stop = 50.0
-        val start_point = along(lineStringRoute2!!, start, TurfConstants.UNIT_MILES)
-        val end_point = along(lineStringRoute2, stop, TurfConstants.UNIT_MILES)
+        val startPoint = along(lineStringRoute2!!, start, TurfConstants.UNIT_MILES)
+        val endPoint = along(lineStringRoute2, stop, TurfConstants.UNIT_MILES)
         val sliced = lineSliceAlong(route2, start, stop, TurfConstants.UNIT_MILES)
         Assert.assertEquals(
             sliced.coordinates()[0].coordinates(),
-            start_point.coordinates()
+            startPoint.coordinates()
         )
         Assert.assertEquals(
             sliced.coordinates()[sliced.coordinates().size - 1].coordinates(),
-            end_point.coordinates()
+            endPoint.coordinates()
         )
     }
 
@@ -454,12 +455,12 @@ class TurfMiscTest : TestUtils() {
         val lineStringLine1 = line1.geometry() as LineString?
         val start = 500.0
         val stop = 800000.0
-        val start_point = along(lineStringLine1!!, start, TurfConstants.UNIT_MILES)
+        val startPoint = along(lineStringLine1!!, start, TurfConstants.UNIT_MILES)
         val lineCoordinates = lineStringLine1.coordinates()
         val sliced = lineSliceAlong(line1, start, stop, TurfConstants.UNIT_MILES)
         Assert.assertEquals(
             sliced.coordinates()[0].coordinates(),
-            start_point.coordinates()
+            startPoint.coordinates()
         )
         Assert.assertEquals(
             sliced.coordinates()[sliced.coordinates().size - 1].coordinates(),
@@ -473,23 +474,23 @@ class TurfMiscTest : TestUtils() {
 
         // Distance between points is about 186 miles
         val lineStringLine1 = fromLngLats(
-            Arrays.asList(
+            listOf(
                 fromLngLat(113.99414062499999, 22.350075806124867),
                 fromLngLat(116.76269531249999, 23.241346102386135)
             )
         )
         val start = 50.0
         val stop = 100.0
-        val start_point = along(lineStringLine1, start, TurfConstants.UNIT_MILES)
-        val end_point = along(lineStringLine1, stop, TurfConstants.UNIT_MILES)
+        val startPoint = along(lineStringLine1, start, TurfConstants.UNIT_MILES)
+        val endPoint = along(lineStringLine1, stop, TurfConstants.UNIT_MILES)
         val sliced = lineSliceAlong(lineStringLine1, start, stop, TurfConstants.UNIT_MILES)
         Assert.assertEquals(
             sliced.coordinates()[0].coordinates(),
-            start_point.coordinates()
+            startPoint.coordinates()
         )
         Assert.assertEquals(
             sliced.coordinates()[sliced.coordinates().size - 1].coordinates(),
-            end_point.coordinates()
+            endPoint.coordinates()
         )
     }
 

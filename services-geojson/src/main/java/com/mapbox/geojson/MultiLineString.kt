@@ -116,7 +116,7 @@ class MultiLineString internal constructor(
         val coordinates = coordinates()
         val lineStrings: MutableList<LineString> = ArrayList(coordinates.size)
         for (points in coordinates) {
-            lineStrings.add(LineString.Companion.fromLngLats(points))
+            lineStrings.add(LineString.fromLngLats(points))
         }
         return lineStrings
     }
@@ -142,15 +142,14 @@ class MultiLineString internal constructor(
                 + "}")
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
         }
-        if (obj is MultiLineString) {
-            val that = obj
-            return (type == that.type()
-                    && (if (bbox == null) that.bbox() == null else bbox == that.bbox())
-                    && coordinates == that.coordinates())
+        if (other is MultiLineString) {
+            return (type == other.type()
+                    && (if (bbox == null) other.bbox() == null else bbox == other.bbox())
+                    && coordinates == other.coordinates())
         }
         return false
     }
@@ -186,7 +185,7 @@ class MultiLineString internal constructor(
             return readCoordinateContainer(jsonReader) as MultiLineString
         }
 
-        public override fun createCoordinateContainer(
+        override fun createCoordinateContainer(
             type: String?,
             bbox: BoundingBox?,
             coordinates: List<List<Point>>?
@@ -208,7 +207,7 @@ class MultiLineString internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromJson(json: String): MultiLineString {
             val gson = GsonBuilder()
             gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.create())
@@ -225,7 +224,7 @@ class MultiLineString internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLineStrings(lineStrings: List<LineString>): MultiLineString {
             val coordinates: MutableList<List<Point>> = ArrayList(lineStrings.size)
             for (lineString in lineStrings) {
@@ -246,7 +245,7 @@ class MultiLineString internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLineStrings(
             lineStrings: List<LineString>,
             bbox: BoundingBox?
@@ -267,9 +266,9 @@ class MultiLineString internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLineString(lineString: LineString): MultiLineString {
-            val coordinates = Arrays.asList(lineString.coordinates())
+            val coordinates = listOf(lineString.coordinates())
             return MultiLineString(TYPE, null, coordinates)
         }
 
@@ -283,12 +282,13 @@ class MultiLineString internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @Suppress("unused")
+        @JvmStatic
         fun fromLineString(
             lineString: LineString,
             bbox: BoundingBox?
         ): MultiLineString {
-            val coordinates = Arrays.asList(lineString.coordinates())
+            val coordinates = listOf(lineString.coordinates())
             return MultiLineString(TYPE, bbox, coordinates)
         }
 
@@ -303,7 +303,7 @@ class MultiLineString internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(points: List<List<Point>>): MultiLineString {
             return MultiLineString(TYPE, null, points)
         }
@@ -320,7 +320,7 @@ class MultiLineString internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(
             points: List<List<Point>>,
             bbox: BoundingBox?
@@ -328,7 +328,7 @@ class MultiLineString internal constructor(
             return MultiLineString(TYPE, bbox, points)
         }
 
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(coordinates: Array<Array<DoubleArray>>): MultiLineString {
             val multiLine: MutableList<List<Point>> = ArrayList(coordinates.size)
             for (i in coordinates.indices) {
@@ -336,7 +336,7 @@ class MultiLineString internal constructor(
                     coordinates[i].size
                 )
                 for (j in coordinates[i].indices) {
-                    lineString.add(Point.Companion.fromLngLat(coordinates[i][j])!!)
+                    lineString.add(Point.fromLngLat(coordinates[i][j])!!)
                 }
                 multiLine.add(lineString)
             }
@@ -350,7 +350,7 @@ class MultiLineString internal constructor(
          * @return the TYPE adapter for this class
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun typeAdapter(gson: Gson): TypeAdapter<MultiLineString> {
             return GsonTypeAdapter(gson)
         }

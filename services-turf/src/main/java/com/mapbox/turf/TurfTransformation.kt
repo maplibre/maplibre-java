@@ -12,6 +12,7 @@ import com.mapbox.turf.TurfConstants.TurfUnitCriteria
  *
  * @since 3.0.0
  */
+@Suppress("unused")
 object TurfTransformation {
     private const val DEFAULT_STEPS = 64
 
@@ -26,13 +27,14 @@ object TurfTransformation {
      * @return a [Polygon] which represents the newly created circle
      * @since 3.0.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun circle(
         center: Point, radius: Double,
         @TurfUnitCriteria units: String?
     ): Polygon {
         return circle(center, radius, DEFAULT_STEPS, units)
     }
+    
     /**
      * Takes a [Point] and calculates the circle polygon given a radius in the
      * provided [TurfConstants.TurfUnitCriteria]; and steps for precision.
@@ -44,18 +46,8 @@ object TurfTransformation {
      * @return a [Polygon] which represents the newly created circle
      * @since 3.0.0
      */
-    /**
-     * Takes a [Point] and calculates the circle polygon given a radius in degrees, radians,
-     * miles, or kilometers; and steps for precision. This uses the [.DEFAULT_STEPS] and
-     * [TurfConstants.UNIT_DEFAULT] values.
-     *
-     * @param center a [Point] which the circle will center around
-     * @param radius the radius of the circle
-     * @return a [Polygon] which represents the newly created circle
-     * @since 3.0.0
-     */
     @JvmOverloads
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun circle(
         center: Point, radius: Double, @IntRange(from = 1) steps: Int = 64,
         @TurfUnitCriteria units: String? = TurfConstants.UNIT_DEFAULT
@@ -63,7 +55,7 @@ object TurfTransformation {
         val coordinates: MutableList<Point> = ArrayList()
         for (i in 0 until steps) {
             coordinates.add(
-                TurfMeasurement.Companion.destination(
+                TurfMeasurement.destination(
                     center,
                     radius,
                     i * 360.0 / steps,

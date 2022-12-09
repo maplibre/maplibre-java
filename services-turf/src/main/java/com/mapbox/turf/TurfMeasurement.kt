@@ -12,6 +12,7 @@ import com.mapbox.geojson.GeometryCollection
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.MultiLineString
 import com.mapbox.geojson.MultiPoint
+import com.mapbox.geojson.MultiPoint.Companion.fromLngLats
 import com.mapbox.geojson.MultiPolygon
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Point.Companion.fromLngLat
@@ -19,6 +20,13 @@ import com.mapbox.geojson.Polygon
 import com.mapbox.geojson.Polygon.Companion.fromLngLats
 import com.mapbox.turf.TurfConstants.TurfUnitCriteria
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.asin
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 /**
  * Class contains an assortment of methods used to calculate measurements such as bearing,
@@ -37,7 +45,7 @@ class TurfMeasurement private constructor() {
         /**
          * Earth's radius in meters.
          */
-        var EARTH_RADIUS = 6378137.0
+        private var EARTH_RADIUS = 6378137.0
 
         /**
          * Takes two [Point]s and finds the geographic bearing between them.
@@ -55,10 +63,10 @@ class TurfMeasurement private constructor() {
             val lon2 = TurfConversion.degreesToRadians(point2.longitude())
             val lat1 = TurfConversion.degreesToRadians(point1.latitude())
             val lat2 = TurfConversion.degreesToRadians(point2.latitude())
-            val value1 = Math.sin(lon2 - lon1) * Math.cos(lat2)
-            val value2 = Math.cos(lat1) * Math.sin(lat2) - (Math.sin(lat1)
-                    * Math.cos(lat2) * Math.cos(lon2 - lon1))
-            return TurfConversion.radiansToDegrees(Math.atan2(value1, value2))
+            val value1 = sin(lon2 - lon1) * cos(lat2)
+            val value2 = cos(lat1) * sin(lat2) - (sin(lat1)
+                    * cos(lat2) * cos(lon2 - lon1))
+            return TurfConversion.radiansToDegrees(atan2(value1, value2))
         }
 
         /**
@@ -85,20 +93,21 @@ class TurfMeasurement private constructor() {
             val latitude1 = TurfConversion.degreesToRadians(point.latitude())
             val bearingRad = TurfConversion.degreesToRadians(bearing)
             val radians = TurfConversion.lengthToRadians(distance, units)
-            val latitude2 = Math.asin(
-                Math.sin(latitude1) * Math.cos(radians)
-                        + Math.cos(latitude1) * Math.sin(radians) * Math.cos(bearingRad)
+            val latitude2 = asin(
+                sin(latitude1) * cos(radians)
+                        + cos(latitude1) * sin(radians) * cos(bearingRad)
             )
-            val longitude2 = longitude1 + Math.atan2(
-                Math.sin(bearingRad)
-                        * Math.sin(radians) * Math.cos(latitude1),
-                Math.cos(radians) - Math.sin(latitude1) * Math.sin(latitude2)
+            val longitude2 = longitude1 + atan2(
+                sin(bearingRad)
+                        * sin(radians) * cos(latitude1),
+                cos(radians) - sin(latitude1) * sin(latitude2)
             )
             return fromLngLat(
                 TurfConversion.radiansToDegrees(longitude2),
                 TurfConversion.radiansToDegrees(latitude2)
             )
         }
+        
         /**
          * Calculates the distance between two points in degress, radians, miles, or kilometers. This
          * uses the Haversine formula to account for global curvature.
@@ -106,17 +115,6 @@ class TurfMeasurement private constructor() {
          * @param point1 first point used for calculating the bearing
          * @param point2 second point used for calculating the bearing
          * @param units  one of the units found inside [TurfConstants.TurfUnitCriteria]
-         * @return distance between the two points in kilometers
-         * @see [Turf distance documentation](http://turfjs.org/docs/.distance)
-         *
-         * @since 1.2.0
-         */
-        /**
-         * Calculates the distance between two points in kilometers. This uses the Haversine formula to
-         * account for global curvature.
-         *
-         * @param point1 first point used for calculating the bearing
-         * @param point2 second point used for calculating the bearing
          * @return distance between the two points in kilometers
          * @see [Turf distance documentation](http://turfjs.org/docs/.distance)
          *
@@ -132,10 +130,10 @@ class TurfMeasurement private constructor() {
             val difLon = TurfConversion.degreesToRadians(point2.longitude() - point1.longitude())
             val lat1 = TurfConversion.degreesToRadians(point1.latitude())
             val lat2 = TurfConversion.degreesToRadians(point2.latitude())
-            val value = (Math.pow(Math.sin(difLat / 2), 2.0)
-                    + Math.pow(Math.sin(difLon / 2), 2.0) * Math.cos(lat1) * Math.cos(lat2))
+            val value = (sin(difLat / 2).pow(2.0)
+                    + sin(difLon / 2).pow(2.0) * cos(lat1) * cos(lat2))
             return TurfConversion.radiansToLength(
-                2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value)), units
+                2 * atan2(sqrt(value), sqrt(1 - value)), units
             )
         }
 
@@ -149,7 +147,7 @@ class TurfMeasurement private constructor() {
          *
          * @since 1.2.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun length(
             lineString: LineString,
             @TurfUnitCriteria units: String
@@ -168,7 +166,7 @@ class TurfMeasurement private constructor() {
          *
          * @since 1.2.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun length(
             multiLineString: MultiLineString,
             @TurfUnitCriteria units: String
@@ -191,7 +189,7 @@ class TurfMeasurement private constructor() {
          *
          * @since 1.2.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun length(
             polygon: Polygon,
             @TurfUnitCriteria units: String
@@ -214,7 +212,8 @@ class TurfMeasurement private constructor() {
          *
          * @since 1.2.0
          */
-        @kotlin.jvm.JvmStatic
+        @Suppress("unused")
+        @JvmStatic
         fun length(
             multiPolygon: MultiPolygon,
             @TurfUnitCriteria units: String
@@ -239,7 +238,7 @@ class TurfMeasurement private constructor() {
          *
          * @since 5.2.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun length(coords: List<Point>, units: String): Double {
             var travelled = 0.0
             var prevCoords = coords[0]
@@ -280,7 +279,7 @@ class TurfMeasurement private constructor() {
          * the origin of that line to the end of the distance
          * @since 1.3.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun along(
             line: LineString, @FloatRange(from = 0.0) distance: Double,
             @TurfUnitCriteria units: String
@@ -298,7 +297,7 @@ class TurfMeasurement private constructor() {
          * the origin of that line to the end of the distance
          * @since 5.2.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun along(
             coords: List<Point>, @FloatRange(from = 0.0) distance: Double,
             @TurfUnitCriteria units: String
@@ -329,7 +328,7 @@ class TurfMeasurement private constructor() {
          * @return A double array defining the bounding box in this order `[minX, minY, maxX, maxY]`
          * @since 2.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun bbox(point: Point): DoubleArray {
             val resultCoords = TurfMeta.coordAll(point)
             return bboxCalculator(resultCoords)
@@ -342,7 +341,7 @@ class TurfMeasurement private constructor() {
          * @return A double array defining the bounding box in this order `[minX, minY, maxX, maxY]`
          * @since 2.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun bbox(lineString: LineString): DoubleArray {
             val resultCoords = TurfMeta.coordAll(lineString)
             return bboxCalculator(resultCoords)
@@ -355,7 +354,7 @@ class TurfMeasurement private constructor() {
          * @return a double array defining the bounding box in this order `[minX, minY, maxX, maxY]`
          * @since 2.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun bbox(multiPoint: MultiPoint): DoubleArray {
             val resultCoords = TurfMeta.coordAll(multiPoint)
             return bboxCalculator(resultCoords)
@@ -368,7 +367,7 @@ class TurfMeasurement private constructor() {
          * @return a double array defining the bounding box in this order `[minX, minY, maxX, maxY]`
          * @since 2.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun bbox(polygon: Polygon): DoubleArray {
             val resultCoords = TurfMeta.coordAll(polygon, false)
             return bboxCalculator(resultCoords)
@@ -405,7 +404,8 @@ class TurfMeasurement private constructor() {
          * @return a double array defining the bounding box in this order `[minX, minY, maxX, maxY]`
          * @since 4.8.0
          */
-        @kotlin.jvm.JvmStatic
+        @Suppress("USELESS_CAST")
+        @JvmStatic
         fun bbox(geoJson: GeoJson): DoubleArray {
             val boundingBox = geoJson.bbox()
             if (boundingBox != null) {
@@ -416,14 +416,20 @@ class TurfMeasurement private constructor() {
                     boundingBox.north()
                 )
             }
-            return if (geoJson is Geometry) {
-                bbox(geoJson)
-            } else if (geoJson is FeatureCollection) {
-                bbox(geoJson)
-            } else if (geoJson is Feature) {
-                bbox(geoJson)
-            } else {
-                throw UnsupportedOperationException("bbox type not supported for GeoJson instance")
+
+            return when (geoJson) {
+                is Geometry -> {
+                    bbox((geoJson as Geometry))
+                }
+                is FeatureCollection -> {
+                    bbox((geoJson as FeatureCollection))
+                }
+                is Feature -> {
+                    bbox((geoJson as Feature))
+                }
+                else -> {
+                    throw UnsupportedOperationException("bbox type not supported for GeoJson instance")
+                }
             }
         }
 
@@ -434,7 +440,7 @@ class TurfMeasurement private constructor() {
          * @return a double array defining the bounding box in this order `[minX, minY, maxX, maxY]`
          * @since 4.8.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun bbox(featureCollection: FeatureCollection): DoubleArray {
             return bboxCalculator(TurfMeta.coordAll(featureCollection, false))
         }
@@ -446,7 +452,7 @@ class TurfMeasurement private constructor() {
          * @return a double array defining the bounding box in this order `[minX, minY, maxX, maxY]`
          * @since 4.8.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun bbox(feature: Feature): DoubleArray {
             return bboxCalculator(TurfMeta.coordAll(feature, false))
         }
@@ -458,23 +464,24 @@ class TurfMeasurement private constructor() {
          * @return a double array defining the bounding box in this order `[minX, minY, maxX, maxY]`
          * @since 2.0.0
          */
+        @Suppress("USELESS_CAST")
         @JvmStatic
         fun bbox(geometry: Geometry): DoubleArray {
             return if (geometry is Point) {
-                bbox(geometry)
+                bbox((geometry as Point))
             } else if (geometry is MultiPoint) {
-                bbox(geometry)
+                bbox((geometry as MultiPoint))
             } else if (geometry is LineString) {
-                bbox(geometry)
+                bbox((geometry as LineString))
             } else if (geometry is MultiLineString) {
-                bbox(geometry)
+                bbox((geometry as MultiLineString))
             } else if (geometry is Polygon) {
-                bbox(geometry)
+                bbox((geometry as Polygon))
             } else if (geometry is MultiPolygon) {
-                bbox(geometry)
+                bbox((geometry as MultiPolygon))
             } else if (geometry is GeometryCollection) {
                 val points: MutableList<Point> = ArrayList()
-                for (geo in geometry.geometries()) {
+                for (geo in (geometry as GeometryCollection).geometries()) {
                     // recursive
                     val bbox = bbox(geo)
                     points.add(fromLngLat(bbox[0], bbox[1]))
@@ -482,7 +489,7 @@ class TurfMeasurement private constructor() {
                     points.add(fromLngLat(bbox[2], bbox[3]))
                     points.add(fromLngLat(bbox[0], bbox[3]))
                 }
-                bbox(MultiPoint.fromLngLats(points))
+                bbox(fromLngLats(points))
             } else {
                 throw RuntimeException("Unknown geometry class: " + geometry.javaClass)
             }
@@ -522,18 +529,8 @@ class TurfMeasurement private constructor() {
          *
          * @since 4.9.0
          */
-        /**
-         * Takes a [BoundingBox] and uses its coordinates to create a [Polygon]
-         * geometry.
-         *
-         * @param boundingBox a [BoundingBox] object to calculate with
-         * @return a [Feature] object
-         * @see [Turf BoundingBox Polygon documentation](http://turfjs.org/docs/.bboxPolygon)
-         *
-         * @since 4.9.0
-         */
         @JvmOverloads
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun bboxPolygon(
             boundingBox: BoundingBox,
             properties: JsonObject? = null,
@@ -542,7 +539,7 @@ class TurfMeasurement private constructor() {
             return Feature.fromGeometry(
                 fromLngLats(
                     listOf(
-                        Arrays.asList(
+                        listOf(
                             fromLngLat(boundingBox.west(), boundingBox.south()),
                             fromLngLat(boundingBox.east(), boundingBox.south()),
                             fromLngLat(boundingBox.east(), boundingBox.north()),
@@ -553,6 +550,7 @@ class TurfMeasurement private constructor() {
                 ), properties, id
             )
         }
+        
         /**
          * Takes a bbox and uses its coordinates to create a [Polygon] geometry.
          *
@@ -564,17 +562,8 @@ class TurfMeasurement private constructor() {
          *
          * @since 4.9.0
          */
-        /**
-         * Takes a bbox and uses its coordinates to create a [Polygon] geometry.
-         *
-         * @param bbox a double[] object to calculate with
-         * @return a [Feature] object
-         * @see [Turf BoundingBox Polygon documentation](http://turfjs.org/docs/.bboxPolygon)
-         *
-         * @since 4.9.0
-         */
         @JvmOverloads
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun bboxPolygon(
             bbox: DoubleArray,
             properties: JsonObject? = null,
@@ -583,7 +572,7 @@ class TurfMeasurement private constructor() {
             return Feature.fromGeometry(
                 fromLngLats(
                     listOf(
-                        Arrays.asList(
+                        listOf(
                             fromLngLat(bbox[0], bbox[1]),
                             fromLngLat(bbox[2], bbox[1]),
                             fromLngLat(bbox[2], bbox[3]),
@@ -651,7 +640,7 @@ class TurfMeasurement private constructor() {
          * @return area in square meters
          * @since 4.10.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun area(feature: Feature): Double {
             return if (feature.geometry() != null) area(feature.geometry()!!) else 0.0
         }
@@ -663,7 +652,7 @@ class TurfMeasurement private constructor() {
          * @return area in square meters
          * @since 4.10.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun area(featureCollection: FeatureCollection): Double {
             val features = featureCollection.features()
             var total = 0.0
@@ -682,7 +671,7 @@ class TurfMeasurement private constructor() {
          * @return area in square meters
          * @since 4.10.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun area(geometry: Geometry): Double {
             return calculateArea(geometry)
         }
@@ -709,10 +698,10 @@ class TurfMeasurement private constructor() {
 
         private fun polygonArea(coordinates: List<List<Point>>): Double {
             var total = 0.0
-            if (coordinates.size > 0) {
-                total += Math.abs(ringArea(coordinates[0]))
+            if (coordinates.isNotEmpty()) {
+                total += abs(ringArea(coordinates[0]))
                 for (i in 1 until coordinates.size) {
-                    total -= Math.abs(ringArea(coordinates[i]))
+                    total -= abs(ringArea(coordinates[i]))
                 }
             }
             return total
@@ -761,7 +750,7 @@ class TurfMeasurement private constructor() {
                     p1 = coordinates[lowerIndex]
                     p2 = coordinates[middleIndex]
                     p3 = coordinates[upperIndex]
-                    total += (rad(p3.longitude()) - rad(p1.longitude())) * Math.sin(rad(p2.latitude()))
+                    total += (rad(p3.longitude()) - rad(p1.longitude())) * sin(rad(p2.latitude()))
                 }
                 total = total * EARTH_RADIUS * EARTH_RADIUS / 2
             }
@@ -782,7 +771,7 @@ class TurfMeasurement private constructor() {
          * @return a [Feature] with a [Point] geometry type.
          * @since 5.3.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun center(
             feature: Feature?,
             properties: JsonObject?,
@@ -798,10 +787,12 @@ class TurfMeasurement private constructor() {
          * @return a [Feature] with a [Point] geometry type.
          * @since 5.3.0
          */
-        @kotlin.jvm.JvmStatic
+        @Suppress("unused")
+        @JvmStatic
         fun center(feature: Feature?): Feature {
             return center(FeatureCollection.fromFeature(feature!!), null, null)
         }
+        
         /**
          * Takes [FeatureCollection] and returns the absolute center
          * of the [Feature]s in the [FeatureCollection].
@@ -810,14 +801,6 @@ class TurfMeasurement private constructor() {
          * @param properties a optional [JsonObject] containing the properties that should be
          * placed in the returned [Feature].
          * @param id  an optional common identifier that should be placed in the returned [Feature].
-         * @return a [Feature] with a [Point] geometry type.
-         * @since 5.3.0
-         */
-        /**
-         * Takes [FeatureCollection] and returns the absolute center
-         * of the [Feature]s in the [FeatureCollection].
-         *
-         * @param featureCollection the single [FeatureCollection] to find the center of.
          * @return a [Feature] with a [Point] geometry type.
          * @since 5.3.0
          */

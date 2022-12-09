@@ -23,6 +23,7 @@ import com.mapbox.turf.TurfConstants.TurfUnitCriteria
  *
  * @since 1.2.0
  */
+@Suppress("unused")
 object TurfConversion {
     private val FACTORS: MutableMap<String?, Double> = HashMap()
 
@@ -81,6 +82,7 @@ object TurfConversion {
         val degrees = radians % (2 * Math.PI)
         return degrees * 180 / Math.PI
     }
+    
     /**
      * Convert a distance measurement (assuming a spherical Earth) from radians to a more friendly
      * unit.
@@ -90,22 +92,15 @@ object TurfConversion {
      * @return converted radian to distance value
      * @since 1.2.0
      */
-    /**
-     * Convert a distance measurement (assuming a spherical Earth) from radians to a more friendly
-     * unit. The units used here equals the default.
-     *
-     * @param radians a double using unit radian
-     * @return converted radian to distance value
-     * @since 1.2.0
-     */
     @JvmStatic
     @JvmOverloads
     fun radiansToLength(
         radians: Double,
         @TurfUnitCriteria units: String = TurfConstants.UNIT_DEFAULT
     ): Double {
-        return radians * FACTORS!![units]!!
+        return radians * FACTORS[units]!!
     }
+    
     /**
      * Convert a distance measurement (assuming a spherical Earth) from a real-world unit into
      * radians.
@@ -115,23 +110,15 @@ object TurfConversion {
      * @return converted distance to radians value
      * @since 1.2.0
      */
-    /**
-     * Convert a distance measurement (assuming a spherical Earth) from a real-world unit into
-     * radians.
-     *
-     * @param distance double representing a distance value assuming the distance units is in
-     * kilometers
-     * @return converted distance to radians value
-     * @since 1.2.0
-     */
     @JvmStatic
     @JvmOverloads
     fun lengthToRadians(
         distance: Double,
         @TurfUnitCriteria units: String = TurfConstants.UNIT_DEFAULT
     ): Double {
-        return distance / FACTORS!![units]!!
+        return distance / FACTORS[units]!!
     }
+    
     /**
      * Converts a distance to a different unit specified.
      *
@@ -142,16 +129,6 @@ object TurfConversion {
      * @return the converted distance
      * @since 2.2.0
      */
-    /**
-     * Converts a distance to the default units. Use
-     * [TurfConversion.convertLength] to specify a unit to convert to.
-     *
-     * @param distance     double representing a distance value
-     * @param originalUnit of the distance, must be one of the units defined in
-     * [TurfUnitCriteria]
-     * @return converted distance in the default unit
-     * @since 2.2.0
-     */
     @JvmStatic
     @JvmOverloads
     fun convertLength(
@@ -159,11 +136,11 @@ object TurfConversion {
         @TurfUnitCriteria originalUnit: String,
         @TurfUnitCriteria finalUnit: String? = TurfConstants.UNIT_DEFAULT
     ): Double {
-        var finalUnit = finalUnit
-        if (finalUnit == null) {
-            finalUnit = TurfConstants.UNIT_DEFAULT
+        var finalUnitVar = finalUnit
+        if (finalUnitVar == null) {
+            finalUnitVar = TurfConstants.UNIT_DEFAULT
         }
-        return radiansToLength(lengthToRadians(distance, originalUnit), finalUnit)
+        return radiansToLength(lengthToRadians(distance, originalUnit), finalUnitVar)
     }
 
     /**
@@ -197,20 +174,13 @@ object TurfConversion {
         }
         return fromFeatures(finalFeatureList)
     }
+    
     /**
      * Takes a [Feature] that contains [Polygon] and a properties [JsonObject] and
      * covert it to a [Feature] that contains [LineString] or [MultiLineString].
      *
      * @param feature a [Feature] object that contains [Polygon]
      * @param properties a [JsonObject] that represents a feature's properties
-     * @return  a [Feature] object that contains [LineString] or [MultiLineString]
-     * @since 4.9.0
-     */
-    /**
-     * Takes a [Feature] that contains [Polygon] and
-     * covert it to a [Feature] that contains [LineString] or [MultiLineString].
-     *
-     * @param feature a [Feature] object that contains [Polygon]
      * @return  a [Feature] object that contains [LineString] or [MultiLineString]
      * @since 4.9.0
      */
@@ -226,6 +196,7 @@ object TurfConversion {
         }
         throw TurfException("Feature's geometry must be Polygon")
     }
+    
     /**
      * Takes a [Polygon] and a properties [JsonObject] and
      * covert it to a [Feature] that contains [LineString] or [MultiLineString].
@@ -235,18 +206,11 @@ object TurfConversion {
      * @return  a [Feature] object that contains [LineString] or [MultiLineString]
      * @since 4.9.0
      */
-    /**
-     * Takes a [Polygon] and
-     * covert it to a [Feature] that contains [LineString] or [MultiLineString].
-     *
-     * @param polygon a [Polygon] object
-     * @return  a [Feature] object that contains [LineString] or [MultiLineString]
-     * @since 4.9.0
-     */
     @JvmOverloads
     fun polygonToLine(polygon: Polygon, properties: JsonObject? = null): Feature? {
         return coordsToLine(polygon.coordinates(), properties)
     }
+    
     /**
      * Takes a [MultiPolygon] and a properties [JsonObject] and
      * covert it to a [FeatureCollection] that contains list
@@ -254,16 +218,6 @@ object TurfConversion {
      *
      * @param multiPolygon a [MultiPolygon] object
      * @param properties a [JsonObject] that represents a feature's properties
-     * @return  a [FeatureCollection] object that contains
-     * list of [Feature] of [LineString] or [MultiLineString]
-     * @since 4.9.0
-     */
-    /**
-     * Takes a [MultiPolygon] and
-     * covert it to a [FeatureCollection] that contains list
-     * of [Feature] of [LineString] or [MultiLineString].
-     *
-     * @param multiPolygon a [MultiPolygon] object
      * @return  a [FeatureCollection] object that contains
      * list of [Feature] of [LineString] or [MultiLineString]
      * @since 4.9.0
@@ -280,6 +234,7 @@ object TurfConversion {
         }
         return fromFeatures(finalFeatureList)
     }
+    
     /**
      * Takes a [Feature] that contains [MultiPolygon] and a
      * properties [JsonObject] and
@@ -290,16 +245,6 @@ object TurfConversion {
      * @param properties a [JsonObject] that represents a feature's properties
      * @return  a [FeatureCollection] object that contains
      * list of [Feature] of [LineString] or [MultiLineString]
-     * @since 4.9.0
-     */
-    /**
-     * Takes a [Feature] that contains [MultiPolygon] and
-     * covert it to a [FeatureCollection] that contains list of [Feature]
-     * of [LineString] or [MultiLineString].
-     *
-     * @param feature a [Feature] object that contains [Polygon]
-     * @return  a [FeatureCollection] object that contains list of [Feature]
-     * of [LineString] or [MultiLineString]
      * @since 4.9.0
      */
     @JvmOverloads
@@ -361,7 +306,7 @@ object TurfConversion {
     fun combine(originalFeatureCollection: FeatureCollection): FeatureCollection {
         if (originalFeatureCollection.features() == null) {
             throw TurfException("Your FeatureCollection is null.")
-        } else if (originalFeatureCollection.features()!!.size == 0) {
+        } else if (originalFeatureCollection.features()!!.isEmpty()) {
             throw TurfException("Your FeatureCollection doesn't have any Feature objects in it.")
         }
         val pointList: MutableList<Point> = ArrayList(0)
@@ -390,13 +335,13 @@ object TurfConversion {
             }
         }
         val finalFeatureList: MutableList<Feature> = ArrayList(0)
-        if (!pointList.isEmpty()) {
+        if (pointList.isNotEmpty()) {
             finalFeatureList.add(Feature.fromGeometry(MultiPoint.fromLngLats(pointList)))
         }
-        if (!lineStringList.isEmpty()) {
+        if (lineStringList.isNotEmpty()) {
             finalFeatureList.add(Feature.fromGeometry(fromLineStrings(lineStringList)))
         }
-        if (!polygonList.isEmpty()) {
+        if (polygonList.isNotEmpty()) {
             finalFeatureList.add(Feature.fromGeometry(fromPolygons(polygonList)))
         }
         return if (finalFeatureList.isEmpty()) originalFeatureCollection else fromFeatures(

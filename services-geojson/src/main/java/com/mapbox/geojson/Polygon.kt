@@ -79,7 +79,7 @@ class Polygon internal constructor(
      * @since 3.0.0
      */
     fun outer(): LineString {
-        return LineString.Companion.fromLngLats(coordinates()[0])
+        return LineString.fromLngLats(coordinates()[0])
     }
 
     /**
@@ -97,7 +97,7 @@ class Polygon internal constructor(
         }
         val inner: MutableList<LineString> = ArrayList(coordinates.size - 1)
         for (points in coordinates.subList(1, coordinates.size)) {
-            inner.add(LineString.Companion.fromLngLats(points))
+            inner.add(LineString.fromLngLats(points))
         }
         return inner
     }
@@ -161,15 +161,14 @@ class Polygon internal constructor(
                 + "}")
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
         }
-        if (obj is Polygon) {
-            val that = obj
-            return (type == that.type()
-                    && (if (bbox == null) that.bbox() == null else bbox == that.bbox())
-                    && coordinates == that.coordinates())
+        if (other is Polygon) {
+            return (type == other.type()
+                    && (if (bbox == null) other.bbox() == null else bbox == other.bbox())
+                    && coordinates == other.coordinates())
         }
         return false
     }
@@ -205,7 +204,7 @@ class Polygon internal constructor(
             return readCoordinateContainer(jsonReader) as Polygon
         }
 
-        public override fun createCoordinateContainer(
+        override fun createCoordinateContainer(
             type: String?,
             bbox: BoundingBox?,
             coordinates: List<List<Point>>?
@@ -230,7 +229,7 @@ class Polygon internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromJson(json: String): Polygon {
             val gson = GsonBuilder()
             gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.create())
@@ -247,7 +246,7 @@ class Polygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(coordinates: List<List<Point>>): Polygon {
             return Polygon(TYPE, null, coordinates)
         }
@@ -263,7 +262,7 @@ class Polygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(
             coordinates: List<List<Point>>,
             bbox: BoundingBox?
@@ -280,13 +279,13 @@ class Polygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(coordinates: Array<Array<DoubleArray>>): Polygon {
             val converted: MutableList<List<Point>> = ArrayList(coordinates.size)
             for (coordinate in coordinates) {
                 val innerList: MutableList<Point> = ArrayList(coordinate.size)
                 for (pointCoordinate in coordinate) {
-                    innerList.add(Point.Companion.fromLngLat(pointCoordinate)!!)
+                    innerList.add(Point.fromLngLat(pointCoordinate)!!)
                 }
                 converted.add(innerList)
             }
@@ -307,15 +306,12 @@ class Polygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromOuterInner(outer: LineString, vararg inner: LineString?): Polygon {
             ensureIsLinearRing(outer)
             val coordinates: MutableList<List<Point>> = ArrayList()
             coordinates.add(outer.coordinates())
             // If inner rings are set to null, return early.
-            if (inner == null) {
-                return Polygon(TYPE, null, coordinates)
-            }
             for (lineString in inner) {
                 ensureIsLinearRing(lineString)
                 coordinates.add(lineString!!.coordinates())
@@ -338,7 +334,7 @@ class Polygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromOuterInner(
             outer: LineString, bbox: BoundingBox?,
             vararg inner: LineString?
@@ -347,9 +343,6 @@ class Polygon internal constructor(
             val coordinates: MutableList<List<Point>> = ArrayList()
             coordinates.add(outer.coordinates())
             // If inner rings are set to null, return early.
-            if (inner == null) {
-                return Polygon(TYPE, bbox, coordinates)
-            }
             for (lineString in inner) {
                 ensureIsLinearRing(lineString)
                 coordinates.add(lineString!!.coordinates())
@@ -373,7 +366,7 @@ class Polygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromOuterInner(
             outer: LineString,
             @Size(min = 1) inner: List<LineString>?
@@ -409,7 +402,7 @@ class Polygon internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromOuterInner(
             outer: LineString, bbox: BoundingBox?,
             @Size(min = 1) inner: List<LineString>?
@@ -435,7 +428,7 @@ class Polygon internal constructor(
          * @return the TYPE adapter for this class
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun typeAdapter(gson: Gson): TypeAdapter<Polygon> {
             return GsonTypeAdapter(gson)
         }

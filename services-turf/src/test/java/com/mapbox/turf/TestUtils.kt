@@ -13,7 +13,9 @@ import java.io.Serializable
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.math.abs
 
+@Suppress("unused")
 open class TestUtils {
     fun compareJson(expectedJson: String?, actualJson: String?) {
         Assert.assertThat(
@@ -38,7 +40,7 @@ open class TestUtils {
         val url = loader.getResource(folder)!!
         val path = url.path
         val names: MutableList<String> = ArrayList()
-        for (file in File(path).listFiles()) {
+        for (file in File(path).listFiles()!!) {
             names.add(file.name)
         }
         return names
@@ -46,7 +48,6 @@ open class TestUtils {
 
     companion object {
         const val DELTA = 1E-10
-        const val ACCESS_TOKEN = "pk.XXX"
         @Throws(IOException::class)
         fun <T : Serializable?> serialize(obj: T): ByteArray {
             val baos = ByteArrayOutputStream()
@@ -70,7 +71,7 @@ open class TestUtils {
         fun expectNearNumber(expected: Double, actual: Double, epsilon: Double) {
             Assert.assertTrue(
                 String.format("Expected %f to be near %f", actual, expected),
-                Math.abs(expected - actual) <= epsilon
+                abs(expected - actual) <= epsilon
             )
         }
     }

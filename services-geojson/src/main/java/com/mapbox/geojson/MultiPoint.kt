@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
-import com.mapbox.geojson.MultiPoint
 import com.mapbox.geojson.gson.GeoJsonAdapterFactory
 import java.io.IOException
 
@@ -112,15 +111,14 @@ class MultiPoint internal constructor(
                 + "}")
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
         }
-        if (obj is MultiPoint) {
-            val that = obj
-            return (type == that.type()
-                    && (if (bbox == null) that.bbox() == null else bbox == that.bbox())
-                    && coordinates == that.coordinates())
+        if (other is MultiPoint) {
+            return (type == other.type()
+                    && (if (bbox == null) other.bbox() == null else bbox == other.bbox())
+                    && coordinates == other.coordinates())
         }
         return false
     }
@@ -156,7 +154,7 @@ class MultiPoint internal constructor(
             return readCoordinateContainer(jsonReader) as MultiPoint
         }
 
-        public override fun createCoordinateContainer(
+        override fun createCoordinateContainer(
             type: String?,
             bbox: BoundingBox?,
             coordinates: List<Point>?
@@ -179,7 +177,7 @@ class MultiPoint internal constructor(
          * method
          * @since 1.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromJson(json: String): MultiPoint {
             val gson = GsonBuilder()
             gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.create())
@@ -199,7 +197,7 @@ class MultiPoint internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(points: List<Point>): MultiPoint {
             return MultiPoint(TYPE, null, points)
         }
@@ -218,16 +216,16 @@ class MultiPoint internal constructor(
          * method
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(points: List<Point>, bbox: BoundingBox?): MultiPoint {
             return MultiPoint(TYPE, bbox, points)
         }
 
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(coordinates: Array<DoubleArray>): MultiPoint {
             val converted = ArrayList<Point>(coordinates.size)
             for (i in coordinates.indices) {
-                converted.add(Point.Companion.fromLngLat(coordinates[i])!!)
+                converted.add(Point.fromLngLat(coordinates[i])!!)
             }
             return MultiPoint(TYPE, null, converted)
         }
@@ -239,7 +237,7 @@ class MultiPoint internal constructor(
          * @return the TYPE adapter for this class
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun typeAdapter(gson: Gson): TypeAdapter<MultiPoint> {
             return GsonTypeAdapter(gson)
         }

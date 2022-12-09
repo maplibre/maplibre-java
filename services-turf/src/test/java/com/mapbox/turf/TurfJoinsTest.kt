@@ -27,7 +27,7 @@ class TurfJoinsTest : TestUtils() {
         pointList.add(fromLngLat(0.0, 0.0))
         var coordinates: MutableList<List<Point>> = ArrayList()
         coordinates.add(pointList)
-        val poly: Polygon = Polygon.fromLngLats(coordinates)
+        val poly: Polygon = fromLngLats(coordinates)
         var ptIn = fromLngLat(50.0, 50.0)
         var ptOut = fromLngLat(140.0, 150.0)
         Assert.assertTrue(inside(ptIn, poly))
@@ -43,7 +43,7 @@ class TurfJoinsTest : TestUtils() {
         pointList.add(fromLngLat(0.0, 0.0))
         coordinates = ArrayList()
         coordinates.add(pointList)
-        val concavePoly: Polygon = Polygon.fromLngLats(coordinates)
+        val concavePoly: Polygon = fromLngLats(coordinates)
         ptIn = fromLngLat(75.0, 75.0)
         ptOut = fromLngLat(25.0, 50.0)
         Assert.assertTrue(inside(ptIn, concavePoly))
@@ -116,8 +116,8 @@ class TurfJoinsTest : TestUtils() {
 
         // test with multiple points and multiple polygons
         val poly1 = fromLngLats(
-            Arrays.asList(
-                Arrays.asList(
+            listOf(
+                listOf(
                     fromLngLat(0.0, 0.0),
                     fromLngLat(10.0, 0.0),
                     fromLngLat(10.0, 10.0),
@@ -127,8 +127,8 @@ class TurfJoinsTest : TestUtils() {
             )
         )
         val poly2 = fromLngLats(
-            Arrays.asList(
-                Arrays.asList(
+            listOf(
+                listOf(
                     fromLngLat(10.0, 0.0),
                     fromLngLat(20.0, 10.0),
                     fromLngLat(20.0, 20.0),

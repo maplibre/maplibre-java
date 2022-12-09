@@ -26,7 +26,7 @@ object TurfJoins {
      *
      * @since 1.3.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun inside(point: Point?, polygon: Polygon?): Boolean {
         // This API needs to get better
         val coordinates = polygon!!.coordinates()

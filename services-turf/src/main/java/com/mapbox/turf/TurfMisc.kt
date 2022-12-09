@@ -36,7 +36,7 @@ class TurfMisc private constructor() {
          *
          * @since 1.2.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun lineSlice(
             startPt: Point, stopPt: Point,
             line: Feature
@@ -73,7 +73,7 @@ class TurfMisc private constructor() {
                     "Turf lineSlice requires a LineString made up of at least 2 "
                             + "coordinates."
                 )
-            } else if (startPt.equals(stopPt)) {
+            } else if (startPt == stopPt) {
                 throw TurfException("Start and stop points in Turf lineSlice cannot equal each other.")
             }
             val startVertex = nearestPointOnLine(startPt, coords)
@@ -118,7 +118,7 @@ class TurfMisc private constructor() {
          *
          * @since 3.1.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun lineSliceAlong(
             line: Feature,
             @FloatRange(from = 0.0) startDist: Double,
@@ -186,8 +186,8 @@ class TurfMisc private constructor() {
                         return LineString.fromLngLats(slice)
                     }
                     val direction: Double =
-                        TurfMeasurement.Companion.bearing(coords[i], coords[i - 1]) - 180
-                    val interpolated: Point = TurfMeasurement.Companion.destination(
+                        TurfMeasurement.bearing(coords[i], coords[i - 1]) - 180
+                    val interpolated: Point = TurfMeasurement.destination(
                         coords[i], overshot, direction, units
                     )
                     slice.add(interpolated)
@@ -199,8 +199,8 @@ class TurfMisc private constructor() {
                         return LineString.fromLngLats(slice)
                     }
                     val direction: Double =
-                        TurfMeasurement.Companion.bearing(coords[i], coords[i - 1]) - 180
-                    val interpolated: Point = TurfMeasurement.Companion.destination(
+                        TurfMeasurement.bearing(coords[i], coords[i - 1]) - 180
+                    val interpolated: Point = TurfMeasurement.destination(
                         coords[i], overshot, direction, units
                     )
                     slice.add(interpolated)
@@ -212,7 +212,7 @@ class TurfMisc private constructor() {
                 if (i == coords.size - 1) {
                     return LineString.fromLngLats(slice)
                 }
-                travelled += TurfMeasurement.Companion.distance(coords[i], coords[i + 1], units)
+                travelled += TurfMeasurement.distance(coords[i], coords[i + 1], units)
             }
             if (travelled < startDist) {
                 throw TurfException("Start position is beyond line")
@@ -230,30 +230,21 @@ class TurfMisc private constructor() {
          * @return closest point on the line to point
          * @since 4.9.0
          */
-        /**
-         * Takes a [Point] and a [LineString] and calculates the closest Point on the
-         * LineString.
-         *
-         * @param pt     point to snap from
-         * @param coords line to snap to
-         * @return closest point on the line to point
-         * @since 1.3.0
-         */
         @JvmStatic
         @JvmOverloads
         fun nearestPointOnLine(
             pt: Point, coords: List<Point?>,
             @TurfUnitCriteria units: String? = null
         ): Feature {
-            var units = units
+            var unitsVar = units
             if (coords.size < 2) {
                 throw TurfException(
                     "Turf nearestPointOnLine requires a List of Points "
                             + "made up of at least 2 coordinates."
                 )
             }
-            if (units == null) {
-                units = TurfConstants.UNIT_KILOMETERS
+            if (unitsVar == null) {
+                unitsVar = TurfConstants.UNIT_KILOMETERS
             }
             var closestPt = Feature.fromGeometry(
                 fromLngLat(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
@@ -264,30 +255,28 @@ class TurfMisc private constructor() {
                 val stop = Feature.fromGeometry(coords[i + 1])
                 //start
                 start.addNumberProperty(
-                    "dist", TurfMeasurement.Companion.distance(
-                        pt, (start.geometry() as Point?)!!, units
+                    "dist", TurfMeasurement.distance(
+                        pt, (start.geometry() as Point?)!!, unitsVar
                     )
                 )
                 //stop
                 stop.addNumberProperty(
-                    "dist", TurfMeasurement.Companion.distance(
-                        pt, (stop.geometry() as Point?)!!, units
+                    "dist", TurfMeasurement.distance(
+                        pt, (stop.geometry() as Point?)!!, unitsVar
                     )
                 )
                 //perpendicular
-                val heightDistance = Math.max(
-                    start.properties()["dist"].asDouble,
-                    stop.properties()["dist"].asDouble
-                )
-                val direction: Double = TurfMeasurement.Companion.bearing(
+                val heightDistance =
+                    start.properties()["dist"].asDouble.coerceAtLeast(stop.properties()["dist"].asDouble)
+                val direction: Double = TurfMeasurement.bearing(
                     (start.geometry() as Point?)!!,
                     (stop.geometry() as Point?)!!
                 )
                 val perpendicularPt1 = Feature.fromGeometry(
-                    TurfMeasurement.Companion.destination(pt, heightDistance, direction + 90, units)
+                    TurfMeasurement.destination(pt, heightDistance, direction + 90, unitsVar)
                 )
                 val perpendicularPt2 = Feature.fromGeometry(
-                    TurfMeasurement.Companion.destination(pt, heightDistance, direction - 90, units)
+                    TurfMeasurement.destination(pt, heightDistance, direction - 90, unitsVar)
                 )
                 val intersect = lineIntersects(
                     (perpendicularPt1.geometry() as Point?)!!.longitude(),
@@ -308,9 +297,9 @@ class TurfMisc private constructor() {
                         )
                     )
                     intersectPt.addNumberProperty(
-                        "dist", TurfMeasurement.Companion.distance(
+                        "dist", TurfMeasurement.distance(
                             pt,
-                            (intersectPt.geometry() as Point?)!!, units
+                            (intersectPt.geometry() as Point?)!!, unitsVar
                         )
                     )
                 }
@@ -340,7 +329,7 @@ class TurfMisc private constructor() {
             // If the lines intersect, the result contains the x and y of the intersection
             // (treating the lines as infinite) and booleans for whether line segment 1 or line
             // segment 2 contain the point
-            var result: LineIntersectsResult? = LineIntersectsResult.Companion.builder()
+            var result: LineIntersectsResult? = LineIntersectsResult.builder()
                 .onLine1(false)
                 .onLine2(false)
                 .build()

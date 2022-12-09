@@ -21,8 +21,8 @@ class TurfClassificationTest : TestUtils() {
         val closestPt = nearestPoint(pt!!, pointList)
         Assert.assertNotNull(closestPt)
         Assert.assertEquals(closestPt.type(), "Point")
-        Assert.assertEquals(closestPt.longitude(), -75.33, TestUtils.Companion.DELTA)
-        Assert.assertEquals(closestPt.latitude(), 39.44, TestUtils.Companion.DELTA)
+        Assert.assertEquals(closestPt.longitude(), -75.33, DELTA)
+        Assert.assertEquals(closestPt.latitude(), 39.44, DELTA)
     }
 
     companion object {

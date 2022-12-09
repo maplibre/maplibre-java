@@ -37,26 +37,26 @@ class GeometryTest : TestUtils() {
         Assert.assertEquals(
             1.0,
             geometry.bbox()!!.southwest().longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             2.0,
             geometry.bbox()!!.southwest().latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             3.0,
             geometry.bbox()!!.northeast().longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             4.0,
             geometry.bbox()!!.northeast().latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertNotNull((geometry as Point).coordinates())
-        Assert.assertEquals(2.0, geometry.longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, geometry.latitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(2.0, geometry.longitude(), DELTA)
+        Assert.assertEquals(3.0, geometry.latitude(), DELTA)
     }
 
     @Test
@@ -86,37 +86,37 @@ class GeometryTest : TestUtils() {
         Assert.assertEquals(
             1.0,
             lineString.bbox()!!.southwest().longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             2.0,
             lineString.bbox()!!.southwest().latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             3.0,
             lineString.bbox()!!.northeast().longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             4.0,
             lineString.bbox()!!.northeast().latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertNotNull((lineString as LineString).coordinates())
-        Assert.assertEquals(1.0, lineString.coordinates()[0].longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, lineString.coordinates()[0].latitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, lineString.coordinates()[1].longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, lineString.coordinates()[1].latitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, lineString.coordinates()[2].longitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, lineString.coordinates()[2].latitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, lineString.coordinates()[0].longitude(), DELTA)
+        Assert.assertEquals(2.0, lineString.coordinates()[0].latitude(), DELTA)
+        Assert.assertEquals(2.0, lineString.coordinates()[1].longitude(), DELTA)
+        Assert.assertEquals(3.0, lineString.coordinates()[1].latitude(), DELTA)
+        Assert.assertEquals(3.0, lineString.coordinates()[2].longitude(), DELTA)
+        Assert.assertEquals(4.0, lineString.coordinates()[2].latitude(), DELTA)
     }
 
     @Test
     @Throws(Exception::class)
     fun lineStringToJson() {
         val geometry: Geometry = LineString.fromLngLats(
-            Arrays.asList(
+            listOf(
                 fromLngLat(1.0, 2.0),
                 fromLngLat(2.0, 3.0),
                 fromLngLat(3.0, 4.0)
@@ -129,7 +129,4 @@ class GeometryTest : TestUtils() {
         compareJson(expectedJsonString, geometryJsonStr)
     }
 
-    companion object {
-        private const val SAMPLE_GEOMETRY_COLLECTION = "sample-geometrycollection.json"
-    }
 }

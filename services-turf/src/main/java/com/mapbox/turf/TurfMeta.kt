@@ -29,7 +29,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 2.0.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun coordAll(point: Point): List<Point> {
         return coordAll(ArrayList(), point)
     }
@@ -42,7 +42,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 4.8.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     private fun coordAll(coords: MutableList<Point>, point: Point): List<Point> {
         coords.add(point)
         return coords
@@ -57,7 +57,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 2.0.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun coordAll(multiPoint: MultiPoint): List<Point> {
         return coordAll(ArrayList(), multiPoint)
     }
@@ -70,7 +70,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 4.8.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     private fun coordAll(coords: MutableList<Point>, multiPoint: MultiPoint): List<Point> {
         coords.addAll(multiPoint.coordinates())
         return coords
@@ -85,7 +85,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 2.0.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun coordAll(lineString: LineString): List<Point> {
         return coordAll(ArrayList(), lineString)
     }
@@ -98,7 +98,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 4.8.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     private fun coordAll(coords: MutableList<Point>, lineString: LineString): List<Point> {
         coords.addAll(lineString.coordinates())
         return coords
@@ -115,7 +115,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 2.0.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun coordAll(polygon: Polygon, excludeWrapCoord: Boolean): List<Point> {
         return coordAll(ArrayList(), polygon, excludeWrapCoord)
     }
@@ -131,7 +131,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 4.8.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     private fun coordAll(
         coords: MutableList<Point>,
         polygon: Polygon,
@@ -156,7 +156,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 2.0.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun coordAll(multiLineString: MultiLineString): List<Point> {
         return coordAll(ArrayList(), multiLineString)
     }
@@ -169,7 +169,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 4.8.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     private fun coordAll(
         coords: MutableList<Point>,
         multiLineString: MultiLineString
@@ -192,7 +192,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 2.0.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun coordAll(
         multiPolygon: MultiPolygon,
         excludeWrapCoord: Boolean
@@ -211,7 +211,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 4.8.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     private fun coordAll(
         coords: MutableList<Point>,
         multiPolygon: MultiPolygon,
@@ -240,7 +240,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 4.8.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun coordAll(
         feature: Feature,
         excludeWrapCoord: Boolean
@@ -261,7 +261,7 @@ object TurfMeta {
      * @return a `List` made up of [Point]s
      * @since 4.8.0
      */
-    @kotlin.jvm.JvmStatic
+    @JvmStatic
     fun coordAll(
         featureCollection: FeatureCollection,
         excludeWrapCoord: Boolean
@@ -313,22 +313,30 @@ object TurfMeta {
         geometry: Geometry,
         excludeWrapCoord: Boolean
     ): List<Point> {
-        if (geometry is Point) {
-            pointList.add(geometry)
-        } else if (geometry is MultiPoint) {
-            pointList.addAll(geometry.coordinates())
-        } else if (geometry is LineString) {
-            pointList.addAll(geometry.coordinates())
-        } else if (geometry is MultiLineString) {
-            coordAll(pointList, geometry)
-        } else if (geometry is Polygon) {
-            coordAll(pointList, geometry, excludeWrapCoord)
-        } else if (geometry is MultiPolygon) {
-            coordAll(pointList, geometry, excludeWrapCoord)
-        } else if (geometry is GeometryCollection) {
-            // recursive
-            for (singleGeometry in geometry.geometries()) {
-                coordAllFromSingleGeometry(pointList, singleGeometry, excludeWrapCoord)
+        when (geometry) {
+            is Point -> {
+                pointList.add(geometry)
+            }
+            is MultiPoint -> {
+                pointList.addAll(geometry.coordinates())
+            }
+            is LineString -> {
+                pointList.addAll(geometry.coordinates())
+            }
+            is MultiLineString -> {
+                coordAll(pointList, geometry)
+            }
+            is Polygon -> {
+                coordAll(pointList, geometry, excludeWrapCoord)
+            }
+            is MultiPolygon -> {
+                coordAll(pointList, geometry, excludeWrapCoord)
+            }
+            is GeometryCollection -> {
+                // recursive
+                for (singleGeometry in geometry.geometries()) {
+                    coordAllFromSingleGeometry(pointList, singleGeometry, excludeWrapCoord)
+                }
             }
         }
         return pointList

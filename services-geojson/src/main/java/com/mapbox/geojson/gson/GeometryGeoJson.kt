@@ -22,7 +22,7 @@ object GeometryGeoJson {
     @JvmStatic
     fun fromJson(json: String): Geometry {
         val gson = GsonBuilder()
-        gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.Companion.create())
+        gson.registerTypeAdapterFactory(GeoJsonAdapterFactory.create())
         gson.registerTypeAdapterFactory(create())
         return gson.create().fromJson(json, Geometry::class.java)
     }

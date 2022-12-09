@@ -35,15 +35,18 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import java.io.IOException
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 class TurfMeasurementTest : TestUtils() {
     @Rule
-    var thrown = ExpectedException.none()
+    @JvmField
+    var thrown : ExpectedException = ExpectedException.none()
     @Test
     fun testBearing() {
         val pt1 = fromLngLat(-75.4, 39.4)
         val pt2 = fromLngLat(-75.534, 39.123)
-        Assert.assertNotEquals(bearing(pt1, pt2), 0.0, TestUtils.Companion.DELTA)
+        Assert.assertNotEquals(bearing(pt1, pt2), 0.0, DELTA)
     }
 
     @Test
@@ -68,37 +71,37 @@ class TurfMeasurementTest : TestUtils() {
         Assert.assertEquals(
             60.37218405837491,
             distance(pt1, pt2, TurfConstants.UNIT_MILES),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             52.461979624130436,
-            distance(pt1, pt2, TurfConstants.UNIT_NAUTICAL_MILES), TestUtils.Companion.DELTA
+            distance(pt1, pt2, TurfConstants.UNIT_NAUTICAL_MILES), DELTA
         )
         Assert.assertEquals(
             97.15957803131901,
             distance(pt1, pt2, TurfConstants.UNIT_KILOMETERS),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             0.015245501024842149,
             distance(pt1, pt2, TurfConstants.UNIT_RADIANS),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             0.8735028650863799,
             distance(pt1, pt2, TurfConstants.UNIT_DEGREES),
-            TestUtils.Companion.DELTA
+            DELTA
         )
 
         // This also works
         Assert.assertEquals(
             97.15957803131901,
             distance(pt1, pt2, TurfConstants.UNIT_KILOMETERS),
-            TestUtils.Companion.DELTA
+            DELTA
         )
 
         // Default is kilometers
-        Assert.assertEquals(97.15957803131901, distance(pt1, pt2), TestUtils.Companion.DELTA)
+        Assert.assertEquals(97.15957803131901, distance(pt1, pt2), DELTA)
 
         // Bad units not possible
     }
@@ -110,7 +113,7 @@ class TurfMeasurementTest : TestUtils() {
         coords.add(fromLngLat(1.0, 1.0))
         val lineString = fromLngLats(coords)
         val distance = length(lineString, TurfConstants.UNIT_METERS)
-        Assert.assertEquals(0.0, distance, TestUtils.Companion.DELTA)
+        Assert.assertEquals(0.0, distance, DELTA)
     }
 
     @Test
@@ -119,17 +122,15 @@ class TurfMeasurementTest : TestUtils() {
         val route1 = Feature.fromJson(loadJsonFixture(LINE_DISTANCE_ROUTE_ONE))
         val route2 = Feature.fromJson(loadJsonFixture(LINE_DISTANCE_ROUTE_TWO))
         Assert.assertEquals(
-            202, Math.round(
-                length(
-                    (route1.geometry() as LineString?)!!,
-                    TurfConstants.UNIT_MILES
-                )
-            )
+            202, length(
+                (route1.geometry() as LineString?)!!,
+                TurfConstants.UNIT_MILES
+            ).roundToInt()
         )
         Assert.assertEquals(
             741.7787396994203,
             length((route2.geometry() as LineString?)!!, TurfConstants.UNIT_KILOMETERS),
-            TestUtils.Companion.DELTA
+            DELTA
         )
     }
 
@@ -138,12 +139,10 @@ class TurfMeasurementTest : TestUtils() {
     fun testLineDistancePolygon() {
         val feature = Feature.fromJson(loadJsonFixture(LINE_DISTANCE_POLYGON))
         Assert.assertEquals(
-            5599, Math.round(
-                1000 * length(
-                    (feature.geometry() as Polygon?)!!,
-                    TurfConstants.UNIT_KILOMETERS
-                )
-            )
+            5599, (1000 * length(
+                (feature.geometry() as Polygon?)!!,
+                TurfConstants.UNIT_KILOMETERS
+            )).roundToLong()
         )
     }
 
@@ -152,13 +151,11 @@ class TurfMeasurementTest : TestUtils() {
     fun testLineDistanceMultiLineString() {
         val feature = Feature.fromJson(loadJsonFixture(LINE_DISTANCE_MULTILINESTRING))
         Assert.assertEquals(
-            4705.0, Math.round(
-                1000
-                        * length(
-                    (feature.geometry() as MultiLineString?)!!,
-                    TurfConstants.UNIT_KILOMETERS
-                )
-            ).toDouble(), TestUtils.Companion.DELTA
+            4705.0, (1000
+                    * length(
+                (feature.geometry() as MultiLineString?)!!,
+                TurfConstants.UNIT_KILOMETERS
+            )).roundToLong().toDouble(), DELTA
         )
     }
 
@@ -173,7 +170,7 @@ class TurfMeasurementTest : TestUtils() {
         val mid = midpoint(pt1, pt2)
         Assert.assertEquals(
             distance(pt1, mid, TurfConstants.UNIT_MILES),
-            distance(pt2, mid, TurfConstants.UNIT_MILES), TestUtils.Companion.DELTA
+            distance(pt2, mid, TurfConstants.UNIT_MILES), DELTA
         )
     }
 
@@ -185,7 +182,7 @@ class TurfMeasurementTest : TestUtils() {
         val mid = midpoint(pt1, pt2)
         Assert.assertEquals(
             distance(pt1, mid, TurfConstants.UNIT_MILES),
-            distance(pt2, mid, TurfConstants.UNIT_MILES), TestUtils.Companion.DELTA
+            distance(pt2, mid, TurfConstants.UNIT_MILES), DELTA
         )
     }
 
@@ -197,7 +194,7 @@ class TurfMeasurementTest : TestUtils() {
         val mid = midpoint(pt1, pt2)
         Assert.assertEquals(
             distance(pt1, mid, TurfConstants.UNIT_MILES),
-            distance(pt2, mid, TurfConstants.UNIT_MILES), TestUtils.Companion.DELTA
+            distance(pt2, mid, TurfConstants.UNIT_MILES), DELTA
         )
     }
 
@@ -209,7 +206,7 @@ class TurfMeasurementTest : TestUtils() {
         val mid = midpoint(pt1, pt2)
         Assert.assertEquals(
             distance(pt1, mid, TurfConstants.UNIT_MILES),
-            distance(pt2, mid, TurfConstants.UNIT_MILES), TestUtils.Companion.DELTA
+            distance(pt2, mid, TurfConstants.UNIT_MILES), DELTA
         )
     }
 
@@ -221,7 +218,7 @@ class TurfMeasurementTest : TestUtils() {
         val mid = midpoint(pt1, pt2)
         Assert.assertEquals(
             distance(pt1, mid, TurfConstants.UNIT_MILES),
-            distance(pt2, mid, TurfConstants.UNIT_MILES), TestUtils.Companion.DELTA
+            distance(pt2, mid, TurfConstants.UNIT_MILES), DELTA
         )
     }
 
@@ -233,7 +230,7 @@ class TurfMeasurementTest : TestUtils() {
         val mid = midpoint(pt1, pt2)
         Assert.assertEquals(
             distance(pt1, mid, TurfConstants.UNIT_MILES),
-            distance(pt2, mid, TurfConstants.UNIT_MILES), TestUtils.Companion.DELTA
+            distance(pt2, mid, TurfConstants.UNIT_MILES), DELTA
         )
     }
 
@@ -246,7 +243,7 @@ class TurfMeasurementTest : TestUtils() {
         val mid = midpoint(pt1, pt2)
         Assert.assertEquals(
             distance(pt1, mid, TurfConstants.UNIT_MILES),
-            distance(pt2, mid, TurfConstants.UNIT_MILES), TestUtils.Companion.DELTA
+            distance(pt2, mid, TurfConstants.UNIT_MILES), DELTA
         )
     }
 
@@ -257,8 +254,8 @@ class TurfMeasurementTest : TestUtils() {
         coords.add(fromLngLat(1.0, 1.0))
         val lineString = fromLngLats(coords)
         val point = along(lineString, 0.0, TurfConstants.UNIT_METERS)
-        Assert.assertEquals(1.0, point.latitude(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(1.0, point.longitude(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, point.latitude(), DELTA)
+        Assert.assertEquals(1.0, point.longitude(), DELTA)
     }
 
     @Test
@@ -295,12 +292,12 @@ class TurfMeasurementTest : TestUtils() {
         Assert.assertEquals(
             (fc.features()!![7].geometry() as Point?)!!.longitude(),
             pt8.longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             (fc.features()!![7].geometry() as Point?)!!.latitude(),
             pt8.latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
     }
 
@@ -313,10 +310,10 @@ class TurfMeasurementTest : TestUtils() {
         val feature = Feature.fromJson(loadJsonFixture(TURF_BBOX_POINT))
         val bbox = bbox((feature.geometry() as Point?)!!)
         Assert.assertEquals(4, bbox.size.toLong())
-        Assert.assertEquals(102.0, bbox[0], TestUtils.Companion.DELTA)
-        Assert.assertEquals(0.5, bbox[1], TestUtils.Companion.DELTA)
-        Assert.assertEquals(102.0, bbox[2], TestUtils.Companion.DELTA)
-        Assert.assertEquals(0.5, bbox[3], TestUtils.Companion.DELTA)
+        Assert.assertEquals(102.0, bbox[0], DELTA)
+        Assert.assertEquals(0.5, bbox[1], DELTA)
+        Assert.assertEquals(102.0, bbox[2], DELTA)
+        Assert.assertEquals(0.5, bbox[3], DELTA)
     }
 
     @Test
@@ -325,10 +322,10 @@ class TurfMeasurementTest : TestUtils() {
         val lineString = LineString.fromJson(loadJsonFixture(TURF_BBOX_LINESTRING))
         val bbox = bbox(lineString)
         Assert.assertEquals(4, bbox.size.toLong())
-        Assert.assertEquals(102.0, bbox[0], TestUtils.Companion.DELTA)
-        Assert.assertEquals(-10.0, bbox[1], TestUtils.Companion.DELTA)
-        Assert.assertEquals(130.0, bbox[2], TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, bbox[3], TestUtils.Companion.DELTA)
+        Assert.assertEquals(102.0, bbox[0], DELTA)
+        Assert.assertEquals(-10.0, bbox[1], DELTA)
+        Assert.assertEquals(130.0, bbox[2], DELTA)
+        Assert.assertEquals(4.0, bbox[3], DELTA)
     }
 
     @Test
@@ -337,10 +334,10 @@ class TurfMeasurementTest : TestUtils() {
         val feature = Feature.fromJson(loadJsonFixture(TURF_BBOX_POLYGON))
         val bbox = bbox((feature.geometry() as Polygon?)!!)
         Assert.assertEquals(4, bbox.size.toLong())
-        Assert.assertEquals(100.0, bbox[0], TestUtils.Companion.DELTA)
-        Assert.assertEquals(0.0, bbox[1], TestUtils.Companion.DELTA)
-        Assert.assertEquals(101.0, bbox[2], TestUtils.Companion.DELTA)
-        Assert.assertEquals(1.0, bbox[3], TestUtils.Companion.DELTA)
+        Assert.assertEquals(100.0, bbox[0], DELTA)
+        Assert.assertEquals(0.0, bbox[1], DELTA)
+        Assert.assertEquals(101.0, bbox[2], DELTA)
+        Assert.assertEquals(1.0, bbox[3], DELTA)
     }
 
     @Test
@@ -349,10 +346,10 @@ class TurfMeasurementTest : TestUtils() {
         val multiLineString = MultiLineString.fromJson(loadJsonFixture(TURF_BBOX_MULTILINESTRING))
         val bbox = bbox(multiLineString)
         Assert.assertEquals(4, bbox.size.toLong())
-        Assert.assertEquals(100.0, bbox[0], TestUtils.Companion.DELTA)
-        Assert.assertEquals(0.0, bbox[1], TestUtils.Companion.DELTA)
-        Assert.assertEquals(103.0, bbox[2], TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, bbox[3], TestUtils.Companion.DELTA)
+        Assert.assertEquals(100.0, bbox[0], DELTA)
+        Assert.assertEquals(0.0, bbox[1], DELTA)
+        Assert.assertEquals(103.0, bbox[2], DELTA)
+        Assert.assertEquals(3.0, bbox[3], DELTA)
     }
 
     @Test
@@ -361,10 +358,10 @@ class TurfMeasurementTest : TestUtils() {
         val multiPolygon = MultiPolygon.fromJson(loadJsonFixture(TURF_BBOX_MULTIPOLYGON))
         val bbox = bbox(multiPolygon)
         Assert.assertEquals(4, bbox.size.toLong())
-        Assert.assertEquals(100.0, bbox[0], TestUtils.Companion.DELTA)
-        Assert.assertEquals(0.0, bbox[1], TestUtils.Companion.DELTA)
-        Assert.assertEquals(103.0, bbox[2], TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, bbox[3], TestUtils.Companion.DELTA)
+        Assert.assertEquals(100.0, bbox[0], DELTA)
+        Assert.assertEquals(0.0, bbox[1], DELTA)
+        Assert.assertEquals(103.0, bbox[2], DELTA)
+        Assert.assertEquals(3.0, bbox[3], DELTA)
     }
 
     @Test
@@ -373,10 +370,10 @@ class TurfMeasurementTest : TestUtils() {
         val geometry: Geometry = MultiPolygon.fromJson(loadJsonFixture(TURF_BBOX_MULTIPOLYGON))
         val bbox = bbox(geometry)
         Assert.assertEquals(4, bbox.size.toLong())
-        Assert.assertEquals(100.0, bbox[0], TestUtils.Companion.DELTA)
-        Assert.assertEquals(0.0, bbox[1], TestUtils.Companion.DELTA)
-        Assert.assertEquals(103.0, bbox[2], TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, bbox[3], TestUtils.Companion.DELTA)
+        Assert.assertEquals(100.0, bbox[0], DELTA)
+        Assert.assertEquals(0.0, bbox[1], DELTA)
+        Assert.assertEquals(103.0, bbox[2], DELTA)
+        Assert.assertEquals(3.0, bbox[3], DELTA)
     }
 
     @Test
@@ -387,7 +384,7 @@ class TurfMeasurementTest : TestUtils() {
         Assert.assertArrayEquals(
             bbox(multiPolygon),
             bbox(fromGeometry(multiPolygon)),
-            TestUtils.Companion.DELTA
+            DELTA
         )
 
         // Check all geometry types
@@ -401,10 +398,10 @@ class TurfMeasurementTest : TestUtils() {
         geometries.add(fromGeometry(fromLngLat(-1.0, -1.0)))
         val bbox = bbox(fromGeometries(geometries))
         Assert.assertEquals(4, bbox.size.toLong())
-        Assert.assertEquals(-1.0, bbox[0], TestUtils.Companion.DELTA)
-        Assert.assertEquals(-10.0, bbox[1], TestUtils.Companion.DELTA)
-        Assert.assertEquals(130.0, bbox[2], TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, bbox[3], TestUtils.Companion.DELTA)
+        Assert.assertEquals(-1.0, bbox[0], DELTA)
+        Assert.assertEquals(-10.0, bbox[1], DELTA)
+        Assert.assertEquals(130.0, bbox[2], DELTA)
+        Assert.assertEquals(4.0, bbox[3], DELTA)
     }
 
     @Test
@@ -655,11 +652,9 @@ class TurfMeasurementTest : TestUtils() {
         if (returnedPoint != null) {
             Assert.assertEquals(133.5, returnedPoint.longitude(), 0.0)
             Assert.assertEquals(-27.0, returnedPoint.latitude(), 0.0)
-            if (returnedCenterFeature.properties() != null) {
-                Assert.assertTrue(
-                    returnedCenterFeature.properties().toString().contains("{\"key\":\"value\"}")
-                )
-            }
+            Assert.assertTrue(
+                returnedCenterFeature.properties().toString().contains("{\"key\":\"value\"}")
+            )
         }
     }
 
@@ -688,11 +683,11 @@ class TurfMeasurementTest : TestUtils() {
         val returnedCenterFeature = center(inputFeatureCollection, null, null)
         val returnedPoint = returnedCenterFeature.geometry() as Point?
         if (returnedPoint != null) {
-            Assert.assertEquals(4.1748046875, returnedPoint.longitude(), TestUtils.Companion.DELTA)
+            Assert.assertEquals(4.1748046875, returnedPoint.longitude(), DELTA)
             Assert.assertEquals(
                 47.214224817196836,
                 returnedPoint.latitude(),
-                TestUtils.Companion.DELTA
+                DELTA
             )
         }
     }

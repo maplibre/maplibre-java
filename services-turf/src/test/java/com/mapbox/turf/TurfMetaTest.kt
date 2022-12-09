@@ -23,14 +23,15 @@ import java.util.*
 
 class TurfMetaTest : TestUtils() {
     @Rule
-    var thrown = ExpectedException.none()
+    @JvmField
+    var thrown : ExpectedException = ExpectedException.none()
     @Test
     @Throws(TurfException::class)
     fun coordAllPoint() {
         val jsonPoint = "{type: 'Point', coordinates: [0, 0]}"
         val pointGeometry = Point.fromJson(jsonPoint)
         val resultList = coordAll(pointGeometry)
-        Assert.assertEquals(resultList.size.toDouble(), 1.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(resultList.size.toDouble(), 1.0, DELTA)
         Assert.assertEquals(resultList[0], fromLngLat(0.0, 0.0))
     }
 
@@ -40,7 +41,7 @@ class TurfMetaTest : TestUtils() {
         val jsonLineString = "{type: 'LineString', coordinates: [[0, 0], [1, 1]]}"
         val lineStringGeometry = LineString.fromJson(jsonLineString)
         val resultList = coordAll(lineStringGeometry)
-        Assert.assertEquals(resultList.size.toDouble(), 2.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(resultList.size.toDouble(), 2.0, DELTA)
         Assert.assertEquals(resultList[0], fromLngLat(0.0, 0.0))
         Assert.assertEquals(resultList[1], fromLngLat(1.0, 1.0))
     }
@@ -51,7 +52,7 @@ class TurfMetaTest : TestUtils() {
         val polygonString = "{type: 'Polygon', coordinates: [[[0, 0], [1, 1], [0, 1], [0, 0]]]}"
         val polygonGeometry = Polygon.fromJson(polygonString)
         val resultList = coordAll(polygonGeometry, false)
-        Assert.assertEquals(resultList.size.toDouble(), 4.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(resultList.size.toDouble(), 4.0, DELTA)
         Assert.assertEquals(resultList[0], fromLngLat(0.0, 0.0))
         Assert.assertEquals(resultList[1], fromLngLat(1.0, 1.0))
         Assert.assertEquals(resultList[2], fromLngLat(0.0, 1.0))
@@ -64,7 +65,7 @@ class TurfMetaTest : TestUtils() {
         val polygonString = "{type: 'Polygon', coordinates: [[[0, 0], [1, 1], [0, 1], [0, 0]]]}"
         val polygonGeometry = Polygon.fromJson(polygonString)
         val resultList = coordAll(polygonGeometry, true)
-        Assert.assertEquals(resultList.size.toDouble(), 3.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(resultList.size.toDouble(), 3.0, DELTA)
         Assert.assertEquals(resultList[0], fromLngLat(0.0, 0.0))
         Assert.assertEquals(resultList[1], fromLngLat(1.0, 1.0))
         Assert.assertEquals(resultList[2], fromLngLat(0.0, 1.0))
@@ -77,7 +78,7 @@ class TurfMetaTest : TestUtils() {
             "{type: 'MultiPolygon', coordinates: [[[[0, 0], [1, 1], [0, 1], [0, 0]]]]}"
         val multiPolygonGeometry = MultiPolygon.fromJson(multipolygonString)
         val resultList = coordAll(multiPolygonGeometry, false)
-        Assert.assertEquals(resultList.size.toDouble(), 4.0, TestUtils.Companion.DELTA)
+        Assert.assertEquals(resultList.size.toDouble(), 4.0, DELTA)
         Assert.assertEquals(resultList[0], fromLngLat(0.0, 0.0))
         Assert.assertEquals(resultList[1], fromLngLat(1.0, 1.0))
         Assert.assertEquals(resultList[2], fromLngLat(0.0, 1.0))
@@ -110,22 +111,22 @@ class TurfMetaTest : TestUtils() {
         Assert.assertEquals(
             0.0,
             coordAll(featureCollection, true)[0].latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             0.0,
             coordAll(featureCollection, true)[0].longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             1.0,
             coordAll(featureCollection, true)[4].latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             1.0,
             coordAll(featureCollection, true)[4].longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
     }
 
@@ -141,22 +142,22 @@ class TurfMetaTest : TestUtils() {
         Assert.assertEquals(
             0.0,
             coordAll(featureCollection, true)[0].latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             0.0,
             coordAll(featureCollection, true)[0].longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             1.0,
             coordAll(featureCollection, true)[1].latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             1.0,
             coordAll(featureCollection, true)[1].longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
     }
 
@@ -181,12 +182,12 @@ class TurfMetaTest : TestUtils() {
         Assert.assertEquals(
             1.0,
             coordAll(featureCollection, true)[0].longitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
         Assert.assertEquals(
             2.0,
             coordAll(featureCollection, true)[0].latitude(),
-            TestUtils.Companion.DELTA
+            DELTA
         )
     }
 
@@ -198,7 +199,7 @@ class TurfMetaTest : TestUtils() {
         getCoord(
             Feature.fromGeometry(
                 fromLngLats(
-                    Arrays.asList(
+                    listOf(
                         fromLngLat(0.0, 9.0),
                         fromLngLat(0.0, 10.0)
                     )

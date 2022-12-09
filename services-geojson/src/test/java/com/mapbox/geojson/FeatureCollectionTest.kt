@@ -37,7 +37,7 @@ class FeatureCollectionTest : TestUtils() {
         points.add(fromLngLat(1.0, 2.0))
         points.add(fromLngLat(2.0, 3.0))
         val lineString = LineString.fromLngLats(points)
-        val feature = Feature.fromGeometry(lineString)
+        val feature = fromGeometry(lineString)
         val features: MutableList<Feature> = ArrayList()
         features.add(feature)
         features.add(feature)
@@ -61,10 +61,10 @@ class FeatureCollectionTest : TestUtils() {
         val bbox = fromLngLats(1.0, 2.0, 3.0, 4.0)
         val featureCollection = fromFeatures(features, bbox)
         Assert.assertNotNull(featureCollection.bbox())
-        Assert.assertEquals(1.0, featureCollection.bbox()!!.west(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(2.0, featureCollection.bbox()!!.south(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(3.0, featureCollection.bbox()!!.east(), TestUtils.Companion.DELTA)
-        Assert.assertEquals(4.0, featureCollection.bbox()!!.north(), TestUtils.Companion.DELTA)
+        Assert.assertEquals(1.0, featureCollection.bbox()!!.west(), DELTA)
+        Assert.assertEquals(2.0, featureCollection.bbox()!!.south(), DELTA)
+        Assert.assertEquals(3.0, featureCollection.bbox()!!.east(), DELTA)
+        Assert.assertEquals(4.0, featureCollection.bbox()!!.north(), DELTA)
     }
 
     @Test
@@ -74,7 +74,7 @@ class FeatureCollectionTest : TestUtils() {
         points.add(fromLngLat(1.0, 2.0))
         points.add(fromLngLat(2.0, 3.0))
         val lineString = LineString.fromLngLats(points)
-        val feature = Feature.fromGeometry(lineString)
+        val feature = fromGeometry(lineString)
         val features: MutableList<Feature> = ArrayList()
         features.add(feature)
         features.add(feature)
@@ -95,14 +95,14 @@ class FeatureCollectionTest : TestUtils() {
     @Throws(Exception::class)
     fun passingInSingleFeature_doesHandleCorrectly() {
         val geometry = fromLngLat(1.0, 2.0)
-        val feature = Feature.fromGeometry(geometry)
+        val feature = fromGeometry(geometry)
         val geo = fromFeature(feature)
         Assert.assertNotNull(geo.features())
         Assert.assertEquals(1, geo.features()!!.size.toLong())
         Assert.assertEquals(
             2.0,
             (geo.features()!![0].geometry() as Point?)!!.coordinates()[1],
-            TestUtils.Companion.DELTA
+            DELTA
         )
     }
 

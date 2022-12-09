@@ -134,9 +134,8 @@ class BoundingBox internal constructor(southwest: Point?, northeast: Point?) : S
             return true
         }
         if (other is BoundingBox) {
-            val that = other
-            return (southwest == that.southwest()
-                    && northeast == that.northeast())
+            return (southwest == other.southwest()
+                    && northeast == other.northeast())
         }
         return false
     }
@@ -177,7 +176,7 @@ class BoundingBox internal constructor(southwest: Point?, northeast: Point?) : S
          * @return a new instance of this class defined by the provided points
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromPoints(southwest: Point, northeast: Point): BoundingBox {
             return BoundingBox(southwest, northeast)
         }
@@ -194,7 +193,7 @@ class BoundingBox internal constructor(southwest: Point?, northeast: Point?) : S
          * @return a new instance of this class defined by the provided coordinates
          * @since 3.0.0
          */
-        @Deprecated("As of 3.1.0, use {@link #fromLngLats} instead.")
+        @Deprecated("As of 3.1.0, use {@link #fromLngLats} instead.", ReplaceWith("fromLngLats"))
         fun fromCoordinates(
             @FloatRange(
                 from = GeoJsonConstants.MIN_LONGITUDE,
@@ -232,10 +231,7 @@ class BoundingBox internal constructor(southwest: Point?, northeast: Point?) : S
          * @return a new instance of this class defined by the provided coordinates
          * @since 3.0.0
          */
-        @Deprecated(
-            """As of 3.1.0, use {@link #fromLngLats} instead.
-    """
-        )
+        @Deprecated("As of 3.1.0, use {@link #fromLngLats} instead.", ReplaceWith("frmLngLats"))
         fun fromCoordinates(
             @FloatRange(
                 from = GeoJsonConstants.MIN_LONGITUDE,
@@ -271,7 +267,7 @@ class BoundingBox internal constructor(southwest: Point?, northeast: Point?) : S
          * @return a new instance of this class defined by the provided coordinates
          * @since 3.1.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(
             @FloatRange(
                 from = GeoJsonConstants.MIN_LONGITUDE,
@@ -291,8 +287,8 @@ class BoundingBox internal constructor(southwest: Point?, northeast: Point?) : S
             ) north: Double
         ): BoundingBox {
             return BoundingBox(
-                Point.Companion.fromLngLat(west, south),
-                Point.Companion.fromLngLat(east, north)
+                Point.fromLngLat(west, south),
+                Point.fromLngLat(east, north)
             )
         }
 
@@ -312,7 +308,7 @@ class BoundingBox internal constructor(southwest: Point?, northeast: Point?) : S
          * @return a new instance of this class defined by the provided coordinates
          * @since 3.1.0
          */
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun fromLngLats(
             @FloatRange(
                 from = GeoJsonConstants.MIN_LONGITUDE,
@@ -334,8 +330,8 @@ class BoundingBox internal constructor(southwest: Point?, northeast: Point?) : S
             northEastAltitude: Double
         ): BoundingBox {
             return BoundingBox(
-                Point.Companion.fromLngLat(west, south, southwestAltitude),
-                Point.Companion.fromLngLat(east, north, northEastAltitude)
+                Point.fromLngLat(west, south, southwestAltitude),
+                Point.fromLngLat(east, north, northEastAltitude)
             )
         }
 
@@ -346,8 +342,8 @@ class BoundingBox internal constructor(southwest: Point?, northeast: Point?) : S
          * @return the TYPE adapter for this class
          * @since 3.0.0
          */
-        @kotlin.jvm.JvmStatic
-        fun typeAdapter(gson: Gson?): TypeAdapter<BoundingBox> {
+        @JvmStatic
+        fun typeAdapter(@Suppress("UNUSED_PARAMETER") gson: Gson?): TypeAdapter<BoundingBox> {
             return BoundingBoxTypeAdapter()
         }
     }
