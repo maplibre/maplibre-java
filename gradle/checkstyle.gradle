@@ -1,6 +1,6 @@
 apply plugin: 'checkstyle'
 
-checkstyle.toolVersion = '7.8.2'
+checkstyle.toolVersion = '10.15.0'
 checkstyle.configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 checkstyleMain.exclude '**/BuildConfig.java'
 

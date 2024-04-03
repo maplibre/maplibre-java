@@ -31,7 +31,11 @@ def isSnapshot() {
 }
 
 private static def getReleaseVersion(String version) {
-    return version.substring(1)
+    if (version && version.length() > 1) {
+        return version.substring(1)
+    } else {
+        return "Unknown"
+    }
 }
 
 private static def getSnapshotVersion(String version) {

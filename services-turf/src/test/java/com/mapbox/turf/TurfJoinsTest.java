@@ -145,7 +145,7 @@ public class TurfJoinsTest extends TestUtils {
       Point.fromLngLat(20, 20),
       Point.fromLngLat(20, 0),
       Point.fromLngLat(10, 0))));
-    
+
     polyFeatureCollection = FeatureCollection.fromFeatures(new Feature[] {
       Feature.fromGeometry(poly1),
       Feature.fromGeometry(poly2)});

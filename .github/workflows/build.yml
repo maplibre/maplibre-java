@@ -1,11 +1,10 @@
-name: Development Build - Linux
+name: build
 env:
  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 on:
   workflow_dispatch:
   pull_request:
-    types: [opened, reopened, edited]
   push:
     paths-ignore:
       - "README.md"
@@ -16,9 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: ${{ env.BRANCH_NAME }}
-          fetch-depth: '0'
 
       - name: Gradle Build and Test
         run: |

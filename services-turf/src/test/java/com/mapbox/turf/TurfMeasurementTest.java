@@ -466,15 +466,17 @@ public class TurfMeasurementTest extends TestUtils {
     expectedPoints.add(Point.fromLngLat(130, 4));
     expectedPoints.add(Point.fromLngLat(20, 4));
     expectedPoints.add(Point.fromLngLat(20, -10));
-    List<List<Point>> polygonPoints = new ArrayList<List<Point>>() {{
-      add(expectedPoints);
-    }};
+    List<List<Point>> polygonPoints = new ArrayList<List<Point>>() {
+      {
+        add(expectedPoints);
+      }
+    };
     Polygon expected = Polygon.fromLngLats(polygonPoints);
     assertEquals("Polygon should match.", expected, polygon);
   }
 
   @Test
-  public void square(){
+  public void square() {
     BoundingBox bbox1 =  BoundingBox.fromLngLats(0, 0, 5, 10);
     BoundingBox bbox2 = BoundingBox.fromLngLats(0, 0, 10, 5);
 

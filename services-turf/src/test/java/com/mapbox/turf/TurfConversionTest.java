@@ -14,7 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -33,8 +32,8 @@ public class TurfConversionTest extends TestUtils {
   private static final String TURF_POLYGON_TO_LINE_PATH_IN = "turf-polygon-to-line/in/";
   private static final String TURF_POLYGON_TO_LINE_PATH_OUT = "turf-polygon-to-line/expected/";
 
-  private static final String TURF_POLYGON_TO_LINE_FILENAME_POLYGON= "polygon.geojson";
-  private static final String TURF_POLYGON_TO_LINE_FILENAME_GEOMETRY_POLYGON= "geometry-polygon.geojson";
+  private static final String TURF_POLYGON_TO_LINE_FILENAME_POLYGON = "polygon.geojson";
+  private static final String TURF_POLYGON_TO_LINE_FILENAME_GEOMETRY_POLYGON = "geometry-polygon.geojson";
   private static final String TURF_POLYGON_TO_LINE_FILENAME_POLYGON_WITH_HOLE = "polygon-with-hole.geojson";
 
   private static final String TURF_POLYGON_TO_LINE_FILENAME_MULTIPOLYGON = "multi-polygon.geojson";
@@ -195,8 +194,8 @@ public class TurfConversionTest extends TestUtils {
         TurfConversion.combine(lineStringFeatureCollection);
     assertNotNull(featureCollectionWithNewMultiLineStringObject);
 
-    MultiLineString multiLineString = (MultiLineString) featureCollectionWithNewMultiLineStringObject.
-        features().get(0).geometry();
+    MultiLineString multiLineString = (MultiLineString) featureCollectionWithNewMultiLineStringObject
+            .features().get(0).geometry();
     assertNotNull(multiLineString);
 
     // Checking the first LineString in the MultiLineString

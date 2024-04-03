@@ -25,7 +25,7 @@ public class PolylineUtilsTest extends TestUtils {
 
   // Delta for Coordinates comparison
   private static final double DELTA = 0.000001;
-  
+
   private static final String SIMPLIFICATION_INPUT = "simplification-input";
   private static final String SIMPLIFICATION_EXPECTED_OUTPUT = "simplification-expected-output";
 
@@ -129,7 +129,7 @@ public class PolylineUtilsTest extends TestUtils {
   }
 
   @Test
-  public void simplify_returnSameListWhenListSizeIsLessThanOrEqualToTwo(){
+  public void simplify_returnSameListWhenListSizeIsLessThanOrEqualToTwo() {
     final List<Point> path = new ArrayList<>();
     path.add(Point.fromLngLat(0, 0));
     path.add(Point.fromLngLat(10, 0));
@@ -138,13 +138,13 @@ public class PolylineUtilsTest extends TestUtils {
   }
 
   @Test
-  public void simplify_withHighestQuality() throws IOException{
+  public void simplify_withHighestQuality() throws IOException {
     List<Point> path = createPointListFromResourceFile(SIMPLIFICATION_INPUT);
     List<Point> simplifiedPath = simplify(path, PRECISION_5, true);
     List<Point> expectedSimplifiedPath = createPointListFromResourceFile(SIMPLIFICATION_EXPECTED_OUTPUT);
     assertTrue("Wrong number of points retained",simplifiedPath.size() == expectedSimplifiedPath.size());
     int counter = 0;
-    for(Point retainedPoint:simplifiedPath){
+    for (Point retainedPoint:simplifiedPath) {
       Point expectedPoint = expectedSimplifiedPath.get(counter);
       assertTrue("Wrong point retained by simplification algorithm",retainedPoint.equals(expectedPoint));
       ++counter;
@@ -156,10 +156,10 @@ public class PolylineUtilsTest extends TestUtils {
     String[] coords = inputPoints.split(",", -1);
 
     final List<Point> pointList = new ArrayList<>();
-    for(int i= 0;i <= coords.length-2;i = i+2) {
-      double x = Double.parseDouble(coords[i]);
-      double y = Double.parseDouble(coords[i+1]);
-      pointList.add(Point.fromLngLat(x, y));
+    for (int idx = 0; idx <= coords.length - 2; idx = idx + 2) {
+      double xCoord = Double.parseDouble(coords[idx]);
+      double yCoord = Double.parseDouble(coords[idx + 1]);
+      pointList.add(Point.fromLngLat(xCoord, yCoord));
     }
 
     return pointList;

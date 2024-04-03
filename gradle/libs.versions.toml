@@ -1,0 +1,20 @@
+[versions]
+junit = "4.12"
+hamcrestJunit = "2.0.0.0"
+mockito = "2.28.2"
+supportAnnotation = "1.0.0"
+okhttp3Mockwebserver = "3.12.7"
+gson = "2.8.6"
+
+gradleNexus = "1.1.0"
+
+[libraries]
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+hamcrestJunit = { group = "org.hamcrest", name = "hamcrest-junit", version.ref = "hamcrestJunit" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+supportAnnotation = { group = "androidx.annotation", name = "annotation", version.ref = "supportAnnotation" }
+okhttp3Mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp3Mockwebserver" }
+gson  = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+[plugins]
+gradle-nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "gradleNexus" }

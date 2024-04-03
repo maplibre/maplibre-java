@@ -1,26 +1,17 @@
-apply plugin: 'io.github.gradle-nexus.publish-plugin'
-apply from: file("${rootDir}/gradle/artifact-settings.gradle")
-
 buildscript {
-    apply from: "${rootDir}/gradle/dependencies.gradle"
-
     repositories {
         maven { url 'https://plugins.gradle.org/m2' }
         google()
         mavenCentral()
-        jcenter()
-    }
-
-    dependencies {
-        // Adding CheckStyle dependency without having to declare specific version explicitly here.
-        dependencies.create(pluginDependencies.checkstyle) {
-            transitive = false
-        }
-
-        classpath pluginDependencies.jacoco
-        classpath pluginDependencies.gradleNexus
     }
 }
+
+plugins {
+    alias libs.plugins.gradle.nexus
+}
+
+apply from: file("${rootDir}/gradle/artifact-settings.gradle")
+
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -28,9 +19,9 @@ tasks.withType(JavaCompile) {
 }
 
 subprojects {
-    apply from: "${rootDir}/gradle/dependencies.gradle"
     apply plugin: 'java'
     apply plugin: 'idea'
+    apply from: "${rootDir}/gradle/checkstyle.gradle"
 
     // Fixes issue with test resources not being found inside Intellij
     idea {
@@ -45,14 +36,13 @@ subprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 
     dependencies {
         // Test Dependencies
-        testImplementation dependenciesList.junit
-        testImplementation dependenciesList.hamcrestJunit
-        testImplementation dependenciesList.mockito
+        testImplementation libs.junit
+        testImplementation libs.hamcrestJunit
+        testImplementation libs.mockito
     }
 }
 
