@@ -36,7 +36,7 @@ public class TestUtils {
       String filepath = "src/test/resources/" + filename;
       byte[] encoded = Files.readAllBytes(Paths.get(filepath));
       return new String(encoded, UTF_8);
-    } catch (IOException e) {
+    } catch (IOException ex) {
       fail("Unable to load " + filename);
       return "";
     }
@@ -60,14 +60,14 @@ public class TestUtils {
   }
 
   /**
-   * Comes from Google Utils Test Case
+   * Comes from Google Utils Test Case.
    */
   public static void expectNearNumber(double expected, double actual, double epsilon) {
     assertTrue(String.format("Expected %f to be near %f", actual, expected),
       Math.abs(expected - actual) <= epsilon);
   }
 
-  protected List<String> getResourceFolderFileNames (String folder) {
+  protected List<String> getResourceFolderFileNames(String folder) {
     ClassLoader loader = getClass().getClassLoader();
     URL url = loader.getResource(folder);
     String path = url.getPath();

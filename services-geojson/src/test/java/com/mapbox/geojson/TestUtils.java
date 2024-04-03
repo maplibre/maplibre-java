@@ -51,7 +51,7 @@ public class TestUtils {
   }
 
   /**
-   * Comes from Google Utils Test Case
+   * Comes from Google Utils Test Case.
    */
   public static void expectNearNumber(double expected, double actual, double epsilon) {
     assertTrue(String.format("Expected %f to be near %f", actual, expected),

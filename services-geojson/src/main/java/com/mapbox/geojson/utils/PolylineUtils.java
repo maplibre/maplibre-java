@@ -216,7 +216,8 @@ public final class PolylineUtils {
    * Square distance from a point to a segment.
    *
    * @param point {@link Point} whose distance from segment needs to be determined
-   * @param p1,p2 points defining the segment
+   * @param p1 point defining the segment
+   * @param p2 point defining the segment
    * @return square of the distance between first input point and segment defined by
    *   other two input points
    */

@@ -4,10 +4,17 @@
     "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
+  <!-- 100 char per line max, unless unavoidable -->
+  <module name="LineLength">
+    <property name="max" value="100"/>
+    <property name="ignorePattern"
+        value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+  </module>
+
   <property name="fileExtensions" value="java, properties, xml"/>
 
   <module name="SuppressionFilter">
-    <property name="file" value="config/checkstyle/suppressions.xml"/>
+    <property name="file" value="${config_loc}/suppressions.xml"/>
     <property name="optional" value="false"/>
   </module>
 
@@ -134,7 +141,7 @@
     -->
     <module name="LocalVariableName">
       <property name="tokens" value="VARIABLE_DEF"/>
-      <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/>
+      <property name="format" value="^[a-z][a-zA-Z0-9][a-zA-Z0-9]*$"/>
       <property name="allowOneCharVarInForLoop" value="true"/>
       <message key="name.invalidPattern"
                value="Local variable name ''{0}'' must be at least two characters long."/>
@@ -190,10 +197,10 @@
     imports. Within these groups (separated by an empty line), imports should
     be lexicographially sorted with no further subcategorization required.
      -->
-    <module name="CustomImportOrder">
-      <property name="sortImportsInGroupAlphabetically" value="false"/>
-      <property name="customImportOrderRules" value="STATIC###THIRD_PARTY_PACKAGE"/>
-    </module>
+<!--    <module name="CustomImportOrder">-->
+<!--      <property name="sortImportsInGroupAlphabetically" value="false"/>-->
+<!--      <property name="customImportOrderRules" value="STATIC###THIRD_PARTY_PACKAGE"/>-->
+<!--    </module>-->
 
     <!-- Forbid imports from sun.* -->
     <module name="IllegalImport"/>
@@ -351,13 +358,6 @@
     -->
     <module name="CommentsIndentation"/>
 
-    <!-- 100 char per line max, unless unavoidable -->
-    <module name="LineLength">
-      <property name="max" value="100"/>
-      <property name="ignorePattern"
-                value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
-    </module>
-
     <!-- Checks for the placement of left curly braces ('{') for code blocks. -->
     <module name="LeftCurly"/>
 
@@ -384,16 +384,15 @@
     <!--################ JAVADOC CHECKS ################-->
     <!--################################################-->
 
+    <module name="MissingJavadocMethodCheck">
+      <property name="allowMissingPropertyJavadoc" value="true"/>
+    </module>
+
     <!--
     Require Javadoc for public methods:
     https://source.android.com/source/code-style.html#use-javadoc-standard-comments
     -->
     <module name="JavadocMethod">
-      <property name="scope" value="public"/>
-
-      <!-- exception: property methods (getX, setX, isX) -->
-      <property name="allowMissingPropertyJavadoc" value="true"/>
-
       <!-- exception: method overrides, test methods -->
       <property name="allowedAnnotations" value="Override, Test, Before, After"/>
 
@@ -406,8 +405,6 @@
       descriptions.
       -->
       <property name="allowMissingReturnTag" value="true"/>
-      <property name="allowThrowsTagsForSubclasses" value="true"/>
-      <property name="suppressLoadErrors" value="true"/>
     </module>
 
     <!-- Javadoc required for public fields (part of API) -->
@@ -522,7 +519,6 @@
     <module name="OverloadMethodsDeclarationOrder"/>
 
     <!-- Require variables to be declared close to where they are used -->
-    <module name="VariableDeclarationUsageDistance"/>
 
     <!-- Require that equals() and hashCode() are overridden together -->
     <module name="EqualsHashCode"/>

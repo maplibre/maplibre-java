@@ -193,9 +193,9 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
    *
    * @param type class of subtype of base type
    * @param label string value for field that distinguishes subtypes
-   * @throws IllegalArgumentException if either {@code type} or {@code label}
-   *     have already been registered on this type adapter.
    * @return The same object it is called on, so the calls can be chained
+   * @throws IllegalArgumentException if either {@code type} or {@code label}
+   *   have already been registered on this type adapter.
    */
   public RuntimeTypeAdapterFactory<T> registerSubtype(Class<? extends T> type, String label) {
     if (type == null || label == null) {
@@ -214,9 +214,9 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
    * name}. Labels are case sensitive.
    *
    * @param type type name
-   * @throws IllegalArgumentException if either {@code type} or its simple name
-   *     have already been registered on this type adapter.
    * @return The same object it is called on, so the calls can be chained
+   * @throws IllegalArgumentException if either {@code type} or its simple name
+   *   have already been registered on this type adapter.
    */
   @SuppressWarnings("unused")
   public RuntimeTypeAdapterFactory<T> registerSubtype(Class<? extends T> type) {

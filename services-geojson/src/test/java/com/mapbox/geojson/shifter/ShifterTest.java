@@ -1,5 +1,11 @@
 package com.mapbox.geojson.shifter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import com.google.gson.JsonParser;
 import com.mapbox.geojson.BoundingBox;
 import com.mapbox.geojson.LineString;
@@ -11,8 +17,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class ShifterTest {
 
@@ -53,7 +57,7 @@ public class ShifterTest {
   }
 
   @Test
-  public void default_shifter(){
+  public void default_shifter() {
     assertTrue(CoordinateShifterManager.isUsingDefaultShifter());
 
     CoordinateShifter shifter = new TestCoordinateShifter();

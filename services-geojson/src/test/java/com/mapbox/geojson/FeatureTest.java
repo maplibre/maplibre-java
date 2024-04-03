@@ -98,10 +98,10 @@ public class FeatureTest extends TestUtils {
 
   @Test
   public void linestring_feature_fromJson() throws IOException {
-      final String json =  "{ \"type\": \"Feature\"," +
-      "\"geometry\": { \"type\": \"LineString\", "+
-      " \"coordinates\": [[ 102.0, 20],[103.0, 3.0],[104.0, 4.0], [105.0, 5.0]]}," +
-      "\"properties\": {\"name\": \"line name\" }}";
+    final String json =  "{ \"type\": \"Feature\"," +
+            "\"geometry\": { \"type\": \"LineString\", " +
+            " \"coordinates\": [[ 102.0, 20],[103.0, 3.0],[104.0, 4.0], [105.0, 5.0]]}," +
+            "\"properties\": {\"name\": \"line name\" }}";
     Feature geo = Feature.fromJson(json);
     assertEquals(geo.type(), "Feature");
     assertEquals(geo.geometry().type(), "LineString");
@@ -250,6 +250,5 @@ public class FeatureTest extends TestUtils {
 
     value = feature.getNumberProperty("does_not_exist");
     assertNull(value);
-    
   }
 }

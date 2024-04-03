@@ -377,14 +377,14 @@ public class TurfMiscTest extends TestUtils {
     double start = 500;
     double stop = 750;
 
-    Point start_point = TurfMeasurement.along(lineStringLine1, start, TurfConstants.UNIT_MILES);
-    Point end_point = TurfMeasurement.along(lineStringLine1, stop, TurfConstants.UNIT_MILES);
+    Point startPoint = TurfMeasurement.along(lineStringLine1, start, TurfConstants.UNIT_MILES);
+    Point endPoint = TurfMeasurement.along(lineStringLine1, stop, TurfConstants.UNIT_MILES);
     LineString sliced = TurfMisc.lineSliceAlong(line1, start, stop, TurfConstants.UNIT_MILES);
 
     assertEquals(sliced.coordinates().get(0).coordinates(),
-      start_point.coordinates());
+      startPoint.coordinates());
     assertEquals(sliced.coordinates().get(sliced.coordinates().size() - 1).coordinates(),
-      end_point.coordinates());
+      endPoint.coordinates());
   }
 
   @Test
@@ -395,14 +395,14 @@ public class TurfMiscTest extends TestUtils {
     double start = 500;
     double stop = 1500;
 
-    Point start_point = TurfMeasurement.along(lineStringLine1, start, TurfConstants.UNIT_MILES);
-    Point end_point = TurfMeasurement.along(lineStringLine1, stop, TurfConstants.UNIT_MILES);
+    Point startPoint = TurfMeasurement.along(lineStringLine1, start, TurfConstants.UNIT_MILES);
+    Point endPoint = TurfMeasurement.along(lineStringLine1, stop, TurfConstants.UNIT_MILES);
     LineString sliced = TurfMisc.lineSliceAlong(line1, start, stop, TurfConstants.UNIT_MILES);
 
     assertEquals(sliced.coordinates().get(0).coordinates(),
-      start_point.coordinates());
+      startPoint.coordinates());
     assertEquals(sliced.coordinates().get(sliced.coordinates().size() - 1).coordinates(),
-      end_point.coordinates());
+      endPoint.coordinates());
   }
 
   @Test
@@ -413,15 +413,15 @@ public class TurfMiscTest extends TestUtils {
     double start = 500;
     double stop = 750;
 
-    Point start_point = TurfMeasurement.along(lineStringRoute1, start, TurfConstants.UNIT_MILES);
-    Point end_point = TurfMeasurement.along(lineStringRoute1, stop, TurfConstants.UNIT_MILES);
+    Point startPoint = TurfMeasurement.along(lineStringRoute1, start, TurfConstants.UNIT_MILES);
+    Point endPoint = TurfMeasurement.along(lineStringRoute1, stop, TurfConstants.UNIT_MILES);
 
     LineString sliced = TurfMisc.lineSliceAlong(route1, start, stop, TurfConstants.UNIT_MILES);
 
     assertEquals(sliced.coordinates().get(0).coordinates(),
-      start_point.coordinates());
+      startPoint.coordinates());
     assertEquals(sliced.coordinates().get(sliced.coordinates().size() - 1).coordinates(),
-      end_point.coordinates());
+      endPoint.coordinates());
   }
 
   @Test
@@ -432,14 +432,14 @@ public class TurfMiscTest extends TestUtils {
     double start = 25;
     double stop = 50;
 
-    Point start_point = TurfMeasurement.along(lineStringRoute2, start, TurfConstants.UNIT_MILES);
-    Point end_point = TurfMeasurement.along(lineStringRoute2, stop, TurfConstants.UNIT_MILES);
+    Point startPoint = TurfMeasurement.along(lineStringRoute2, start, TurfConstants.UNIT_MILES);
+    Point endPoint = TurfMeasurement.along(lineStringRoute2, stop, TurfConstants.UNIT_MILES);
     LineString sliced = TurfMisc.lineSliceAlong(route2, start, stop, TurfConstants.UNIT_MILES);
 
     assertEquals(sliced.coordinates().get(0).coordinates(),
-      start_point.coordinates());
+      startPoint.coordinates());
     assertEquals(sliced.coordinates().get(sliced.coordinates().size() - 1).coordinates(),
-      end_point.coordinates());
+      endPoint.coordinates());
   }
 
   @Test
@@ -461,11 +461,11 @@ public class TurfMiscTest extends TestUtils {
 
     double start = 500;
     double stop = 800000;
-    Point start_point = TurfMeasurement.along(lineStringLine1, start, TurfConstants.UNIT_MILES);
+    Point startPoint = TurfMeasurement.along(lineStringLine1, start, TurfConstants.UNIT_MILES);
     List<Point> lineCoordinates = lineStringLine1.coordinates();
     LineString sliced = TurfMisc.lineSliceAlong(line1, start, stop, TurfConstants.UNIT_MILES);
     assertEquals(sliced.coordinates().get(0).coordinates(),
-      start_point.coordinates());
+      startPoint.coordinates());
     assertEquals(sliced.coordinates().get(sliced.coordinates().size() - 1).coordinates(),
       lineCoordinates.get(lineCoordinates.size() - 1).coordinates());
   }
@@ -481,13 +481,13 @@ public class TurfMiscTest extends TestUtils {
     double start = 50;
     double stop =  100;
 
-    Point start_point = TurfMeasurement.along(lineStringLine1, start, TurfConstants.UNIT_MILES);
-    Point end_point = TurfMeasurement.along(lineStringLine1, stop, TurfConstants.UNIT_MILES);
+    Point startPoint = TurfMeasurement.along(lineStringLine1, start, TurfConstants.UNIT_MILES);
+    Point endPoint = TurfMeasurement.along(lineStringLine1, stop, TurfConstants.UNIT_MILES);
     LineString sliced = TurfMisc.lineSliceAlong(lineStringLine1, start, stop, TurfConstants.UNIT_MILES);
 
     assertEquals(sliced.coordinates().get(0).coordinates(),
-      start_point.coordinates());
+      startPoint.coordinates());
     assertEquals(sliced.coordinates().get(sliced.coordinates().size() - 1).coordinates(),
-      end_point.coordinates());
+      endPoint.coordinates());
   }
 }

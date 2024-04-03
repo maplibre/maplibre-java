@@ -11,4 +11,11 @@
   <suppress checks="MagicNumber" files="[\\/]TurfHelpers.java$"/>
   <suppress checks="MagicNumber" files=".*[\\/]src[\\/](test|it)[\\/]"/>
   <suppress checks="WriteTag" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+  <suppress checks="MissingJavadocMethod" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+  <suppress checks="LineLength" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+  <suppress checks="JavadocVariable" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+  <suppress checks="JavadocMethod" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+  <suppress checks="OperatorWrap" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+  <suppress checks="JavadocPackage" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+
 </suppressions>
