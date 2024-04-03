@@ -10,7 +10,7 @@ jacocoTestReport{
     description = 'Generates a test coverage report for a project'
 
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
 }
