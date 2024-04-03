@@ -1,9 +1,8 @@
 apply plugin: 'java-library'
-apply from: "../gradle/dependencies.gradle"
 
 dependencies {
   api project(":services-geojson")
 
   // Annotations
-  compileOnly dependenciesList.supportAnnotation
+  compileOnly libs.supportAnnotation
 }

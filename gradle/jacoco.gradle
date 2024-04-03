@@ -1,7 +1,6 @@
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = pluginVersion.jacoco
 }
 
 jacocoTestReport{

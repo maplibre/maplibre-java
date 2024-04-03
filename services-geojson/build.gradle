@@ -1,14 +1,12 @@
 apply plugin: 'java-library'
 
-apply from: "../gradle/dependencies.gradle"
-
 dependencies {
   // Gson
-  api dependenciesList.gson
+  api libs.gson
 
   // Annotations
-  compileOnly dependenciesList.supportAnnotation
+  compileOnly libs.supportAnnotation
 
   // Test Dependencies
-  testImplementation dependenciesList.okhttp3Mockwebserver
+  testImplementation libs.okhttp3Mockwebserver
 }
