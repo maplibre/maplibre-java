@@ -19,11 +19,11 @@ afterEvaluate {
                 project.logger.info("Publishing project with version: ${versionName}")
 
                 artifact sourcesJar {
-                    classifier "sources"
+                    archiveClassifier.set("sources")
                 }
 
                 artifact javadocJar {
-                    classifier "javadoc"
+                    archiveClassifier.set("javadoc")
                 }
 
                 pom {
