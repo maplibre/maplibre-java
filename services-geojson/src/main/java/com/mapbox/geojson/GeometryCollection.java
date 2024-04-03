@@ -146,7 +146,7 @@ public final class GeometryCollection implements Geometry {
    * Create a new instance of this class by giving the collection a list of {@link Geometry} and
    * bounding box.
    *
-   *  @param type type
+   * @param type type
    * @param geometries a non-null list of geometry which makes up this collection
    * @param bbox       optionally include a bbox definition as a double array
    * @since 4.6.0
