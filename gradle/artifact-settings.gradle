@@ -18,9 +18,8 @@ ext {
 }
 
 def getVersionName() {
-    def cmd = "git describe --tag --abbrev=0"
-    def version = cmd.execute().text.trim()
-    def deducedVersion = isSnapshot() ? getSnapshotVersion(version) : getReleaseVersion(version)
+    def version = System.getenv('VERSION')
+    def deducedVersion = isSnapshot() ? getSnapshotVersion(version) : version
     project.logger.info("Project version detected: ${deducedVersion}")
     return deducedVersion
 }
@@ -28,14 +27,6 @@ def getVersionName() {
 def isSnapshot() {
     def snapshotProp = findProperty("snapshot")
     return snapshotProp ? snapshotProp.asBoolean() : false
-}
-
-private static def getReleaseVersion(String version) {
-    if (version && version.length() > 1) {
-        return version.substring(1)
-    } else {
-        return "Unknown"
-    }
 }
 
 private static def getSnapshotVersion(String version) {

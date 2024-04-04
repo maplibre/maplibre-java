@@ -1,3 +1,5 @@
+import java.time.Duration
+
 buildscript {
     repositories {
         maven { url 'https://plugins.gradle.org/m2' }
@@ -98,5 +100,9 @@ nexusPublishing {
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
+    }
+    transitionCheckOptions {
+        maxRetries = 120
+        delayBetween = Duration.ofSeconds(10)
     }
 }
