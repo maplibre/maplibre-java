@@ -1,0 +1,6 @@
+repos:
+- repo: https://github.com/Mateusz-Grzelinski/actionlint-py
+  rev: v1.6.27.12
+  hooks:
+    - id: actionlint
+      additional_dependencies: [shellcheck-py]
