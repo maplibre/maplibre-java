@@ -1,5 +1,5 @@
 [versions]
-junit = "4.12"
+junit = "4.13.2"
 hamcrestJunit = "2.0.0.0"
 mockito = "5.11.0"
 supportAnnotation = "1.7.1"
