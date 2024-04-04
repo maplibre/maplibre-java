@@ -53,6 +53,7 @@ jobs:
           tag_name: ${{ env.version }}
 
       - name: Prepare PGP Keyring file
+        if: env.make_release
         env:
           GPG_KEY_CONTENTS: ${{ secrets.GPG_KEY_CONTENTS }}
         run: |
@@ -60,6 +61,7 @@ jobs:
         shell: bash
 
       - name: Publish to Maven Central
+        if: env.make_release
         run: |
           ./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository --info --stacktrace
         env:
