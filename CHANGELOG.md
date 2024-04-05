@@ -1,8 +1,6 @@
-## Changelog for the Mapbox Java SDK
+## Changelog for MapLibre Java <= 5.9.0
 
-Mapbox welcomes participation and contributions from everyone.
-
-### main
+Releases after 5.9.0 have an auto-generated changelog.
 
 ### 5.9.0 - May 5, 2021
 - Initial MapLibre release
