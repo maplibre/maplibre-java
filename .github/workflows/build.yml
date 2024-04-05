@@ -47,8 +47,8 @@ jobs:
         id: github_release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ env.version }}
-          tag_name: ${{ env.version }}
+          name: ${{ env.VERSION }}
+          tag_name: ${{ env.VERSION }}
 
       - name: Prepare PGP Keyring file
         if: env.make_release
