@@ -36,7 +36,7 @@ jobs:
 
       - name: Get version
         if: env.make_release
-        run: echo VERSION=$(head VERSION)" >> "$GITHUB_ENV"
+        run: echo VERSION="$(head VERSION)" >> "$GITHUB_ENV"
 
       - name: Gradle Build and Test
         run: |
@@ -61,7 +61,6 @@ jobs:
       - name: Publish to Maven Central
         if: env.make_release
         run: |
-          export VERSION="$(head VERSION)"
           ./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository --info --stacktrace
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
