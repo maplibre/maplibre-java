@@ -258,11 +258,8 @@ public final class Feature implements GeoJson {
    * @return a {@link JsonObject} which holds this features current properties
    * @since 1.0.0
    */
-  @NonNull
+  @Nullable
   public JsonObject properties() {
-    if (properties == null) {
-      throw new IllegalStateException("Properties should not be null");
-    }
     return properties;
   }
 
