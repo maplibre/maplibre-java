@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -61,7 +61,16 @@ jobs:
       - name: Publish to Maven Central
         if: env.make_release
         run: |
-          ./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository --info --stacktrace
+          ./gradlew
+          publishKotlinMultiplatformPublication 
+          publishJvmPublication 
+          publishIosArm64Publication 
+          publishIosSimulatorArm64Publication 
+          publishIosX64Publication 
+          publishReleasePublicationToSonatypeRepository 
+          closeAndReleaseSonatypeStagingRepository 
+          --info 
+          --stacktrace
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
