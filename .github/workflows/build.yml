@@ -61,16 +61,15 @@ jobs:
       - name: Publish to Maven Central
         if: env.make_release
         run: |
-          ./gradlew
-          publishKotlinMultiplatformPublication 
-          publishJvmPublication 
-          publishIosArm64Publication 
-          publishIosSimulatorArm64Publication 
-          publishIosX64Publication 
-          publishReleasePublicationToSonatypeRepository 
-          closeAndReleaseSonatypeStagingRepository 
-          --info 
-          --stacktrace
+          ./gradlew \
+            publishKotlinMultiplatformPublicationToSonatypeRepository \
+            publishJvmPublicationToSonatypeRepository \
+            publishIosArm64PublicationToSonatypeRepository \
+            publishIosSimulatorArm64PublicationToSonatypeRepository \
+            publishIosX64PublicationToSonatypeRepository \
+            publishReleasePublicationToSonatypeRepositoryToSonatypeRepository \
+            closeAndReleaseSonatypeStagingRepository \
+            --info --stacktrace
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
