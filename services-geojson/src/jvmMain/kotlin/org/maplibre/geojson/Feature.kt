@@ -2,6 +2,13 @@ package org.maplibre.geojson
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.floatOrNull
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.longOrNull
 import org.maplibre.geojson.common.toCommon
 import org.maplibre.geojson.common.toJvm
 import org.maplibre.geojson.model.Feature as CommonFeature
@@ -158,15 +165,80 @@ class Feature internal constructor(
     }
 
     /**
-     * Convenience method to get a Number member.
+     * Convenience method to get a String member.
      *
      * @param key name of the member
      * @return the value of the member, null if it doesn't exist
      * @since 1.0.0
      */
-    fun getNumberProperty(key: String?): Number? {
-        val propertyKey = properties()!![key]
-        return propertyKey?.asNumber
+    fun getStringProperty(key: String): String? {
+        return properties?.asString
+    }
+
+    /**
+     * Convenience method to get a Int member.
+     *
+     * @param key name of the member
+     * @return the value of the member, null if it doesn't exist
+     * @since 1.0.0
+     */
+    fun getIntProperty(key: String): Int? {
+        return properties?.asInt
+    }
+
+    /**
+     * Convenience method to get a Long member.
+     *
+     * @param key name of the member
+     * @return the value of the member, null if it doesn't exist
+     * @since 1.0.0
+     */
+    fun getLongProperty(key: String): Long? {
+        return properties?.asLong
+    }
+
+    /**
+     * Convenience method to get a Float member.
+     *
+     * @param key name of the member
+     * @return the value of the member, null if it doesn't exist
+     * @since 1.0.0
+     */
+    fun getFloatProperty(key: String): Float? {
+        return properties?.asFloat
+    }
+
+    /**
+     * Convenience method to get a Double member.
+     *
+     * @param key name of the member
+     * @return the value of the member, null if it doesn't exist
+     * @since 1.0.0
+     */
+    fun getDoubleProperty(key: String): Double? {
+        return properties?.asDouble
+    }
+
+    /**
+     * Convenience method to get a number member.
+     *
+     * @param key name of the member
+     * @return the value of the member, null if it doesn't exist
+     * @since 1.0.0
+     */
+    fun getNumberProperty(key: String): Number? {
+        return properties?.get(key)?.asNumber
+    }
+
+    /**
+     * Convenience method to get a Boolean member.
+     *
+     * @param key name of the member
+     * @return the value of the member, null if it doesn't exist
+     * @since 1.0.0
+     */
+    fun getBooleanProperty(key: String): Boolean? {
+        return properties?.get(key)?.asBoolean
     }
 
     /**
