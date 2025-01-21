@@ -72,7 +72,7 @@ internal constructor(
 ) : CommonMultiPolygon(
     coordinates,
     bbox,
-), CoordinateContainer<List<List<List<Point?>?>?>?> {
+), CoordinateContainer<List<List<List<Point?>>>> {
 
     /**
      * Returns a list of polygons which make up this MultiPolygon instance.

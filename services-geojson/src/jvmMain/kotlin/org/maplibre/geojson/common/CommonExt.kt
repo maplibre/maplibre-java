@@ -50,7 +50,7 @@ fun Feature.toJvm(): JvmFeature {
         bbox?.toJvm(),
         id,
         geometry?.toJvm(),
-        properties?.let { props -> JsonParser.parseString(props.toString()).asJsonObject }
+        properties?.let { props -> JsonParser.parseString(props.toString()).asJsonObject }?.takeIf { it.size() > 0 }
     )
 }
 

@@ -21,7 +21,7 @@ class PolygonTest {
             Point(1.0, 2.0)
         )
 
-        val polygon = Polygon.fromOuterInner(LineString(points))
+        val polygon = Polygon.fromOuterInnerLines(LineString(points))
         assertNotNull(polygon)
     }
 
@@ -34,7 +34,7 @@ class PolygonTest {
         )
 
         assertFailsWith(GeoJsonException::class) {
-            Polygon.fromOuterInner(LineString(points))
+            Polygon.fromOuterInnerLines(LineString(points))
         }
     }
 
@@ -48,7 +48,7 @@ class PolygonTest {
         )
 
         assertFailsWith(GeoJsonException::class) {
-            Polygon.fromOuterInner(LineString(points))
+            Polygon.fromOuterInnerLines(LineString(points))
         }
     }
 
@@ -61,7 +61,7 @@ class PolygonTest {
             Point(10.0, 2.0),
         )
 
-        val polygon = Polygon.fromOuterInner(LineString(points))
+        val polygon = Polygon.fromOuterInnerLines(LineString(points))
         assertEquals(Point(10.0, 2.0), polygon.coordinates.first().first())
     }
 
@@ -83,7 +83,7 @@ class PolygonTest {
         )
         val innerLineString = LineString(innerPoints)
 
-        val polygon = Polygon.fromOuterInner(outerLineString, listOf(innerLineString))
+        val polygon = Polygon.fromOuterInnerLines(outerLineString, listOf(innerLineString))
         assertEquals(Point(10.0, 2.0), polygon.coordinates.first().first())
         assertEquals(outerLineString, polygon.outerLine)
         assertEquals(1, polygon.innerLines.size)
@@ -109,7 +109,7 @@ class PolygonTest {
         val innerLineString = LineString(innerPoints)
 
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
-        val polygon = Polygon.fromOuterInner(outerLineString, listOf(innerLineString), bbox)
+        val polygon = Polygon.fromOuterInnerLines(outerLineString, listOf(innerLineString), bbox)
 
         assertEquals(bbox, polygon.bbox)
         assertEquals(outerLineString, polygon.outerLine)
@@ -129,7 +129,7 @@ class PolygonTest {
         val outerLine = LineString(points)
         val innerLines = listOf(LineString(points), LineString(points))
 
-        val polygon = Polygon.fromOuterInner(outerLine, inner = innerLines)
+        val polygon = Polygon.fromOuterInnerLines(outerLine, inner = innerLines)
         assertNull(polygon.bbox)
     }
 
@@ -145,7 +145,7 @@ class PolygonTest {
         val outerLine = LineString(points)
 
         val innerLines = listOf(LineString(points), LineString(points))
-        val polygon = Polygon.fromOuterInner(outerLine, innerLines)
+        val polygon = Polygon.fromOuterInnerLines(outerLine, innerLines)
         compareJson(
             polygon.toJson(),
             "{\"type\":\"Polygon\",\"coordinates\":"
@@ -165,7 +165,7 @@ class PolygonTest {
         val outerLine = LineString(points)
         val innerLines = listOf(LineString(points), LineString(points))
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
-        val polygon = Polygon.fromOuterInner(outerLine, innerLines, bbox)
+        val polygon = Polygon.fromOuterInnerLines(outerLine, innerLines, bbox)
 
         assertNotNull(polygon.bbox)
         assertEquals(1.0, polygon.bbox!!.west, DELTA)
@@ -186,7 +186,7 @@ class PolygonTest {
         val outerLine = LineString(points)
         val innerLines = listOf(LineString(points), LineString(points))
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
-        val polygon = Polygon.fromOuterInner(outerLine, innerLines, bbox)
+        val polygon = Polygon.fromOuterInnerLines(outerLine, innerLines, bbox)
         compareJson(
             polygon.toJson(),
             "{\"type\":\"Polygon\",\"bbox\":[1.0,2.0,3.0,4.0],\"coordinates\":"

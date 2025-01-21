@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.Test
-import org.maplibre.geojson.model.Polygon.Companion.fromOuterInner
+import org.maplibre.geojson.model.Polygon.Companion.fromOuterInnerLines
 import org.maplibre.geojson.TestUtils.DELTA
 import org.maplibre.geojson.TestUtils.compareJson
 import kotlin.test.assertFailsWith
@@ -23,8 +23,8 @@ class MultiPolygonTest {
 
         val outer = LineString(points)
         val polygons = listOf(
-            fromOuterInner(outer),
-            fromOuterInner(outer)
+            fromOuterInnerLines(outer),
+            fromOuterInnerLines(outer)
         )
         val multiPolygon = MultiPolygon.fromPolygons(polygons)
         assertNotNull(multiPolygon)
@@ -41,8 +41,8 @@ class MultiPolygonTest {
 
         val outer = LineString(points)
         val polygons = listOf(
-            fromOuterInner(outer),
-            fromOuterInner(outer)
+            fromOuterInnerLines(outer),
+            fromOuterInnerLines(outer)
         )
         val multiPolygon = MultiPolygon.fromPolygons(polygons)
         assertNull(multiPolygon.bbox)
@@ -59,8 +59,8 @@ class MultiPolygonTest {
 
         val outer = LineString(points)
         val polygons = listOf(
-            fromOuterInner(outer),
-            fromOuterInner(outer)
+            fromOuterInnerLines(outer),
+            fromOuterInnerLines(outer)
         )
         val multiPolygon = MultiPolygon.fromPolygons(polygons)
         compareJson(
@@ -81,8 +81,8 @@ class MultiPolygonTest {
 
         val outer = LineString(points)
         val polygons = listOf(
-            fromOuterInner(outer),
-            fromOuterInner(outer)
+            fromOuterInnerLines(outer),
+            fromOuterInnerLines(outer)
         )
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val multiPolygon = MultiPolygon.fromPolygons(polygons, bbox)
@@ -122,8 +122,8 @@ class MultiPolygonTest {
 
         val outer = LineString(points)
         val polygons = listOf(
-            fromOuterInner(outer),
-            fromOuterInner(outer)
+            fromOuterInnerLines(outer),
+            fromOuterInnerLines(outer)
         )
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val multiPolygon = MultiPolygon.fromPolygons(polygons, bbox)

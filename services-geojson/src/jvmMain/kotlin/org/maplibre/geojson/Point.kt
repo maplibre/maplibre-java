@@ -226,6 +226,7 @@ class Point internal constructor(
             return Point(TYPE, bbox, listOf(longitude, latitude, altitude))
         }
 
+        @JvmStatic
         fun fromLngLat(coords: DoubleArray): Point? {
             if (coords.size == 2) {
                 return fromLngLat(coords[0], coords[1])

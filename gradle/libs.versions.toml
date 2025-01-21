@@ -2,14 +2,25 @@
 kotlin = "2.1.0"
 kotlinxSerializationJson = "1.7.3"
 kotlinxIO = "0.6.0"
-gson = "2.10.1"
 gradleNexus = "1.3.0"
+
+# Deprecated JVM usage
+gson = "2.10.1"
+junit = "4.13.2"
+hamcrestJunit = "2.0.0.0"
+mockito = "5.11.0"
 
 [libraries]
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinxIO" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+
+# Deprecated JVM usage
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+hamcrestJunit = { group = "org.hamcrest", name = "hamcrest-junit", version.ref = "hamcrestJunit" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

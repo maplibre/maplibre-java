@@ -39,7 +39,7 @@ class MultiPoint internal constructor(
 ) : CommonMultiPoint(
     coordinates,
     bbox,
-), CoordinateContainer<List<Point?>?> {
+), CoordinateContainer<List<Point>> {
 
     /**
      * This describes the TYPE of GeoJson this object is, thus this will always return [ ].

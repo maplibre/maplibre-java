@@ -2,13 +2,6 @@ package org.maplibre.geojson
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.doubleOrNull
-import kotlinx.serialization.json.floatOrNull
-import kotlinx.serialization.json.intOrNull
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.json.longOrNull
 import org.maplibre.geojson.common.toCommon
 import org.maplibre.geojson.common.toJvm
 import org.maplibre.geojson.model.Feature as CommonFeature
@@ -58,6 +51,12 @@ class Feature internal constructor(
     private val geometry: Geometry?,
     private var properties: JsonObject?
 ) : GeoJson {
+
+    init {
+        if (properties == null) {
+            properties = JsonObject()
+        }
+    }
 
     /**
      * This describes the TYPE of GeoJson geometry this object is, thus this will always return
@@ -172,7 +171,7 @@ class Feature internal constructor(
      * @since 1.0.0
      */
     fun getStringProperty(key: String): String? {
-        return properties?.asString
+        return properties?.get(key)?.asString
     }
 
     /**
@@ -183,7 +182,7 @@ class Feature internal constructor(
      * @since 1.0.0
      */
     fun getIntProperty(key: String): Int? {
-        return properties?.asInt
+        return properties?.get(key)?.asInt
     }
 
     /**
@@ -194,7 +193,7 @@ class Feature internal constructor(
      * @since 1.0.0
      */
     fun getLongProperty(key: String): Long? {
-        return properties?.asLong
+        return properties?.get(key)?.asLong
     }
 
     /**
@@ -205,7 +204,7 @@ class Feature internal constructor(
      * @since 1.0.0
      */
     fun getFloatProperty(key: String): Float? {
-        return properties?.asFloat
+        return properties?.get(key)?.asFloat
     }
 
     /**
@@ -216,7 +215,7 @@ class Feature internal constructor(
      * @since 1.0.0
      */
     fun getDoubleProperty(key: String): Double? {
-        return properties?.asDouble
+        return properties?.get(key)?.asDouble
     }
 
     /**
@@ -303,7 +302,10 @@ class Feature internal constructor(
     }
 
     override fun toJson(): String {
-        return toCommon().toJson()
+        val commonModel =  toCommon()
+        return commonModel
+            .copy(properties = commonModel.properties.takeIf { properties?.isEmpty != true })
+            .toJson()
     }
 
     override fun equals(other: Any?): Boolean {

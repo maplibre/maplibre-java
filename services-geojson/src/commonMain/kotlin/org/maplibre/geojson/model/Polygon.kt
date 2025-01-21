@@ -132,7 +132,7 @@ constructor(
          */
         @JvmStatic
         @JvmOverloads
-        fun fromOuterInner(
+        fun fromOuterInnerLines(
             outer: LineString,
             inner: List<LineString> = emptyList(),
             bbox: BoundingBox? = null,

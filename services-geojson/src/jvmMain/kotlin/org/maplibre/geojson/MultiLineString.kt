@@ -53,7 +53,7 @@ class MultiLineString internal constructor(
 ) : CommonMultiLineString(
     coordinates,
     bbox
-), CoordinateContainer<List<List<Point?>?>?> {
+), CoordinateContainer<List<List<Point>>> {
 
     /**
      * This describes the TYPE of GeoJson geometry this object is, thus this will always return
@@ -83,7 +83,7 @@ class MultiLineString internal constructor(
      * @return a list of points
      * @since 3.0.0
      */
-    override fun coordinates(): List<List<Point?>> =
+    override fun coordinates(): List<List<Point>> =
         coordinates.map { line -> line.map { coord -> coord.toJvm() } }
 
     /**

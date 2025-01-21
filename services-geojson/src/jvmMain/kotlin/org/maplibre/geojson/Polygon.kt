@@ -56,7 +56,7 @@ class Polygon internal constructor(
 ) : CommonPolygon(
     coordinates,
     bbox,
-), CoordinateContainer<List<List<Point?>?>?> {
+), CoordinateContainer<List<List<Point>>> {
 
     /**
      * Convenience method to get the outer [LineString] which defines the outer perimeter of
