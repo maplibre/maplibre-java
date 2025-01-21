@@ -2,11 +2,8 @@ package org.maplibre.geojson
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
 import org.maplibre.geojson.common.toCommon
 import org.maplibre.geojson.common.toJvm
-import org.maplibre.geojson.common.toKtxJsonMap
 import org.maplibre.geojson.model.Feature as CommonFeature
 
 /**
@@ -48,17 +45,12 @@ import org.maplibre.geojson.model.Feature as CommonFeature
     replaceWith = ReplaceWith("Feature", "org.maplibre.geojson.model.Feature"),
 )
 class Feature internal constructor(
-    type: String,
-    bbox: BoundingBox?,
-    id: String?,
-    geometry: Geometry?,
-    private var props: JsonObject?
-) : CommonFeature(
-    geometry = geometry?.toCommon(),
-    properties = null,
-    id = id,
-    bbox = bbox,
-), GeoJson {
+    private val type: String,
+    private val bbox: BoundingBox?,
+    private val id: String?,
+    private val geometry: Geometry?,
+    private var properties: JsonObject?
+) : GeoJson {
 
     /**
      * This describes the TYPE of GeoJson geometry this object is, thus this will always return
@@ -80,7 +72,7 @@ class Feature internal constructor(
      * @return a list of double coordinate values describing a bounding box
      * @since 3.0.0
      */
-    override fun bbox(): BoundingBox? = bbox?.toJvm()
+    override fun bbox(): BoundingBox? = bbox
 
     /**
      * A feature may have a commonly used identifier which is either a unique String or number.
@@ -99,7 +91,7 @@ class Feature internal constructor(
      * @return a single defined [Geometry] which makes this feature spatially aware
      * @since 1.0.0
      */
-    fun geometry(): Geometry? = geometry?.toJvm()
+    fun geometry(): Geometry? = geometry
 
     /**
      * This contains the JSON object which holds the feature properties. The value of the properties
@@ -108,7 +100,7 @@ class Feature internal constructor(
      * @return a [JsonObject] which holds this features current properties
      * @since 1.0.0
      */
-    fun properties(): JsonObject? = props
+    fun properties(): JsonObject? = properties
 
     /**
      * Convenience method to add a String member.
@@ -239,22 +231,35 @@ class Feature internal constructor(
     }
 
     override fun toJson(): String {
-        return copy(properties = props?.toKtxJsonMap()?.toMutableMap())
-            .toJson()
+        return toCommon().toJson()
     }
 
     override fun equals(other: Any?): Boolean {
-        return copy(properties = props?.toKtxJsonMap()?.toMutableMap()) == other
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Feature
+
+        if (type != other.type) return false
+        if (bbox != other.bbox) return false
+        if (id != other.id) return false
+        if (geometry != other.geometry) return false
+        if (properties != other.properties) return false
+
+        return true
     }
 
     override fun hashCode(): Int {
-        return copy(properties = props?.toKtxJsonMap()?.toMutableMap())
-            .hashCode()
+        var result = type.hashCode()
+        result = 31 * result + (bbox?.hashCode() ?: 0)
+        result = 31 * result + (id?.hashCode() ?: 0)
+        result = 31 * result + (geometry?.hashCode() ?: 0)
+        result = 31 * result + (properties?.hashCode() ?: 0)
+        return result
     }
 
     override fun toString(): String {
-        return copy(properties = props?.toKtxJsonMap()?.toMutableMap())
-            .toJson()
+        return "Feature(type='$type', bbox=$bbox, id=$id, geometry=$geometry, properties=$properties)"
     }
 
     companion object {

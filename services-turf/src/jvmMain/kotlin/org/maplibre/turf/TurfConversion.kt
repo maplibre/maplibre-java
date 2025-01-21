@@ -8,6 +8,7 @@ import org.maplibre.geojson.MultiPoint
 import org.maplibre.geojson.MultiPolygon
 import org.maplibre.geojson.Point
 import org.maplibre.geojson.Polygon
+import org.maplibre.geojson.common.toCommon
 import org.maplibre.geojson.common.toJvm
 import org.maplibre.geojson.common.toKtxJsonMap
 import org.maplibre.turf.TurfConstants.TurfUnitCriteria
@@ -152,7 +153,7 @@ object TurfConversion {
      */
     @JvmStatic
     fun explode(feature: Feature): FeatureCollection {
-        return CommonTurfConversion.explode(feature).toJvm()
+        return CommonTurfConversion.explode(feature.toCommon()).toJvm()
     }
 
     /**
@@ -167,7 +168,7 @@ object TurfConversion {
     @JvmStatic
     @JvmOverloads
     fun polygonToLine(feature: Feature, properties: GsonJsonObject? = null): Feature? {
-        return CommonTurfConversion.polygonToLine(feature, properties?.toKtxJsonMap()?.toMutableMap()).toJvm()
+        return CommonTurfConversion.polygonToLine(feature.toCommon(), properties?.toKtxJsonMap()?.toMutableMap()).toJvm()
     }
 
     /**
@@ -237,7 +238,7 @@ object TurfConversion {
         feature: Feature,
         properties: GsonJsonObject? = null
     ): FeatureCollection {
-        return CommonTurfConversion.multiPolygonToLine(feature, properties?.toKtxJsonMap()?.toMutableMap()).toJvm()
+        return CommonTurfConversion.multiPolygonToLine(feature.toCommon(), properties?.toKtxJsonMap()?.toMutableMap()).toJvm()
     }
 
     /**

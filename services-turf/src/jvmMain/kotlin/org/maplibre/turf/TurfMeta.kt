@@ -9,6 +9,7 @@ import org.maplibre.geojson.MultiPoint
 import org.maplibre.geojson.MultiPolygon
 import org.maplibre.geojson.Point
 import org.maplibre.geojson.Polygon
+import org.maplibre.geojson.common.toCommon
 import org.maplibre.geojson.common.toJvm
 import org.maplibre.geojson.turf.TurfMeta as CommonTurfMeta
 
@@ -133,7 +134,7 @@ object TurfMeta {
         feature: Feature,
         excludeWrapCoord: Boolean
     ): List<Point> {
-        return CommonTurfMeta.coordAll(feature, excludeWrapCoord).map { pt -> pt.toJvm() }
+        return CommonTurfMeta.coordAll(feature.toCommon(), excludeWrapCoord).map { pt -> pt.toJvm() }
     }
 
     /**

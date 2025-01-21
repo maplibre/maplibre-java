@@ -4,8 +4,6 @@ import com.google.gson.JsonParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.JsonElement as KtxJsonElement
-import kotlinx.serialization.json.JsonObject as KtxJsonObject
-import com.google.gson.JsonElement as GsonJsonElement
 import com.google.gson.JsonObject as GsonJsonObject
 import org.maplibre.geojson.model.BoundingBox
 import org.maplibre.geojson.model.Point
@@ -47,16 +45,22 @@ fun GeometryCollection.toJvm(): JvmGeometryCollection {
 }
 
 fun Feature.toJvm(): JvmFeature {
-    return when (this) {
-        is JvmFeature -> this // Do not convert, to keep JVM properties
-        else -> JvmFeature(
-            "Feature",
-            bbox?.toJvm(),
-            id,
-            geometry?.toJvm(),
-            properties?.let { props -> JsonParser.parseString(props.toString()).asJsonObject }
-        )
-    }
+    return JvmFeature(
+        "Feature",
+        bbox?.toJvm(),
+        id,
+        geometry?.toJvm(),
+        properties?.let { props -> JsonParser.parseString(props.toString()).asJsonObject }
+    )
+}
+
+fun JvmFeature.toCommon(): Feature {
+    return Feature(
+        geometry = geometry()?.toCommon(),
+        bbox = bbox(),
+        id = id(),
+        properties = properties()?.toKtxJsonMap()?.toMutableMap()
+    )
 }
 
 fun FeatureCollection.toJvm(): JvmFeatureCollection {

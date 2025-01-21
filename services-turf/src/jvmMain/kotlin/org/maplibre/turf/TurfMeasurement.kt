@@ -343,7 +343,7 @@ object TurfMeasurement {
      */
     @JvmStatic
     fun bbox(feature: Feature): DoubleArray {
-        return CommonTurfMeasurement.bbox(feature)
+        return CommonTurfMeasurement.bbox(feature.toCommon())
     }
 
     /**
@@ -436,7 +436,7 @@ object TurfMeasurement {
      */
     @JvmStatic
     fun area(feature: Feature): Double {
-        return CommonTurfMeasurement.area(feature)
+        return CommonTurfMeasurement.area(feature.toCommon())
     }
 
     /**
@@ -478,7 +478,7 @@ object TurfMeasurement {
         properties: JsonObject?,
         id: String?
     ): Feature {
-        return CommonTurfMeasurement.center(feature, properties?.toKtxJsonMap(), id).toJvm()
+        return CommonTurfMeasurement.center(feature.toCommon(), properties?.toKtxJsonMap(), id).toJvm()
     }
 
     /**
@@ -490,7 +490,7 @@ object TurfMeasurement {
      */
     @JvmStatic
     fun center(feature: Feature): Feature {
-        return CommonTurfMeasurement.center(feature).toJvm()
+        return CommonTurfMeasurement.center(feature.toCommon()).toJvm()
     }
 
     /**

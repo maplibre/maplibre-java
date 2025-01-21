@@ -3,6 +3,7 @@ package org.maplibre.turf
 import org.maplibre.geojson.Feature
 import org.maplibre.geojson.LineString
 import org.maplibre.geojson.Point
+import org.maplibre.geojson.common.toCommon
 import org.maplibre.geojson.common.toJvm
 import org.maplibre.turf.TurfConstants.TurfUnitCriteria
 import org.maplibre.turf.common.toUnit
@@ -40,7 +41,7 @@ object TurfMisc {
         stopPt: Point,
         line: Feature
     ): LineString {
-        return CommonTurfMisc.lineSlice(startPt, stopPt, line).toJvm()
+        return CommonTurfMisc.lineSlice(startPt, stopPt, line.toCommon()).toJvm()
     }
 
     /**
@@ -90,7 +91,7 @@ object TurfMisc {
         stopDist: Double,
         @TurfUnitCriteria units: String
     ): LineString {
-        return CommonTurfMisc.lineSliceAlong(line, startDist, stopDist, units.toUnit()).toJvm()
+        return CommonTurfMisc.lineSliceAlong(line.toCommon(), startDist, stopDist, units.toUnit()).toJvm()
     }
 
     /**

@@ -1,5 +1,6 @@
 package org.maplibre.geojson
 
+import org.maplibre.geojson.common.toCommon
 import org.maplibre.geojson.common.toJvm
 import org.maplibre.geojson.model.FeatureCollection as CommonFeatureCollection
 
@@ -34,7 +35,7 @@ class FeatureCollection internal constructor(
     bbox: BoundingBox?,
     features: List<Feature>
 ) : CommonFeatureCollection(
-    features,
+    features.map { f -> f.toCommon() },
     bbox
 ), GeoJson {
 
