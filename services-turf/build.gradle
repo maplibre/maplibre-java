@@ -9,7 +9,10 @@ plugins {
 kotlin {
     jvmToolchain(17)
 
-    jvm()
+    jvm {
+        // Only for deprecated test support.
+        withJava()
+    }
 
     def xcf = new XCFrameworkConfig(project)
     [iosX64(), iosArm64(), iosSimulatorArm64()].forEach { target ->
@@ -31,6 +34,12 @@ kotlin {
 
         jvmMain.dependencies {
             api libs.gson
+        }
+
+        jvmTest.dependencies {
+            implementation libs.junit
+            implementation libs.hamcrestJunit
+            implementation libs.mockito
         }
     }
 

@@ -42,7 +42,7 @@ object TurfAssertions {
      * @since 1.2.0
      */
     @JvmStatic
-    fun geojsonType(value: GeoJson?, type: String, name: String) {
+    fun geojsonType(value: GeoJson?, type: String?, name: String?) {
         if (type == null || type.length == 0 || name == null || name.length == 0) {
             throw TurfException("Type and name required")
         }
@@ -66,7 +66,7 @@ object TurfAssertions {
      * @since 1.2.0
      */
     @JvmStatic
-    fun featureOf(feature: Feature, type: String, name: String) {
+    fun featureOf(feature: Feature, type: String, name: String?) {
         if (name == null || name.length == 0) {
             throw TurfException(".featureOf() requires a name")
         }
@@ -101,7 +101,7 @@ object TurfAssertions {
      * @since 1.2.0
      */
     @JvmStatic
-    fun collectionOf(featureCollection: FeatureCollection, type: String, name: String) {
+    fun collectionOf(featureCollection: FeatureCollection?, type: String?, name: String?) {
         if (name == null || name.length == 0) {
             throw TurfException("collectionOf() requires a name")
         }

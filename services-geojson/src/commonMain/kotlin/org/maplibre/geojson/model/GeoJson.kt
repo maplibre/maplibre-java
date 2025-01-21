@@ -1,5 +1,9 @@
 package org.maplibre.geojson.model
 
+import kotlinx.serialization.Serializable
+import org.maplibre.geojson.utils.json
+import kotlin.jvm.JvmStatic
+
 /**
  * Generic implementation for all GeoJson objects defining common traits that each GeoJson object
  * has. This logic is carried over to [Geometry] which is an interface which all seven GeoJson
@@ -7,7 +11,8 @@ package org.maplibre.geojson.model
  *
  * @since 1.0.0
  */
-interface GeoJson {
+@Serializable
+sealed interface GeoJson {
 
     /**
      * A GeoJson object MAY have a member named "bbox" to include information on the coordinate range
@@ -30,4 +35,17 @@ interface GeoJson {
      * @since 1.0.0
      */
     fun toJson(): String
+
+    companion object {
+
+        /**
+         * Create a new GeoJSON instance that is a sub class of this GeoJSON interface.
+         *
+         * @param jsonString a formatted valid JSON string defining a Geometry
+         * @return a new instance of this class defined by the values in the JSON string
+         * @since 1.0.0
+         */
+        @JvmStatic
+        fun fromJson(jsonString: String): GeoJson = json.decodeFromString(jsonString)
+    }
 }

@@ -1,6 +1,17 @@
 package org.maplibre.geojson
 
+import org.maplibre.geojson.common.toJvm
 import org.maplibre.geojson.model.BoundingBox
+import org.maplibre.geojson.model.Feature
+import org.maplibre.geojson.model.FeatureCollection
+import org.maplibre.geojson.model.GeometryCollection
+import org.maplibre.geojson.model.LineString
+import org.maplibre.geojson.model.MultiLineString
+import org.maplibre.geojson.model.MultiPoint
+import org.maplibre.geojson.model.MultiPolygon
+import org.maplibre.geojson.model.Point
+import org.maplibre.geojson.model.Polygon
+import org.maplibre.geojson.model.GeoJson as CommonGeoJson
 import java.io.Serializable
 
 /**
@@ -47,4 +58,30 @@ interface GeoJson : Serializable {
      * @since 3.0.0
      */
     fun bbox(): BoundingBox?
+
+    companion object {
+
+        /**
+         * Create a new instance of GeoJSIN class by passing in a formatted valid JSON String.
+         *
+         * @param json a formatted valid JSON string defining a GeoJson Geometry
+         * @return a new instance of Geometry class defined by the values passed inside
+         * this static factory method
+         * @since 4.0.0
+         */
+        @JvmStatic
+        fun fromJson(json: String): GeoJson {
+            return when (val commonGeoJson = CommonGeoJson.fromJson(json)) {
+                is Feature -> commonGeoJson.toJvm()
+                is FeatureCollection -> commonGeoJson.toJvm()
+                is Point -> commonGeoJson.toJvm()
+                is LineString -> commonGeoJson.toJvm()
+                is MultiLineString -> commonGeoJson.toJvm()
+                is MultiPoint -> commonGeoJson.toJvm()
+                is MultiPolygon -> commonGeoJson.toJvm()
+                is Polygon -> commonGeoJson.toJvm()
+                is GeometryCollection -> commonGeoJson.toJvm()
+            }
+        }
+    }
 }

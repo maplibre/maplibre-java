@@ -1,6 +1,5 @@
 package org.maplibre.turf
 
-import org.maplibre.geojson.turf.TurfException
 import org.maplibre.geojson.Feature
 import org.maplibre.geojson.FeatureCollection
 import org.maplibre.geojson.LineString
@@ -134,7 +133,8 @@ object TurfMeta {
         feature: Feature,
         excludeWrapCoord: Boolean
     ): List<Point> {
-        return CommonTurfMeta.coordAll(feature.toCommon(), excludeWrapCoord).map { pt -> pt.toJvm() }
+        return CommonTurfMeta.coordAll(feature.toCommon(), excludeWrapCoord)
+            .map { pt -> pt.toJvm() }
     }
 
     /**
@@ -172,6 +172,7 @@ object TurfMeta {
         if (obj.geometry() is Point) {
             return obj.geometry() as Point
         }
+
         throw TurfException("A Feature with a Point geometry is required.")
     }
 }

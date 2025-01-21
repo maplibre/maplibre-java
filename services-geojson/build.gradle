@@ -11,6 +11,7 @@ kotlin {
     jvmToolchain(17)
 
     jvm {
+        // Only for deprecated test support.
         withJava()
     }
 

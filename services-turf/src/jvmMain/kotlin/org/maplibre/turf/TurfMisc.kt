@@ -6,6 +6,7 @@ import org.maplibre.geojson.Point
 import org.maplibre.geojson.common.toCommon
 import org.maplibre.geojson.common.toJvm
 import org.maplibre.turf.TurfConstants.TurfUnitCriteria
+import org.maplibre.turf.common.toJvm
 import org.maplibre.turf.common.toUnit
 import org.maplibre.geojson.turf.TurfMisc as CommonTurfMisc
 
@@ -62,7 +63,11 @@ object TurfMisc {
         stopPt: Point,
         line: LineString
     ): LineString {
-        return CommonTurfMisc.lineSlice(startPt, stopPt, line).toJvm()
+        try {
+            return CommonTurfMisc.lineSlice(startPt, stopPt, line).toJvm()
+        } catch (e: Exception) {
+            throw e.toJvm()
+        }
     }
 
     /**
@@ -91,7 +96,12 @@ object TurfMisc {
         stopDist: Double,
         @TurfUnitCriteria units: String
     ): LineString {
-        return CommonTurfMisc.lineSliceAlong(line.toCommon(), startDist, stopDist, units.toUnit()).toJvm()
+        try {
+            return CommonTurfMisc.lineSliceAlong(line.toCommon(), startDist, stopDist, units.toUnit())
+                .toJvm()
+        } catch (e: Exception) {
+            throw e.toJvm()
+        }
     }
 
     /**
@@ -136,7 +146,11 @@ object TurfMisc {
      */
     @JvmStatic
     fun nearestPointOnLine(pt: Point, coords: List<Point>): Feature {
-        return CommonTurfMisc.nearestPointOnLine(pt, coords).toJvm()
+        try {
+            return CommonTurfMisc.nearestPointOnLine(pt, coords).toJvm()
+        } catch (e: Exception) {
+            throw e.toJvm()
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ import org.maplibre.geojson.BoundingBox
 import org.maplibre.geojson.Feature
 import org.maplibre.geojson.FeatureCollection
 import org.maplibre.geojson.GeoJson
+import org.maplibre.geojson.model.GeoJson as CommonGeoJson
 import org.maplibre.geojson.Geometry
 import org.maplibre.geojson.LineString
 import org.maplibre.geojson.MultiLineString
@@ -411,7 +412,7 @@ object TurfMeasurement {
      */
     @JvmStatic
     fun envelope(geoJson: GeoJson): Polygon? {
-        return CommonTurfMeasurement.envelope(CommonGeometry.fromJson(geoJson.toJson()))?.toJvm()
+        return CommonTurfMeasurement.envelope(CommonGeoJson.fromJson(geoJson.toJson()))?.toJvm()
     }
 
     /**
@@ -446,6 +447,7 @@ object TurfMeasurement {
      * @return area in square meters
      * @since 4.10.0
      */
+    @JvmStatic
     fun area(featureCollection: FeatureCollection): Double {
         return CommonTurfMeasurement.area(featureCollection)
     }

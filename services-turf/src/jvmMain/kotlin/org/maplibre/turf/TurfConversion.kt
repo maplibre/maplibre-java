@@ -12,6 +12,7 @@ import org.maplibre.geojson.common.toCommon
 import org.maplibre.geojson.common.toJvm
 import org.maplibre.geojson.common.toKtxJsonMap
 import org.maplibre.turf.TurfConstants.TurfUnitCriteria
+import org.maplibre.turf.common.toJvm
 import org.maplibre.turf.common.toUnit
 import org.maplibre.geojson.turf.TurfConversion as CommonTurfConversion
 import com.google.gson.JsonObject as GsonJsonObject
@@ -269,6 +270,10 @@ object TurfConversion {
      */
     @JvmStatic
     fun combine(originalFeatureCollection: FeatureCollection): FeatureCollection {
-        return CommonTurfConversion.combine(originalFeatureCollection).toJvm()
+        try {
+            return CommonTurfConversion.combine(originalFeatureCollection).toJvm()
+        } catch (e: Exception) {
+            throw e.toJvm()
+        }
     }
 }
