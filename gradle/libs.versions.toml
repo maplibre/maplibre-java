@@ -21,7 +21,6 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 hamcrestJunit = { group = "org.hamcrest", name = "hamcrest-junit", version.ref = "hamcrestJunit" }
 mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 
-
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 gradle-nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "gradleNexus" }

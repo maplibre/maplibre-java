@@ -23,6 +23,28 @@ kotlin {
         }
     }
 
+    js(IR) {
+        browser {
+            testTask {
+                // TODO (fabi755): not working to read assets file at the moment
+                enabled = false
+            }
+        }
+
+        nodejs()
+    }
+
+    wasmJs {
+        browser {
+            testTask {
+                // TODO (fabi755): not working to read assets file at the moment
+                enabled = false
+            }
+        }
+
+        nodejs()
+    }
+
     sourceSets {
         commonMain.dependencies {
             api libs.kotlinx.serialization.json

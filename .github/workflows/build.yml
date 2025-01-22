@@ -67,7 +67,9 @@ jobs:
             publishIosArm64PublicationToSonatypeRepository \
             publishIosSimulatorArm64PublicationToSonatypeRepository \
             publishIosX64PublicationToSonatypeRepository \
-            publishReleasePublicationToSonatypeRepositoryToSonatypeRepository \
+            publishJsPublicationToSonatypeRepository \
+            publishWasmJsPublicationToSonatypeRepository \
+            publishReleasePublicationToSonatypeRepository \
             closeAndReleaseSonatypeStagingRepository \
             --info --stacktrace
         env:

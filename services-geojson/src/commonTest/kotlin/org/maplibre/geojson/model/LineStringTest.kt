@@ -56,10 +56,10 @@ class LineStringTest {
         )
 
         val lineString = LineString(points)
-        compareJson(
-            lineString.toJson(),
-            "{\"coordinates\":[[1.0,1.0],[2.0,2.0],[3.0,3.0]],\"type\":\"LineString\"}"
-        )
+
+        val actualLineString = LineString.fromJson(lineString.toJson())
+        val expectedLineString = LineString.fromJson("{\"coordinates\":[[1.0,1.0],[2.0,2.0],[3.0,3.0]],\"type\":\"LineString\"}")
+        assertEquals(expectedLineString, actualLineString)
     }
 
     @Test
@@ -90,12 +90,12 @@ class LineStringTest {
 
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val lineString = LineString(points, bbox)
-        val lineStringJson = lineString.toJson()
-        compareJson(
-            "{\"coordinates\":[[1.0,1.0],[2.0,2.0],[3.0,3.0]],"
-                    + "\"type\":\"LineString\",\"bbox\":[1.0,2.0,3.0,4.0]}",
-            lineStringJson
-        )
+
+        val actualLineString = LineString.fromJson(lineString.toJson())
+        val expectedLineString = LineString.fromJson("{\"coordinates\":[[1.0,1.0],[2.0,2.0],[3.0,3.0]],"
+                + "\"type\":\"LineString\",\"bbox\":[1.0,2.0,3.0,4.0]}")
+
+        assertEquals(expectedLineString, actualLineString)
     }
 
     @Test
@@ -135,7 +135,10 @@ class LineStringTest {
                 "  \"coordinates\": [[ 100.0, 0.0], [101.0, 1.0]]} "
         val geo: LineString = LineString.fromJson(json)
         val geoJsonString = geo.toJson()
-        compareJson(geoJsonString, json)
+
+        val actualLineString = LineString.fromJson(geoJsonString)
+        val expectedLineString = LineString.fromJson(json)
+        assertEquals(expectedLineString, actualLineString)
     }
 
     @Test

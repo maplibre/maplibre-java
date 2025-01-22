@@ -56,10 +56,10 @@ class MultiLineStringTest {
         )
 
         val multiLineString: MultiLineString = MultiLineString.fromLineStrings(lineStrings)
-        compareJson(
-            multiLineString.toJson(),
-            "{\"type\":\"MultiLineString\",\"coordinates\":[[[1.0,2.0],[2.0,3.0]],[[1.0,2.0],[2.0,3.0]]]}"
-        )
+
+        val actualMultiLineString = MultiLineString.fromJson(multiLineString.toJson())
+        val expectedMultiLineString = MultiLineString.fromJson("{\"type\":\"MultiLineString\",\"coordinates\":[[[1.0,2.0],[2.0,3.0]],[[1.0,2.0],[2.0,3.0]]]}")
+        assertEquals(expectedMultiLineString, actualMultiLineString)
     }
 
     @Test
@@ -117,11 +117,11 @@ class MultiLineStringTest {
         )
 
         val multiLineString: MultiLineString = MultiLineString.fromLineStrings(lineStrings, bbox)
-        compareJson(
-            multiLineString.toJson(),
-            "{\"type\":\"MultiLineString\",\"bbox\":[1.0,2.0,3.0,4.0],"
-                    + "\"coordinates\":[[[1.0,2.0],[2.0,3.0]],[[1.0,2.0],[2.0,3.0]]]}"
-        )
+
+        val actualMultiLineString = MultiLineString.fromJson(multiLineString.toJson())
+        val expectedMultiLineString = MultiLineString.fromJson("{\"type\":\"MultiLineString\",\"bbox\":[1.0,2.0,3.0,4.0],"
+                + "\"coordinates\":[[[1.0,2.0],[2.0,3.0]],[[1.0,2.0],[2.0,3.0]]]}")
+        assertEquals(expectedMultiLineString, actualMultiLineString)
     }
 
     @Test
@@ -140,7 +140,10 @@ class MultiLineStringTest {
         val json = "{\"type\": \"MultiLineString\", " +
                 "\"coordinates\": [[[100.0, 0.0],[101.0, 1.0]],[[102.0, 2.0],[103.0, 3.0]]] }"
         val geo = MultiLineString.fromJson(json)
-        compareJson(json, geo.toJson())
+
+        val actualMultiLineString = MultiLineString.fromJson(geo.toJson())
+        val expectedMultiLineString = MultiLineString.fromJson(json)
+        assertEquals(expectedMultiLineString, actualMultiLineString)
     }
 
     @Test

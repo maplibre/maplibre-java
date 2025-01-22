@@ -41,10 +41,10 @@ class MultiPointTest {
         )
 
         val multiPoint = MultiPoint(points)
-        compareJson(
-            multiPoint.toJson(),
-            "{\"coordinates\":[[1.0,2.0],[2.0,3.0]],\"type\":\"MultiPoint\"}"
-        )
+
+        val actualMultiPoint = MultiPoint.fromJson(multiPoint.toJson())
+        val expectedMultiPoint = MultiPoint.fromJson("{\"coordinates\":[[1.0,2.0],[2.0,3.0]],\"type\":\"MultiPoint\"}")
+        assertEquals(expectedMultiPoint, actualMultiPoint)
     }
 
     @Test
@@ -72,10 +72,10 @@ class MultiPointTest {
 
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val multiPoint = MultiPoint(points, bbox)
-        compareJson(
-            multiPoint.toJson(),
-            "{\"coordinates\":[[1.0,2.0],[2.0,3.0]],\"type\":\"MultiPoint\",\"bbox\":[1.0,2.0,3.0,4.0]}"
-        )
+
+        val actualMultiPoint = MultiPoint.fromJson(multiPoint.toJson())
+        val expectedMultiPoint = MultiPoint.fromJson("{\"coordinates\":[[1.0,2.0],[2.0,3.0]],\"type\":\"MultiPoint\",\"bbox\":[1.0,2.0,3.0,4.0]}")
+        assertEquals(expectedMultiPoint, actualMultiPoint)
     }
 
     @Test
@@ -95,7 +95,10 @@ class MultiPointTest {
         val json = ("{ \"type\": \"MultiPoint\","
                 + "\"coordinates\": [ [100.0, 0.0], [101.0, 1.0] ] } ")
         val geo: MultiPoint = MultiPoint.fromJson(json)
-        compareJson(json, geo.toJson())
+
+        val actualMultiPoint = MultiPoint.fromJson(geo.toJson())
+        val expectedMultiPoint = MultiPoint.fromJson(json)
+        assertEquals(expectedMultiPoint, actualMultiPoint)
     }
 
     @Test

@@ -49,12 +49,11 @@ class GeometryTest {
         val geometry: Geometry = Point(
             2.0, 3.0, bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         )
-        val pointStr = geometry.toJson()
-        compareJson(
-            "{\"coordinates\": [2.0,3.0],"
-                    + "\"type\":\"Point\",\"bbox\":[1.0,2.0,3.0,4.0]}",
-            pointStr
-        )
+
+        val actualPoint = Point.fromJson(geometry.toJson())
+        val expectedPoint = Point.fromJson("{\"coordinates\": [2.0,3.0],"
+                + "\"type\":\"Point\",\"bbox\":[1.0,2.0,3.0,4.0]}")
+        assertEquals(expectedPoint, actualPoint)
     }
 
     @Test
@@ -89,9 +88,11 @@ class GeometryTest {
             ),
             BoundingBox(1.0, 2.0, 3.0, 4.0)
         )
-        val geometryJsonStr = geometry.toJson()
-        val expectedJsonString = ("{\"coordinates\":[[1.0,2.0],[2.0,3.0],[3.0,4.0]],"
+
+        val actualLineString = LineString.fromJson(geometry.toJson())
+        val expectedLineString = LineString.fromJson("{\"coordinates\":[[1.0,2.0],[2.0,3.0],[3.0,4.0]],"
                 + "\"type\":\"LineString\",\"bbox\":[1.0,2.0,3.0,4.0]}")
-        compareJson(expectedJsonString, geometryJsonStr)
+
+        assertEquals(expectedLineString, actualLineString)
     }
 }

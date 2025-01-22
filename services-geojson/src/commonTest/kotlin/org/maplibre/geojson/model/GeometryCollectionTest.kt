@@ -49,11 +49,11 @@ class GeometryCollectionTest {
         val geometries = listOf(points[0], lineString)
 
         val geometryCollection = GeometryCollection(geometries)
-        compareJson(
-            geometryCollection.toJson(),
-            ("{\"type\":\"GeometryCollection\",\"geometries\":[" + "{\"type\":\"Point\","
+
+        val actualGeometryCollection = GeometryCollection.fromJson(geometryCollection.toJson())
+            val expectedGeometryCollection = GeometryCollection.fromJson("{\"type\":\"GeometryCollection\",\"geometries\":[" + "{\"type\":\"Point\","
                     + "\"coordinates\":[1.0,2.0]},{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}]}")
-        )
+        assertEquals(expectedGeometryCollection, actualGeometryCollection)
     }
 
     @Test
@@ -96,12 +96,12 @@ class GeometryCollectionTest {
 
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val geometryCollection = GeometryCollection(geometries, bbox)
-        compareJson(
-            geometryCollection.toJson(),
-            ("{\"type\":\"GeometryCollection\",\"bbox\":[1.0,2.0,3.0,4.0],"
-                    + "\"geometries\":[{\"type\":\"Point\",\"coordinates\":[1.0,2.0]},"
-                    + "{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}]}")
-        )
+
+        val actualGeometryCollection = GeometryCollection.fromJson(geometryCollection.toJson())
+        val expectedGeometryCollection = GeometryCollection.fromJson("{\"type\":\"GeometryCollection\",\"bbox\":[1.0,2.0,3.0,4.0],"
+                + "\"geometries\":[{\"type\":\"Point\",\"coordinates\":[1.0,2.0]},"
+                + "{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}]}")
+        assertEquals(expectedGeometryCollection, actualGeometryCollection)
     }
 
     @Test
@@ -153,7 +153,8 @@ class GeometryCollectionTest {
             BoundingBox(-120.0, -40.0, 120.0, 40.0)
         )
 
-        val jsonString = geometryCollection.toJson()
-        compareJson(jsonOriginal, jsonString)
+        val actualGeometryCollection = GeometryCollection.fromJson(geometryCollection.toJson())
+        val expectedGeometryCollection = GeometryCollection.fromJson(jsonOriginal)
+        assertEquals(expectedGeometryCollection, actualGeometryCollection)
     }
 }

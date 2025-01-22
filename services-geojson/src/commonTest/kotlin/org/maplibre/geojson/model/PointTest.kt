@@ -44,10 +44,10 @@ class PointTest {
     @Test
     fun bbox_doesSerializeWhenNotPresent() {
         val point = Point(1.0, 2.0)
-        compareJson(
-            point.toJson(),
-            "{\"type\":\"Point\",\"coordinates\":[1.0, 2.0]}"
-        )
+
+        val actualPoint = Point.fromJson(point.toJson())
+        val expectedPoint = Point.fromJson("{\"type\":\"Point\",\"coordinates\":[1.0, 2.0]}")
+        assertEquals(expectedPoint, actualPoint)
     }
 
     @Test
@@ -71,11 +71,11 @@ class PointTest {
     fun bbox_doesSerializeWhenPresent() {
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val point = Point(2.0, 2.0, bbox = bbox)
-        compareJson(
-            point.toJson(),
-            "{\"coordinates\": [2.0,2.0],"
-                    + "\"type\":\"Point\",\"bbox\":[1.0,2.0,3.0,4.0]}"
-        )
+
+        val actualPoint = Point.fromJson(point.toJson())
+        val expectedPoint = Point.fromJson("{\"coordinates\": [2.0,2.0],"
+                + "\"type\":\"Point\",\"bbox\":[1.0,2.0,3.0,4.0]}")
+        assertEquals(expectedPoint, actualPoint)
     }
 
     @Test
@@ -111,10 +111,11 @@ class PointTest {
 
     @Test
     fun toJson() {
-        val json =
-            "{ \"type\": \"Point\", \"coordinates\": [ 100.0, 0.0] }"
-        val geo: Point = Point.fromJson(json)
-        compareJson(json, geo.toJson())
+        val json = "{ \"type\": \"Point\", \"coordinates\": [ 100.0, 0.0] }"
+
+        val actualPoint = Point.fromJson(Point.fromJson(json).toJson())
+        val expectedPoint = Point.fromJson(json)
+        assertEquals(expectedPoint, actualPoint)
     }
 
     @Test

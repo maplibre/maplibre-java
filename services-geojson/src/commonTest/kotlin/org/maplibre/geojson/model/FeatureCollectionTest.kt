@@ -45,13 +45,12 @@ class FeatureCollectionTest {
 
         val features = listOf(feature, feature)
 
-        val featureCollection = FeatureCollection(features)
-        compareJson(
-            featureCollection.toJson(),
-            ("{\"type\":\"FeatureCollection\",\"features\":[" +
-                    "{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}," +
-                    "{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}]}")
-        )
+        val actualFeatureCollection = FeatureCollection.fromJson(FeatureCollection(features).toJson())
+        val expectedFeatureCollection = FeatureCollection.fromJson("{\"type\":\"FeatureCollection\",\"features\":[" +
+                "{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}," +
+                "{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}]}")
+
+        assertEquals(expectedFeatureCollection, actualFeatureCollection)
     }
 
     @Test
@@ -82,16 +81,15 @@ class FeatureCollectionTest {
         val features = listOf(feature, feature)
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
 
-        val featureCollection = FeatureCollection(features, bbox)
-        compareJson(
-            featureCollection.toJson(),
-            ("{\"type\":\"FeatureCollection\",\"bbox\":[1.0,2.0,3.0,4.0],"
-                    + "\"features\":[{\"type\":\"Feature\","
-                    + "\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}},"
-                    + "{\"type\":\"Feature\","
-                    + "\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}"
-                    + "]}")
-        )
+        val actualFeatureCollection = FeatureCollection.fromJson(FeatureCollection(features, bbox).toJson())
+        val expectedFeatureCollection = FeatureCollection.fromJson("{\"type\":\"FeatureCollection\",\"bbox\":[1.0,2.0,3.0,4.0],"
+                + "\"features\":[{\"type\":\"Feature\","
+                + "\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}},"
+                + "{\"type\":\"Feature\","
+                + "\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}"
+                + "]}")
+
+        assertEquals(expectedFeatureCollection, actualFeatureCollection)
     }
 
     @Test
@@ -118,8 +116,9 @@ class FeatureCollectionTest {
     @Test
     fun toJson() {
         val json = loadJsonFixture(SAMPLE_FEATURECOLLECTION_BBOX)
-        val geo = FeatureCollection.fromJson(json)
-        compareJson(json, geo.toJson())
+        val expectedFeatureCollection = FeatureCollection.fromJson(json)
+        val actualFeatureCollection = FeatureCollection.fromJson(FeatureCollection.fromJson(json).toJson())
+        assertEquals(expectedFeatureCollection, actualFeatureCollection)
     }
 
     companion object {

@@ -26,3 +26,9 @@ nexusPublishing {
         delayBetween = Duration.ofSeconds(10)
     }
 }
+
+allprojects {
+    project.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin) {
+        project.extensions.getByType(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec).version = "23.6.0"
+    }
+}

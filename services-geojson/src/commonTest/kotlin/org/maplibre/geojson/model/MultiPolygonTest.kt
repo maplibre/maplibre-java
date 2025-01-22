@@ -63,11 +63,11 @@ class MultiPolygonTest {
             fromOuterInnerLines(outer)
         )
         val multiPolygon = MultiPolygon.fromPolygons(polygons)
-        compareJson(
-            multiPolygon.toJson(),
-            "{\"type\":\"MultiPolygon\","
-                    + "\"coordinates\":[[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]],[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]]]}"
-        )
+
+        val actualMultiPolygon = MultiPolygon.fromJson(multiPolygon.toJson())
+        val expectedMultiPolygon = MultiPolygon.fromJson("{\"type\":\"MultiPolygon\","
+                + "\"coordinates\":[[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]],[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]]]}")
+        assertEquals(expectedMultiPolygon, actualMultiPolygon)
     }
 
     @Test
@@ -127,11 +127,11 @@ class MultiPolygonTest {
         )
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val multiPolygon = MultiPolygon.fromPolygons(polygons, bbox)
-        compareJson(
-            multiPolygon.toJson(),
-            "{\"type\":\"MultiPolygon\",\"bbox\":[1.0,2.0,3.0,4.0],"
-                    + "\"coordinates\":[[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]],[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]]]}"
-        )
+
+        val actualMultiPolygon = MultiPolygon.fromJson(multiPolygon.toJson())
+        val expectedMultiPolygon = MultiPolygon.fromJson("{\"type\":\"MultiPolygon\",\"bbox\":[1.0,2.0,3.0,4.0],"
+                + "\"coordinates\":[[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]],[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]]]}")
+        assertEquals(expectedMultiPolygon, actualMultiPolygon)
     }
 
     @Test
@@ -154,7 +154,10 @@ class MultiPolygonTest {
                 "      [[100.2, 0.2], [100.2, 0.8], [100.8, 0.8], [100.8, 0.2], [100.2, 0.2]]]]}"
 
         val multiPolygon = MultiPolygon.fromJson(json)
-        compareJson(json, multiPolygon.toJson())
+
+        val actualMultiPolygon = MultiPolygon.fromJson(multiPolygon.toJson())
+        val expectedMultiPolygon = MultiPolygon.fromJson(json)
+        assertEquals(expectedMultiPolygon, actualMultiPolygon)
     }
 
     @Test
