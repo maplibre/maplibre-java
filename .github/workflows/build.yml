@@ -29,9 +29,10 @@ jobs:
 
       - name: Should make release?
         if: |
-          github.ref == 'refs/heads/main' && 
-            ((github.event.inputs.release && github.event_name == 'workflow_dispatch') ||
-              (github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.version-file-changed.outputs.any_changed == 'true'))
+          github.event_name == 'workflow_dispatch' && github.event.inputs.release ||
+          (github.ref == 'refs/heads/main' &&
+            github.event_name == 'push' &&
+            steps.version-file-changed.outputs.any_changed == 'true')
         run: echo make_release=true >> "$GITHUB_ENV"
 
       - name: Get version
