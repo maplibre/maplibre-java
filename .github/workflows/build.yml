@@ -63,14 +63,7 @@ jobs:
         if: env.make_release
         run: |
           ./gradlew \
-            publishKotlinMultiplatformPublicationToSonatypeRepository \
-            publishJvmPublicationToSonatypeRepository \
-            publishIosArm64PublicationToSonatypeRepository \
-            publishIosSimulatorArm64PublicationToSonatypeRepository \
-            publishIosX64PublicationToSonatypeRepository \
-            publishJsPublicationToSonatypeRepository \
-            publishWasmJsPublicationToSonatypeRepository \
-            publishReleasePublicationToSonatypeRepository \
+            publishToSonatypeRepository \
             closeAndReleaseSonatypeStagingRepository \
             --info --stacktrace
         env:

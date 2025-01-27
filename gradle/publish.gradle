@@ -4,54 +4,41 @@ apply plugin: 'signing'
 apply from: file("${rootDir}/gradle/artifact-settings.gradle")
 apply from: file("${rootDir}/gradle/publish-root.gradle")
 
-afterEvaluate {
-    // Define group & version for Kotlin Multiplatform artifacts
-    group = project.ext.mapLibreArtifactGroupId
-    version = project.ext.versionName
+// Define group & version for Kotlin Multiplatform artifacts
+group = project.ext.mapLibreArtifactGroupId
+version = project.ext.versionName
 
-    publishing {
-        publications {
-            release(MavenPublication) {
-                groupId project.ext.mapLibreArtifactGroupId
-                artifactId project.ext.mapLibreArtifactId
-                version project.ext.versionName
+publishing {
+    publications.withType(MavenPublication) {
+        groupId project.ext.mapLibreArtifactGroupId
+        version project.ext.versionName
 
-                project.logger.info("Publishing project with version: ${versionName}")
+        // Drop the `services` from artifact ID
+        artifactId artifactId.replace("services-", "")
 
-                pom {
-                    name = project.ext.mapLibreArtifactTitle
-                    description = project.ext.mapLibreArtifactTitle
-                    url = project.ext.mapLibreArtifactUrl
-                    licenses {
-                        license {
-                            name = project.ext.mapLibreArtifactLicenseName
-                            url = project.ext.mapLibreArtifactLicenseUrl
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = project.ext.mapLibreDeveloperId
-                            name = project.ext.mapLibreDeveloperName
-                            email = 'maplibre@maplibre.org'
-                        }
-                    }
-                    scm {
-                        connection = project.ext.mapLibreArtifactScmUrl
-                        developerConnection = project.ext.mapLibreArtifactScmUrl
-                        url = project.ext.mapLibreArtifactUrl
-                    }
+        project.logger.info("Publishing project $artifactId with version: ${version}")
+
+        pom {
+            name = project.ext.mapLibreArtifactTitle
+            description = project.ext.mapLibreArtifactTitle
+            url = project.ext.mapLibreArtifactUrl
+            licenses {
+                license {
+                    name = project.ext.mapLibreArtifactLicenseName
+                    url = project.ext.mapLibreArtifactLicenseUrl
                 }
             }
-        }
-
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = "https://maven.pkg.github.com/maplibre.org/maplibre-java"
-                credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
+            developers {
+                developer {
+                    id = project.ext.mapLibreDeveloperId
+                    name = project.ext.mapLibreDeveloperName
+                    email = 'maplibre@maplibre.org'
                 }
+            }
+            scm {
+                connection = project.ext.mapLibreArtifactScmUrl
+                developerConnection = project.ext.mapLibreArtifactScmUrl
+                url = project.ext.mapLibreArtifactUrl
             }
         }
     }
