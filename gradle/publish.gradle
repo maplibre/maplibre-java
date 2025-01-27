@@ -32,7 +32,7 @@ publishing {
                 developer {
                     id = project.ext.mapLibreDeveloperId
                     name = project.ext.mapLibreDeveloperName
-                    email = 'maplibre@maplibre.org'
+                    email = 'team@maplibre.org'
                 }
             }
             scm {
