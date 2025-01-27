@@ -63,7 +63,7 @@ jobs:
         if: env.make_release
         run: |
           ./gradlew \
-            publishToSonatypeRepository \
+            publishAllPublicationsToSonatypeRepository \
             closeAndReleaseSonatypeStagingRepository \
             --info --stacktrace
         env:
