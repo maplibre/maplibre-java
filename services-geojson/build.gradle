@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFrameworkConfig
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
-    id("maven-publish")
     alias(libs.plugins.kotlin.cocoapods)
+    alias(libs.plugins.kotlin.dokka)
 }
 
 kotlin {

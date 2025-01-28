@@ -1,28 +1,30 @@
 [versions]
 kotlin = "2.1.0"
-kotlinxSerializationJson = "1.7.3"
-kotlinxIO = "0.6.0"
-gradleNexus = "1.3.0"
+kotlin-dokka = "2.0.0"
+kotlinx-serialization-json = "1.7.3"
+kotlinx-io = "0.6.0"
+gradle-nexus = "1.3.0"
 
 # Deprecated JVM usage
 gson = "2.10.1"
 junit = "4.13.2"
-hamcrestJunit = "2.0.0.0"
+hamcrest-junit = "2.0.0.0"
 mockito = "5.11.0"
 
 [libraries]
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinxIO" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 
 # Deprecated JVM usage
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-hamcrestJunit = { group = "org.hamcrest", name = "hamcrest-junit", version.ref = "hamcrestJunit" }
+hamcrestJunit = { group = "org.hamcrest", name = "hamcrest-junit", version.ref = "hamcrest-junit" }
 mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-gradle-nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "gradleNexus" }
+gradle-nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "gradle-nexus" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+kotlin-dokka = { id = "org.jetbrains.dokka", version.ref = "kotlin-dokka" }

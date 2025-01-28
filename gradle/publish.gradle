@@ -8,6 +8,12 @@ apply from: file("${rootDir}/gradle/publish-root.gradle")
 group = project.ext.mapLibreArtifactGroupId
 version = project.ext.versionName
 
+tasks.register('dokkaHtmlJar', Jar.class) {
+    dependsOn(dokkaHtml)
+    from(dokkaHtml)
+    archiveClassifier.set("javadoc")
+}
+
 publishing {
     publications.withType(MavenPublication) {
         groupId project.ext.mapLibreArtifactGroupId
@@ -17,6 +23,8 @@ publishing {
         artifactId artifactId.replace("services-", "")
 
         project.logger.info("Publishing project $artifactId with version: ${version}")
+
+        artifact tasks.dokkaHtmlJar
 
         pom {
             name = project.ext.mapLibreArtifactTitle
