@@ -56,3 +56,9 @@ signing {
     required { project.ext["signing.keyId"] != null }
     sign publishing.publications
 }
+
+// Fix Gradle warning about signing tasks using publishing task outputs without explicit dependencies
+// See: https://github.com/gradle/gradle/issues/26091
+tasks.withType(AbstractPublishToMaven.class).configureEach {
+    dependsOn(tasks.withType(Sign.class))
+}
