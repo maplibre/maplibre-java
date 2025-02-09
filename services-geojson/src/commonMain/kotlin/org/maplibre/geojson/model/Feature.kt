@@ -13,7 +13,6 @@ import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
 import org.maplibre.geojson.utils.json
-import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 /**
@@ -56,14 +55,41 @@ import kotlin.jvm.JvmStatic
  */
 @Serializable
 @SerialName("Feature")
-open class Feature
-@JvmOverloads
-constructor(
+data class Feature(
     val geometry: Geometry? = null,
     var properties: MutableMap<String, JsonElement>? = null,
     val id: String? = null,
     override val bbox: BoundingBox? = null,
 ) : GeoJson {
+
+    /**
+     * Create a new empty Feature instance.
+     */
+    constructor(): this(null, null, null, null)
+
+    /**
+     * Create a new Feature instance with a Geometry
+     *
+     * @param geometry   a single geometry which makes up this feature object
+     */
+    constructor(geometry: Geometry?): this(geometry, null, null, null)
+
+    /**
+     * Create a new Feature instance with given parameters.
+     *
+     * @param geometry   a single geometry which makes up this feature object
+     * @param properties a map with [JsonElement]s containing the feature properties
+     */
+    constructor(geometry: Geometry?, properties: MutableMap<String, JsonElement>?): this(geometry, properties, null, null)
+
+    /**
+     * Create a new Feature instance with given parameters.
+     *
+     * @param geometry   a single geometry which makes up this feature object
+     * @param properties a map with [JsonElement]s containing the feature properties
+     * @param id         common identifier of this feature
+     */
+    constructor(geometry: Geometry?, properties: MutableMap<String, JsonElement>?, id: String?): this(geometry, properties, id, null)
 
     /**
      * Convenience method to get a String member.
@@ -212,41 +238,6 @@ constructor(
      * @since 1.0.0
      */
     override fun toJson() = json.encodeToString(this)
-
-    fun copy(
-        geometry: Geometry? = this.geometry,
-        properties: MutableMap<String, JsonElement>? = this.properties,
-        id: String? = this.id,
-        bbox: BoundingBox? = this.bbox
-    ): Feature {
-        return Feature(geometry, properties, id, bbox)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as Feature
-
-        if (geometry != other.geometry) return false
-        if (properties != other.properties) return false
-        if (id != other.id) return false
-        if (bbox != other.bbox) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = geometry?.hashCode() ?: 0
-        result = 31 * result + (properties?.hashCode() ?: 0)
-        result = 31 * result + (id?.hashCode() ?: 0)
-        result = 31 * result + (bbox?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString(): String {
-        return "Feature(geometry=$geometry, properties=$properties, id=$id, bbox=$bbox)"
-    }
 
     companion object {
 

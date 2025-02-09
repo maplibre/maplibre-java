@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import org.maplibre.geojson.serializer.PointDoubleArraySerializer
 import org.maplibre.geojson.utils.json
-import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 /**
@@ -37,12 +36,17 @@ import kotlin.jvm.JvmStatic
  */
 @Serializable
 @SerialName("MultiPoint")
-open class MultiPoint
-@JvmOverloads
-constructor(
-    override val coordinates: List<@Serializable(with = PointDoubleArraySerializer::class) Point>,
-    override val bbox: BoundingBox? = null,
-) : CoordinateContainer<List<Point>> {
+data class MultiPoint(
+    val coordinates: List<@Serializable(with = PointDoubleArraySerializer::class) Point>,
+    override val bbox: BoundingBox?,
+) : Geometry {
+
+    /**
+     * Create a new instance by giving the MultiPoint a list of [Point] objects.
+     *
+     * @param coordinates a list of points
+     */
+    constructor(coordinates: List<Point>) : this(coordinates, null)
 
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
@@ -52,28 +56,6 @@ constructor(
      * @since 1.0.0
      */
     override fun toJson() = json.encodeToString(this)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as MultiPoint
-
-        if (coordinates != other.coordinates) return false
-        if (bbox != other.bbox) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = coordinates.hashCode()
-        result = 31 * result + (bbox?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString(): String {
-        return "MultiPoint(coordinates=$coordinates, bbox=$bbox)"
-    }
 
     companion object {
 

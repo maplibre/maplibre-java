@@ -4,7 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import org.maplibre.geojson.utils.json
-import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 /**
@@ -58,24 +57,30 @@ import kotlin.jvm.JvmStatic
  */
 @Serializable
 @SerialName("GeometryCollection")
-open class GeometryCollection
-@JvmOverloads
-constructor(
+data class GeometryCollection(
     val geometries: List<Geometry>,
-    override val bbox: BoundingBox? = null,
+    override val bbox: BoundingBox?,
 ) : Geometry {
+
+    /**
+     * Create a new instance by giving the collection a list of GeoJSON [Geometry]
+     */
+    constructor(geometries: List<Geometry>) : this(geometries, null)
+
+    /**
+     * Create a new instance by giving the collection a single GeoJSON [Geometry].
+     *
+     * @param geometry a non-null object of type geometry which makes up this collection
+     */
+    constructor(geometry: Geometry) : this(geometry, null)
 
     /**
      * Create a new instance of this class by giving the collection a single GeoJSON [Geometry].
      *
      * @param geometry a non-null object of type geometry which makes up this collection
      * @param bbox     optionally include a bbox definition as a double array
-     * @return a new instance of this class defined by the values passed inside this static factory
-     * method
-     * @since 3.0.0
      */
-    @JvmOverloads
-    constructor(geometry: Geometry, bbox: BoundingBox? = null) : this(listOf(geometry), bbox)
+    constructor(geometry: Geometry, bbox: BoundingBox?) : this(listOf(geometry), bbox)
 
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
@@ -85,28 +90,6 @@ constructor(
      * @since 1.0.0
      */
     override fun toJson() = json.encodeToString(this)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as GeometryCollection
-
-        if (geometries != other.geometries) return false
-        if (bbox != other.bbox) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = geometries.hashCode()
-        result = 31 * result + (bbox?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString(): String {
-        return "GeometryCollection(geometries=$geometries, bbox=$bbox)"
-    }
 
     companion object {
 

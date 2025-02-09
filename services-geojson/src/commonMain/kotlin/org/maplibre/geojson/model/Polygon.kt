@@ -6,7 +6,6 @@ import kotlinx.serialization.encodeToString
 import org.maplibre.geojson.exception.GeoJsonException
 import org.maplibre.geojson.serializer.PointDoubleArraySerializer
 import org.maplibre.geojson.utils.json
-import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 /**
@@ -54,12 +53,78 @@ import kotlin.jvm.JvmStatic
  */
 @Serializable
 @SerialName("Polygon")
-open class Polygon
-@JvmOverloads
-constructor(
-    override val coordinates: List<List<@Serializable(with = PointDoubleArraySerializer::class) Point>>,
-    override val bbox: BoundingBox? = null,
-) : CoordinateContainer<List<List<Point>>> {
+data class Polygon(
+    val coordinates: List<List<@Serializable(with = PointDoubleArraySerializer::class) Point>>,
+    override val bbox: BoundingBox?,
+) : Geometry {
+
+    /**
+     * Create a new instance of this class by passing in a list of coordinates which represent the
+     * polygon geometry. The first list of coordinates is considered the outer perimeter of the
+     * polygon and any subsequent lists are considered holes inside the polygon.
+     *
+     * @param coordinates a list of a list of points which represent the polygon geometry
+     */
+    constructor(coordinates: List<List<Point>>) : this(coordinates, null)
+
+    /**
+     * Create a new instance of this class by passing in an outer [LineString] and optionally
+     * one or more inner LineStrings. Each of these LineStrings should follow the linear ring rules.
+     *
+     *
+     * Note that if a LineString breaks one of the linear ring rules, a [RuntimeException] will
+     * be thrown.
+     *
+     * @param outer a LineString which defines the outer perimeter of the polygon
+     * @return a new instance of this class defined by the values passed inside this static factory
+     * method
+     * @since 3.0.0
+     */
+    constructor(outer: LineString) : this(outer,  emptyList(), null)
+
+    /**
+     * Create a new instance of this class by passing in an outer [LineString] and optionally
+     * one or more inner LineStrings. Each of these LineStrings should follow the linear ring rules.
+     *
+     *
+     * Note that if a LineString breaks one of the linear ring rules, a [RuntimeException] will
+     * be thrown.
+     *
+     * @param outer a LineString which defines the outer perimeter of the polygon
+     * @param inner one or more LineStrings representing holes inside the outer perimeter
+     * @return a new instance of this class defined by the values passed inside this static factory
+     * method
+     * @since 3.0.0
+     */
+    constructor(outer: LineString, inner: List<LineString>) : this(outer, inner, null)
+
+    /**
+     * Create a new instance of this class by passing in an outer [LineString] and optionally
+     * one or more inner LineStrings. Each of these LineStrings should follow the linear ring rules.
+     *
+     *
+     * Note that if a LineString breaks one of the linear ring rules, a [RuntimeException] will
+     * be thrown.
+     *
+     * @param outer a LineString which defines the outer perimeter of the polygon
+     * @param inner one or more LineStrings representing holes inside the outer perimeter
+     * @param bbox  optionally include a bbox definition as a double array
+     * @return a new instance of this class defined by the values passed inside this static factory
+     * method
+     * @since 3.0.0
+     */
+    constructor(outer: LineString, inner: List<LineString>, bbox: BoundingBox?) : this(
+        listOf(
+            outer.coordinates,
+            *inner.map { innerLine ->
+                ensureIsLinearRing(innerLine)
+                innerLine.coordinates
+            }.toTypedArray()
+        ),
+        bbox
+    ) {
+        ensureIsLinearRing(outer)
+    }
 
     /**
      * Convenience method to get the outer [LineString] which defines the outer perimeter of
@@ -91,64 +156,20 @@ constructor(
      */
     override fun toJson(): String = json.encodeToString(this)
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as Polygon
-
-        if (coordinates != other.coordinates) return false
-        if (bbox != other.bbox) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = coordinates.hashCode()
-        result = 31 * result + (bbox?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString(): String {
-        return "Polygon(coordinates=$coordinates, bbox=$bbox)"
-    }
-
     companion object {
 
         /**
-         * Create a new instance of this class by passing in an outer [LineString] and optionally
-         * one or more inner LineStrings. Each of these LineStrings should follow the linear ring rules.
+         * Create a new instance of this class by passing in a formatted valid JSON String. If you are
+         * creating a Polygon object from scratch it is better to use the constructor.
+         * For a valid Polygon to exist, it must follow the linear ring rules and the first list of
+         * coordinates are considered the outer ring by default.
          *
-         *
-         * Note that if a LineString breaks one of the linear ring rules, a [RuntimeException] will
-         * be thrown.
-         *
-         * @param outer a LineString which defines the outer perimeter of the polygon
-         * @param bbox  optionally include a bbox definition as a double array
-         * @param inner one or more LineStrings representing holes inside the outer perimeter
-         * @return a new instance of this class defined by the values passed inside this static factory
-         * method
-         * @since 3.0.0
+         * @param jsonString a formatted valid JSON string defining a GeoJson Polygon
+         * @return a new instance of this class defined by the values in the JSON string method
+         * @since 1.0.0
          */
         @JvmStatic
-        @JvmOverloads
-        fun fromOuterInnerLines(
-            outer: LineString,
-            inner: List<LineString> = emptyList(),
-            bbox: BoundingBox? = null,
-        ): Polygon {
-            ensureIsLinearRing(outer)
-
-            val coordinates = listOf(
-                outer.coordinates,
-                *inner.map { innerLine ->
-                    ensureIsLinearRing(innerLine)
-                    innerLine.coordinates
-                }.toTypedArray()
-            )
-
-            return Polygon(coordinates, bbox)
-        }
+        fun fromJson(jsonString: String): Polygon = json.decodeFromString(jsonString)
 
         /**
          * Checks to ensure that the LineStrings defining the polygon correctly and adhering to the linear
@@ -168,18 +189,5 @@ constructor(
                 throw GeoJsonException("LinearRings require first and last coordinate to be identical.")
             }
         }
-
-        /**
-         * Create a new instance of this class by passing in a formatted valid JSON String. If you are
-         * creating a Polygon object from scratch it is better to use the constructor.
-         * For a valid Polygon to exist, it must follow the linear ring rules and the first list of
-         * coordinates are considered the outer ring by default.
-         *
-         * @param jsonString a formatted valid JSON string defining a GeoJson Polygon
-         * @return a new instance of this class defined by the values in the JSON string method
-         * @since 1.0.0
-         */
-        @JvmStatic
-        fun fromJson(jsonString: String): Polygon = json.decodeFromString(jsonString)
     }
 }

@@ -3,7 +3,6 @@ package org.maplibre.geojson.model
 import kotlinx.serialization.Serializable
 import org.maplibre.geojson.serializer.BoundingBoxSerializer
 import org.maplibre.geojson.utils.json
-import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 
@@ -28,7 +27,26 @@ import kotlin.jvm.JvmStatic
  * @since 3.0.0
  */
 @Serializable(with = BoundingBoxSerializer::class)
-open class BoundingBox(val southwest: Point, val northeast: Point) {
+data class BoundingBox(val southwest: Point, val northeast: Point) {
+
+    /**
+     * Define a new instance of this class by passing in four coordinates in the same order they would
+     * appear in the serialized GeoJson form. Limits are placed on the minimum and maximum coordinate
+     * values which can exist and comply with the GeoJson spec.
+     *
+     * @param west              the left side of the bounding box when the map is facing due north
+     * @param south             the bottom side of the bounding box when the map is facing due north
+     * @param east              the right side of the bounding box when the map is facing due north
+     * @param north             the top side of the bounding box when the map is facing due north
+     * @return a new instance of this class defined by the provided coordinates
+     * @since 3.1.0
+     */
+    constructor(
+        west: Double,
+        south: Double,
+        east: Double,
+        north: Double,
+    ) : this(west, south, null, east, north, null)
 
     /**
      * Define a new instance of this class by passing in four coordinates in the same order they would
@@ -44,14 +62,13 @@ open class BoundingBox(val southwest: Point, val northeast: Point) {
      * @return a new instance of this class defined by the provided coordinates
      * @since 3.1.0
      */
-    @JvmOverloads
     constructor(
         west: Double,
         south: Double,
+        southwestAltitude: Double?,
         east: Double,
         north: Double,
-        southwestAltitude: Double? = null,
-        northEastAltitude: Double? = null
+        northEastAltitude: Double?
     ) : this(
         Point(west, south, southwestAltitude),
         Point(east, north, northEastAltitude)
@@ -96,28 +113,6 @@ open class BoundingBox(val southwest: Point, val northeast: Point) {
      */
     val north: Double
         get() = northeast.latitude
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as BoundingBox
-
-        if (southwest != other.southwest) return false
-        if (northeast != other.northeast) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = southwest.hashCode()
-        result = 31 * result + northeast.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "BoundingBox(southwest=$southwest, northeast=$northeast)"
-    }
 
     companion object {
 

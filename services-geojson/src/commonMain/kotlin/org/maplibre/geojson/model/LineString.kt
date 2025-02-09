@@ -6,7 +6,6 @@ import kotlinx.serialization.encodeToString
 import org.maplibre.geojson.serializer.PointDoubleArraySerializer
 import org.maplibre.geojson.utils.PolylineUtils
 import org.maplibre.geojson.utils.json
-import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 /**
@@ -53,31 +52,41 @@ import kotlin.jvm.JvmStatic
  */
 @Serializable
 @SerialName("LineString")
-open class LineString
-@JvmOverloads
-constructor(
-    override val coordinates: List<@Serializable(with = PointDoubleArraySerializer::class) Point>,
-    override val bbox: BoundingBox? = null,
-) : CoordinateContainer<List<Point>> {
+data class LineString(
+    val coordinates: List<@Serializable(with = PointDoubleArraySerializer::class) Point>,
+    override val bbox: BoundingBox?,
+) : Geometry {
 
     /**
-     * Create a new instance of this class by defining a [MultiPoint] object and passing. The
+     * Create a new instance by defining a list of [Point] objects. The list must have at least 2
+     * points to be valid.
+     *
+     * @param coordinates a list of {@link Point}s which make up the LineString geometry
+     */
+    constructor(coordinates: List<Point>) : this(coordinates, null)
+
+    /**
+     * Create a new instance by defining a [MultiPoint] object and passing. The
+     * multipoint object should comply with the GeoJson specifications described in the documentation.
+     *
+     * @param multiPoint which will make up the LineString geometry
+     */
+    constructor(multiPoint: MultiPoint) : this(multiPoint, null)
+
+    /**
+     * Create a new instance by defining a [MultiPoint] object and passing. The
      * multipoint object should comply with the GeoJson specifications described in the documentation.
      *
      * @param multiPoint which will make up the LineString geometry
      * @param bbox       optionally include a bbox definition as a double array
-     * @return a new instance of this class defined by the values passed inside this static factory
-     * method
-     * @since 3.0.0
      */
-    @JvmOverloads
-    constructor(multiPoint: MultiPoint, bbox: BoundingBox? = null) : this(
+    constructor(multiPoint: MultiPoint, bbox: BoundingBox?) : this(
         multiPoint.coordinates,
         bbox
     )
 
     /**
-     * Create a new instance of this class by convert a polyline string into a lineString. This is
+     * Create a new instance by convert a polyline string into a lineString. This is
      * handy when an API provides you with an encoded string representing the line geometry and you'd
      * like to convert it to a useful LineString object. Note that the precision that the string
      * geometry was encoded with needs to be known and passed into this method using the precision
@@ -86,12 +95,21 @@ constructor(
      * @param polyline  encoded string geometry to decode into a new LineString instance
      * @param precision The encoded precision which must match the same precision used when the string
      * was first encoded
-     * @return a new instance of this class defined by the values passed inside this static factory
-     * method
-     * @since 1.0.0
      */
-    @JvmOverloads
-    constructor(polyline: String, precision: Int, bbox: BoundingBox? = null) : this(
+    constructor(polyline: String, precision: Int) : this(polyline, precision, null)
+
+    /**
+     * Create a new instance by convert a polyline string into a lineString. This is
+     * handy when an API provides you with an encoded string representing the line geometry and you'd
+     * like to convert it to a useful LineString object. Note that the precision that the string
+     * geometry was encoded with needs to be known and passed into this method using the precision
+     * parameter.
+     *
+     * @param polyline  encoded string geometry to decode into a new LineString instance
+     * @param precision The encoded precision which must match the same precision used when the string
+     * was first encoded
+     */
+    constructor(polyline: String, precision: Int, bbox: BoundingBox?) : this(
         PolylineUtils.decode(polyline, precision),
         bbox
     )
@@ -117,28 +135,6 @@ constructor(
      * @since 1.0.0
      */
     override fun toJson() = json.encodeToString(this)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as LineString
-
-        if (coordinates != other.coordinates) return false
-        if (bbox != other.bbox) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = coordinates.hashCode()
-        result = 31 * result + (bbox?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString(): String {
-        return "LineString(coordinates=$coordinates, bbox=$bbox)"
-    }
 
     companion object {
 

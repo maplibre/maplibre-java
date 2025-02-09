@@ -4,7 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import org.maplibre.geojson.utils.json
-import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 /**
@@ -47,12 +46,18 @@ import kotlin.jvm.JvmStatic
  */
 @Serializable
 @SerialName("Point")
-open class Point
-@JvmOverloads
-constructor(
-    override val coordinates: List<Double>,
-    override val bbox: BoundingBox? = null,
-) : CoordinateContainer<List<Double>> {
+data class Point(
+    val coordinates: List<Double>,
+    override val bbox: BoundingBox?,
+) : Geometry {
+
+    /**
+     * Create a new instance by giving the Point a list of double values representing the longitude,
+     * latitude, and optionally altitude position of this point.
+     *
+     * @param coordinates a list of double values representing the longitude, latitude, and optionally altitude position of this point
+     */
+    constructor(coordinates: List<Double>) : this(coordinates, null)
 
     /**
      * Create a new instance of this class defining a longitude and latitude value in that respective
@@ -128,28 +133,6 @@ constructor(
      * @since 1.0.0
      */
     override fun toJson() = json.encodeToString(this)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as Point
-
-        if (coordinates != other.coordinates) return false
-        if (bbox != other.bbox) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = coordinates.hashCode()
-        result = 31 * result + (bbox?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString(): String {
-        return "Point(coordinates=$coordinates, bbox=$bbox)"
-    }
 
     companion object {
 

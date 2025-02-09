@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import org.maplibre.geojson.serializer.PointDoubleArraySerializer
 import org.maplibre.geojson.utils.json
-import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 /**
@@ -68,12 +67,17 @@ import kotlin.jvm.JvmStatic
  */
 @Serializable
 @SerialName("MultiPolygon")
-open class MultiPolygon
-@JvmOverloads
-constructor(
-    override val coordinates: List<List<List<@Serializable(with = PointDoubleArraySerializer::class) Point>>>,
-    override val bbox: BoundingBox? = null,
-) : CoordinateContainer<List<List<List<Point>>>> {
+data class MultiPolygon(
+    val coordinates: List<List<List<@Serializable(with = PointDoubleArraySerializer::class) Point>>>,
+    override val bbox: BoundingBox?,
+) : Geometry {
+
+    /**
+     * Create a new instance by giving the MultiPolygon a list of [Polygon] objects.
+     *
+     * @param coordinates a list of Polygons which make up this MultiPolygon
+     */
+    constructor(coordinates: List<List<List<Point>>>) : this(coordinates, null)
 
     /**
      * Returns a list of polygons which make up this MultiPolygon instance.
@@ -93,28 +97,6 @@ constructor(
      */
     override fun toJson() = json.encodeToString(this)
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as MultiPolygon
-
-        if (coordinates != other.coordinates) return false
-        if (bbox != other.bbox) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = coordinates.hashCode()
-        result = 31 * result + (bbox?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString(): String {
-        return "MultiPolygon(coordinates=$coordinates, bbox=$bbox)"
-    }
-
     companion object {
 
         /**
@@ -131,8 +113,40 @@ constructor(
         @JvmStatic
         fun fromPolygon(
             polygon: Polygon,
-            bbox: BoundingBox? = null,
+        ) = fromPolygon(polygon, null)
+
+        /**
+         * Create a new instance of this class by defining a single [Polygon] objects and passing
+         * it in as a parameter in this method. The Polygon should comply with the GeoJson
+         * specifications described in the documentation.
+         *
+         * @param polygon a single Polygon which make up this MultiPolygon
+         * @param bbox    optionally include a bbox definition
+         * @return a new instance of this class defined by the values passed inside this static factory
+         * method
+         * @since 3.0.0
+         */
+        @JvmStatic
+        fun fromPolygon(
+            polygon: Polygon,
+            bbox: BoundingBox?,
         ) = MultiPolygon(listOf(polygon.coordinates), bbox)
+
+        /**
+         * Create a new instance of this class by defining a list of [Polygon] objects and passing
+         * that list in as a parameter in this method. The Polygons should comply with the GeoJson
+         * specifications described in the documentation. Optionally, pass in an instance of a
+         * [BoundingBox] which better describes this MultiPolygon.
+         *
+         * @param polygons a list of Polygons which make up this MultiPolygon
+         * @return a new instance of this class defined by the values passed inside this static factory
+         * method
+         * @since 3.0.0
+         */
+        @JvmStatic
+        fun fromPolygons(
+            polygons: List<Polygon>,
+        ) = fromPolygons(polygons, null)
 
         /**
          * Create a new instance of this class by defining a list of [Polygon] objects and passing
@@ -149,7 +163,7 @@ constructor(
         @JvmStatic
         fun fromPolygons(
             polygons: List<Polygon>,
-            bbox: BoundingBox? = null,
+            bbox: BoundingBox?,
         ) = MultiPolygon(polygons.map { polygon -> polygon.coordinates }, bbox)
 
         /**

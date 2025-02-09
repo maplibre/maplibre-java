@@ -4,7 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import org.maplibre.geojson.utils.json
-import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 
@@ -34,24 +33,32 @@ import kotlin.jvm.JvmStatic
  */
 @Serializable
 @SerialName("FeatureCollection")
-open class FeatureCollection
-@JvmOverloads
-constructor(
+data class FeatureCollection(
     val features: List<Feature>,
-    override val bbox: BoundingBox? = null,
+    override val bbox: BoundingBox?,
 ) : GeoJson {
 
     /**
-     * Create a new instance of this class by giving the feature collection a single [Feature].
+     * Create a new instance by giving the feature collection a list of [Feature] objects.
+     *
+     * @param features a list of features
+     */
+    constructor(features: List<Feature>) : this(features, null)
+
+    /**
+     * Create a new instance by giving the feature collection a single [Feature].
+     *
+     * @param feature a single feature
+     */
+    constructor(feature: Feature) : this(feature, null)
+
+    /**
+     * Create a new instance by giving the feature collection a single [Feature].
      *
      * @param feature a single feature
      * @param bbox    optionally include a bbox definition as a double array
-     * @return a new instance of this class defined by the values passed inside this static factory
-     * method
-     * @since 3.0.0
      */
-    @JvmOverloads
-    constructor(feature: Feature, bbox: BoundingBox? = null) : this(listOf(feature), bbox)
+    constructor(feature: Feature, bbox: BoundingBox?) : this(listOf(feature), bbox)
 
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
@@ -61,28 +68,6 @@ constructor(
      * @since 1.0.0
      */
     override fun toJson() = json.encodeToString(this)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as FeatureCollection
-
-        if (features != other.features) return false
-        if (bbox != other.bbox) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = features.hashCode()
-        result = 31 * result + (bbox?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString(): String {
-        return "FeatureCollection(features=$features, bbox=$bbox)"
-    }
 
     companion object {
 

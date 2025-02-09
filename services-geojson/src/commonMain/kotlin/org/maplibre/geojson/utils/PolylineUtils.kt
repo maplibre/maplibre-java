@@ -3,7 +3,6 @@ package org.maplibre.geojson.utils
 import org.maplibre.geojson.model.Point
 import kotlin.math.pow
 import kotlin.math.roundToLong
-import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
 /**
@@ -122,6 +121,35 @@ object PolylineUtils {
      * boost when processing it and also reducing visual noise.
      *
      * @param points         an array of points
+     * simplification
+     * @return an array of simplified points
+     * @see [JavaScript implementation](https://github.com/mourner/simplify-js/blob/master/simplify.js)
+     *
+     * @since 1.2.0
+     */
+    fun simplify(
+        points: List<Point>,
+    ): List<Point> = simplify(points, SIMPLIFY_DEFAULT_TOLERANCE, SIMPLIFY_DEFAULT_HIGHEST_QUALITY)
+
+    /**
+     * Reduces the number of points in a polyline while retaining its shape, giving a performance
+     * boost when processing it and also reducing visual noise.
+     *
+     * @param points         an array of points
+     * @param tolerance      affects the amount of simplification (in the same metric as the point coordinates)
+     * @return an array of simplified points
+     * @see [JavaScript implementation](https://github.com/mourner/simplify-js/blob/master/simplify.js)
+     *
+     * @since 1.2.0
+     */
+    fun simplify(points: List<Point>, tolerance: Double): List<Point> =
+        simplify(points, tolerance, SIMPLIFY_DEFAULT_HIGHEST_QUALITY)
+
+    /**
+     * Reduces the number of points in a polyline while retaining its shape, giving a performance
+     * boost when processing it and also reducing visual noise.
+     *
+     * @param points         an array of points
      * @param tolerance      affects the amount of simplification (in the same metric as the point coordinates)
      * @param highestQuality excludes distance-based preprocessing step which leads to highest quality
      * simplification
@@ -130,11 +158,10 @@ object PolylineUtils {
      *
      * @since 1.2.0
      */
-    @JvmOverloads
     fun simplify(
         points: List<Point>,
-        tolerance: Double = SIMPLIFY_DEFAULT_TOLERANCE,
-        highestQuality: Boolean = SIMPLIFY_DEFAULT_HIGHEST_QUALITY
+        tolerance: Double,
+        highestQuality: Boolean,
     ): List<Point> {
         if (points.size <= 2) {
             return points
