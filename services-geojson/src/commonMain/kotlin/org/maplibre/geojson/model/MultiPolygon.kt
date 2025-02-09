@@ -85,8 +85,7 @@ data class MultiPolygon(
      * @return a list of {@link Polygon}s which make up this MultiPolygon instance
      * @since 3.0.0
      */
-    val polygons: List<Polygon>
-        get() = coordinates.map { points -> Polygon(points) }
+    val polygons: List<Polygon> by lazy { coordinates.map { points -> Polygon(points) } }
 
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson

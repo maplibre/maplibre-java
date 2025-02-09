@@ -80,7 +80,7 @@ data class Polygon(
      * method
      * @since 3.0.0
      */
-    constructor(outer: LineString) : this(outer,  emptyList(), null)
+    constructor(outer: LineString) : this(outer, emptyList(), null)
 
     /**
      * Create a new instance of this class by passing in an outer [LineString] and optionally
@@ -133,8 +133,7 @@ data class Polygon(
      * @return a [LineString] defining the outer perimeter of this polygon
      * @since 3.0.0
      */
-    val outerLine: LineString
-        get() = LineString(coordinates.first())
+    val outerLine: LineString by lazy { LineString(coordinates.first()) }
 
     /**
      * Convenience method to get a list of inner [LineString]s defining holes inside the
@@ -144,8 +143,9 @@ data class Polygon(
      * @return a List of [LineString]s defining holes inside the polygon
      * @since 3.0.0
      */
-    val innerLines: List<LineString>
-        get() = coordinates.drop(1).map { points -> LineString(points) }
+    val innerLines: List<LineString> by lazy {
+        coordinates.drop(1).map { points -> LineString(points) }
+    }
 
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson

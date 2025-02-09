@@ -98,8 +98,7 @@ data class Point(
      *   point
      * @since 3.0.0
      */
-    val longitude: Double
-        get() = coordinates[0]
+    val longitude: Double by lazy { coordinates[0] }
 
     /**
      * This returns a double value representing the y or northing position of
@@ -110,8 +109,7 @@ data class Point(
      *   point
      * @since 3.0.0
      */
-    val latitude: Double
-        get() = coordinates[1]
+    val latitude: Double by lazy { coordinates[1] }
 
     /**
      * Optionally, the coordinate spec in GeoJson allows for altitude values to be placed inside the
@@ -122,8 +120,7 @@ data class Point(
      * @return a double value ranging from negative to positive infinity
      * @since 3.0.0
      */
-    val altitude: Double?
-        get() = coordinates.getOrNull(2)
+    val altitude: Double? by lazy { coordinates.getOrNull(2) }
 
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson

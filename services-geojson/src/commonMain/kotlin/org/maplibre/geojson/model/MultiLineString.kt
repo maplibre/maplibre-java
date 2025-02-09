@@ -68,8 +68,7 @@ data class MultiLineString(
      * @return a list of [LineString]s
      * @since 3.0.0
      */
-    val lineStrings: List<LineString>
-        get() = coordinates.map { points -> LineString(points) }
+    val lineStrings: List<LineString> by lazy { coordinates.map { points -> LineString(points) } }
 
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson

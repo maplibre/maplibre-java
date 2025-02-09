@@ -81,8 +81,7 @@ data class BoundingBox(val southwest: Point, val northeast: Point) {
      * @return the most westerly coordinate inside this bounding box
      * @since 3.0.0
      */
-    val west: Double
-        get() = southwest.longitude
+    val west: Double by lazy { southwest.longitude }
 
     /**
      * Convenience method for getting the bounding box most southerly point (latitude) as a double
@@ -91,8 +90,7 @@ data class BoundingBox(val southwest: Point, val northeast: Point) {
      * @return the most southerly coordinate inside this bounding box
      * @since 3.0.0
      */
-    val south: Double
-        get() = southwest.latitude
+    val south: Double by lazy { southwest.latitude }
 
     /**
      * Convenience method for getting the bounding box most easterly point (longitude) as a double
@@ -101,8 +99,7 @@ data class BoundingBox(val southwest: Point, val northeast: Point) {
      * @return the most easterly coordinate inside this bounding box
      * @since 3.0.0
      */
-    val east: Double
-        get() = northeast.longitude
+    val east: Double by lazy { northeast.longitude }
 
     /**
      * Convenience method for getting the bounding box most westerly point (longitude) as a double
@@ -111,8 +108,7 @@ data class BoundingBox(val southwest: Point, val northeast: Point) {
      * @return the most westerly coordinate inside this bounding box
      * @since 3.0.0
      */
-    val north: Double
-        get() = northeast.latitude
+    val north: Double by lazy { northeast.latitude }
 
     companion object {
 
