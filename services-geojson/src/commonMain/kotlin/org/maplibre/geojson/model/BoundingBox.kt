@@ -5,7 +5,7 @@ import org.maplibre.geojson.serializer.BoundingBoxSerializer
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
-
+//TODO
 /**
  * A GeoJson object MAY have a member named "bbox" to include information on the coordinate range
  * for its Geometries, Features, or FeatureCollections.
@@ -27,8 +27,14 @@ import kotlin.jvm.JvmStatic
  * @since 3.0.0
  */
 @Serializable(with = BoundingBoxSerializer::class)
-data class BoundingBox(val southwest: Point, val northeast: Point) {
+data class BoundingBox(
+    //TODO
+    val southwest: Point,
+    //TODO
+    val northeast: Point
+) {
 
+    //TODO
     /**
      * Define a new instance of this class by passing in four coordinates in the same order they would
      * appear in the serialized GeoJson form. Limits are placed on the minimum and maximum coordinate
@@ -48,6 +54,7 @@ data class BoundingBox(val southwest: Point, val northeast: Point) {
         north: Double,
     ) : this(west, south, null, east, north, null)
 
+    //TODO
     /**
      * Define a new instance of this class by passing in four coordinates in the same order they would
      * appear in the serialized GeoJson form. Limits are placed on the minimum and maximum coordinate
@@ -74,6 +81,7 @@ data class BoundingBox(val southwest: Point, val northeast: Point) {
         Point(east, north, northEastAltitude)
     )
 
+    //TODO
     /**
      * Convenience method for getting the bounding box most westerly point (longitude) as a double
      * coordinate.
@@ -83,6 +91,7 @@ data class BoundingBox(val southwest: Point, val northeast: Point) {
      */
     val west: Double by lazy { southwest.longitude }
 
+    //TODO
     /**
      * Convenience method for getting the bounding box most southerly point (latitude) as a double
      * coordinate.
@@ -92,6 +101,7 @@ data class BoundingBox(val southwest: Point, val northeast: Point) {
      */
     val south: Double by lazy { southwest.latitude }
 
+    //TODO
     /**
      * Convenience method for getting the bounding box most easterly point (longitude) as a double
      * coordinate.
@@ -101,6 +111,7 @@ data class BoundingBox(val southwest: Point, val northeast: Point) {
      */
     val east: Double by lazy { northeast.longitude }
 
+    //TODO
     /**
      * Convenience method for getting the bounding box most westerly point (longitude) as a double
      * coordinate.
@@ -112,6 +123,7 @@ data class BoundingBox(val southwest: Point, val northeast: Point) {
 
     companion object {
 
+        //TODO
         /**
          * Create a new instance of this class by passing in a formatted valid JSON String. If you are
          * creating a BoundingBox object from scratch it is better to use the constructor.

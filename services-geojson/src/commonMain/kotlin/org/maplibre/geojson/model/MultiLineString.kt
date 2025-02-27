@@ -44,6 +44,7 @@ import kotlin.jvm.JvmStatic
  * Look over the [LineString] documentation to get more information about
  * formatting your list of linestring objects correctly.
  *
+ * //TODO
  * @param coordinates a list of {@link Point}s which make up the MultiLineString geometry
  * @param bbox   optionally include a bbox definition
  * @since 1.0.0
@@ -51,25 +52,22 @@ import kotlin.jvm.JvmStatic
 @Serializable
 @SerialName("MultiLineString")
 data class MultiLineString(
-    val coordinates: List<List<@Serializable(with = PointDoubleArraySerializer::class) Point>>,
+    //TODO
+    val lineStrings: List<LineString>,
+    //TODO
     override val bbox: BoundingBox?,
 ) : Geometry {
 
+
+    //TODO
     /**
      * Create a new instance by giving the MultiLineString a list of [LineString] objects.
      *
      * @param lineStrings a list of LineStrings which make up this MultiLineString
      */
-    constructor(coordinates: List<List<Point>>) : this(coordinates, null)
+    constructor(lineStrings: List<LineString>) : this(lineStrings, null)
 
-    /**
-     * Returns a list of LineStrings which are currently making up this MultiLineString.
-     *
-     * @return a list of [LineString]s
-     * @since 3.0.0
-     */
-    val lineStrings: List<LineString> by lazy { coordinates.map { points -> LineString(points) } }
-
+//TODO
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
      * string.
@@ -81,67 +79,7 @@ data class MultiLineString(
 
     companion object {
 
-        /**
-         * Create a new instance by passing in a single [LineString] object. The
-         * LineStrings should comply with the GeoJson specifications described in the documentation.
-         *
-         * @param lineString a single LineString which make up this MultiLineString
-         * @return a new instance of this class defined by the values passed inside this static factory
-         * method
-         * @since 3.0.0
-         */
-        @JvmStatic
-        fun fromLineString(lineString: LineString) = fromLineString(lineString, null)
-
-        /**
-         * Create a new instance of this class by passing in a single [LineString] object. The
-         * LineStrings should comply with the GeoJson specifications described in the documentation.
-         *
-         * @param lineString a single LineString which make up this MultiLineString
-         * @param bbox       optionally include a bbox definition
-         * @return a new instance of this class defined by the values passed inside this static factory
-         * method
-         * @since 3.0.0
-         */
-        @JvmStatic
-        fun fromLineString(
-            lineString: LineString,
-            bbox: BoundingBox?
-        ) = MultiLineString(listOf(lineString.coordinates), bbox)
-
-        /**
-         * Create a new instance of this class by defining a list of [LineString] objects and
-         * passing that list in as a parameter in this method. The LineStrings should comply with the
-         * GeoJson specifications described in the documentation. Optionally, pass in an instance of a
-         * [BoundingBox] which better describes this MultiLineString.
-         *
-         * @param lineStrings a list of LineStrings which make up this MultiLineString
-         * @param bbox        optionally include a bbox definition
-         * @return a new instance of this class defined by the values passed inside this static factory
-         * method
-         * @since 3.0.0
-         */
-        @JvmStatic
-        fun fromLineStrings(lineStrings: List<LineString>) = fromLineStrings(lineStrings, null)
-
-        /**
-         * Create a new instance of this class by defining a list of [LineString] objects and
-         * passing that list in as a parameter in this method. The LineStrings should comply with the
-         * GeoJson specifications described in the documentation. Optionally, pass in an instance of a
-         * [BoundingBox] which better describes this MultiLineString.
-         *
-         * @param lineStrings a list of LineStrings which make up this MultiLineString
-         * @param bbox        optionally include a bbox definition
-         * @return a new instance of this class defined by the values passed inside this static factory
-         * method
-         * @since 3.0.0
-         */
-        @JvmStatic
-        fun fromLineStrings(
-            lineStrings: List<LineString>,
-            bbox: BoundingBox?
-        ) = MultiLineString(lineStrings.map { lineString -> lineString.coordinates }, bbox)
-
+//TODO
         /**
          * Create a new instance of this class by passing in a formatted valid JSON String. If you are
          * creating a MultiLineString object from scratch it is better to use the constructor.

@@ -7,6 +7,7 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 
+//TODO
 /**
  * This represents a GeoJson Feature Collection which holds a list of [Feature] objects (when
  * serialized the feature list becomes a JSON array).
@@ -27,6 +28,7 @@ import kotlin.jvm.JvmStatic
  * }
  * ```
  *
+ * //TODO
  * @param features a list of features
  * @param bbox     optionally include a bbox definition as a double array
  * @since 1.0.0
@@ -34,10 +36,13 @@ import kotlin.jvm.JvmStatic
 @Serializable
 @SerialName("FeatureCollection")
 data class FeatureCollection(
+    //TODO
     val features: List<Feature>,
+    //TODO
     override val bbox: BoundingBox?,
 ) : GeoJson {
 
+    //TODO
     /**
      * Create a new instance by giving the feature collection a list of [Feature] objects.
      *
@@ -45,21 +50,24 @@ data class FeatureCollection(
      */
     constructor(features: List<Feature>) : this(features, null)
 
+    //TODO
     /**
      * Create a new instance by giving the feature collection a single [Feature].
      *
      * @param feature a single feature
      */
-    constructor(feature: Feature) : this(feature, null)
+    constructor(feature: Feature) : this(listOf(feature), null)
 
+    //TODO
     /**
      * Create a new instance by giving the feature collection a single [Feature].
      *
      * @param feature a single feature
      * @param bbox    optionally include a bbox definition as a double array
      */
-    constructor(feature: Feature, bbox: BoundingBox?) : this(listOf(feature), bbox)
+    constructor(feature: Feature, bbox: BoundingBox) : this(listOf(feature), bbox)
 
+    //TODO
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
      * string.
@@ -71,6 +79,7 @@ data class FeatureCollection(
 
     companion object {
 
+        //TODO
         /**
          * Create a new instance of this class by passing in a formatted valid JSON String. If you are
          * creating a FeatureCollection object from scratch it is better to use the constructor.

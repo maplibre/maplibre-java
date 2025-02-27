@@ -47,6 +47,7 @@ import kotlin.jvm.JvmStatic
  * }
  * ```
  *
+ * //TODO
  * @param geometry   a single geometry which makes up this feature object
  * @param properties a map with [JsonElement]s containing the feature properties
  * @param bbox       optionally include a bbox definition as a double array
@@ -56,17 +57,25 @@ import kotlin.jvm.JvmStatic
 @Serializable
 @SerialName("Feature")
 data class Feature(
+    //TODO
     val geometry: Geometry? = null,
-    var properties: MutableMap<String, JsonElement>? = null,
+    //TODO
+    //TODO: can we use here something generic (not from kotlinx) instead?
+    //  any idea?
+    var properties: JsonElement? = null,
+    //TODO
     val id: String? = null,
+    //TODO
     override val bbox: BoundingBox? = null,
 ) : GeoJson {
 
+    //TODO
     /**
      * Create a new empty Feature instance.
      */
     constructor(): this(null, null, null, null)
 
+    //TODO
     /**
      * Create a new Feature instance with a Geometry
      *
@@ -74,14 +83,16 @@ data class Feature(
      */
     constructor(geometry: Geometry?): this(geometry, null, null, null)
 
+    //TODO
     /**
      * Create a new Feature instance with given parameters.
      *
      * @param geometry   a single geometry which makes up this feature object
      * @param properties a map with [JsonElement]s containing the feature properties
      */
-    constructor(geometry: Geometry?, properties: MutableMap<String, JsonElement>?): this(geometry, properties, null, null)
+    constructor(geometry: Geometry?, properties: JsonElement?): this(geometry, properties, null, null)
 
+    //TODO
     /**
      * Create a new Feature instance with given parameters.
      *
@@ -89,147 +100,9 @@ data class Feature(
      * @param properties a map with [JsonElement]s containing the feature properties
      * @param id         common identifier of this feature
      */
-    constructor(geometry: Geometry?, properties: MutableMap<String, JsonElement>?, id: String?): this(geometry, properties, id, null)
+    constructor(geometry: Geometry?, properties: JsonElement?, id: String?): this(geometry, properties, id, null)
 
-    /**
-     * Convenience method to get a String member.
-     *
-     * @param key name of the member
-     * @return the value of the member, null if it doesn't exist
-     * @since 1.0.0
-     */
-    fun getStringProperty(key: String): String? {
-        return properties?.get(key)?.jsonPrimitive?.contentOrNull
-    }
-
-    /**
-     * Convenience method to get a Int member.
-     *
-     * @param key name of the member
-     * @return the value of the member, null if it doesn't exist
-     * @since 1.0.0
-     */
-    fun getIntProperty(key: String): Int? {
-        return properties?.get(key)?.jsonPrimitive?.intOrNull
-    }
-
-    /**
-     * Convenience method to get a Long member.
-     *
-     * @param key name of the member
-     * @return the value of the member, null if it doesn't exist
-     * @since 1.0.0
-     */
-    fun getLongProperty(key: String): Long? {
-        return properties?.get(key)?.jsonPrimitive?.longOrNull
-    }
-
-    /**
-     * Convenience method to get a Float member.
-     *
-     * @param key name of the member
-     * @return the value of the member, null if it doesn't exist
-     * @since 1.0.0
-     */
-    fun getFloatProperty(key: String): Float? {
-        return properties?.get(key)?.jsonPrimitive?.floatOrNull
-    }
-
-    /**
-     * Convenience method to get a Double member.
-     *
-     * @param key name of the member
-     * @return the value of the member, null if it doesn't exist
-     * @since 1.0.0
-     */
-    fun getDoubleProperty(key: String): Double? {
-        return properties?.get(key)?.jsonPrimitive?.doubleOrNull
-    }
-
-    /**
-     * Convenience method to get a Boolean member.
-     *
-     * @param key name of the member
-     * @return the value of the member, null if it doesn't exist
-     * @since 1.0.0
-     */
-    fun getBooleanProperty(key: String): Boolean? {
-        return properties?.get(key)?.jsonPrimitive?.booleanOrNull
-    }
-
-    /**
-     * Convenience method to add a String member.
-     *
-     * @param key   name of the member
-     * @param value the String value associated with the member
-     * @since 1.0.0
-     */
-    fun addProperty(key: String, value: String) {
-        createPropertiesIfNecessary()[key] = JsonPrimitive(value)
-    }
-
-    /**
-     * Convenience method to add a Integer member.
-     *
-     * @param key   name of the member
-     * @param value the Int value associated with the member
-     */
-    fun addProperty(key: String, value: Int) {
-        createPropertiesIfNecessary()[key] = JsonPrimitive(value)
-    }
-
-    /**
-     * Convenience method to add a Long member.
-     *
-     * @param key   name of the member
-     * @param value the Long value associated with the member
-     */
-    fun addProperty(key: String, value: Long) {
-        createPropertiesIfNecessary()[key] = JsonPrimitive(value)
-    }
-
-    /**
-     * Convenience method to add a Float member.
-     *
-     * @param key   name of the member
-     * @param value the Float value associated with the member
-     */
-    fun addProperty(key: String, value: Float) {
-        createPropertiesIfNecessary()[key] = JsonPrimitive(value)
-    }
-
-    /**
-     * Convenience method to add a Double member.
-     *
-     * @param key   name of the member
-     * @param value the Double value associated with the member
-     */
-    fun addProperty(key: String, value: Double) {
-        createPropertiesIfNecessary()[key] = JsonPrimitive(value)
-    }
-
-    /**
-     * Convenience method to add a Boolean member.
-     *
-     * @param key   name of the member
-     * @param value the Boolean value associated with the member
-     * @since 1.0.0
-     */
-    fun addProperty(key: String, value: Boolean) {
-        createPropertiesIfNecessary()[key] = JsonPrimitive(value)
-    }
-
-    /**
-     * Get properties or create a new empty property map if it is null.
-     */
-    private fun createPropertiesIfNecessary(): MutableMap<String, JsonElement> {
-        if (properties == null) {
-            properties = mutableMapOf()
-        }
-
-        return properties!!
-    }
-
+    //TODO
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
      * string.
@@ -241,6 +114,7 @@ data class Feature(
 
     companion object {
 
+        //TODO
         /**
          * Create a new instance of this class by passing in a formatted valid JSON String. If you are
          * creating a Feature object from scratch it is better to use the constructor.

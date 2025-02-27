@@ -47,6 +47,7 @@ import kotlin.jvm.JvmStatic
  * }
  * ```
  *
+ * //TODO
  * @param coordinates a list of a list of points which represent the polygon geometry
  * @param bbox        optionally include a bbox definition as a double array
  * @since 1.0.0
@@ -54,19 +55,15 @@ import kotlin.jvm.JvmStatic
 @Serializable
 @SerialName("Polygon")
 data class Polygon(
-    val coordinates: List<List<@Serializable(with = PointDoubleArraySerializer::class) Point>>,
+    //TODO
+    val outerLineString: LineString,
+    //TODO
+    val holeLineStrings: List<LineString>,
+    //TODO
     override val bbox: BoundingBox?,
 ) : Geometry {
 
-    /**
-     * Create a new instance of this class by passing in a list of coordinates which represent the
-     * polygon geometry. The first list of coordinates is considered the outer perimeter of the
-     * polygon and any subsequent lists are considered holes inside the polygon.
-     *
-     * @param coordinates a list of a list of points which represent the polygon geometry
-     */
-    constructor(coordinates: List<List<Point>>) : this(coordinates, null)
-
+    //TODO
     /**
      * Create a new instance of this class by passing in an outer [LineString] and optionally
      * one or more inner LineStrings. Each of these LineStrings should follow the linear ring rules.
@@ -82,6 +79,7 @@ data class Polygon(
      */
     constructor(outer: LineString) : this(outer, emptyList(), null)
 
+    //TODO
     /**
      * Create a new instance of this class by passing in an outer [LineString] and optionally
      * one or more inner LineStrings. Each of these LineStrings should follow the linear ring rules.
@@ -98,55 +96,7 @@ data class Polygon(
      */
     constructor(outer: LineString, inner: List<LineString>) : this(outer, inner, null)
 
-    /**
-     * Create a new instance of this class by passing in an outer [LineString] and optionally
-     * one or more inner LineStrings. Each of these LineStrings should follow the linear ring rules.
-     *
-     *
-     * Note that if a LineString breaks one of the linear ring rules, a [RuntimeException] will
-     * be thrown.
-     *
-     * @param outer a LineString which defines the outer perimeter of the polygon
-     * @param inner one or more LineStrings representing holes inside the outer perimeter
-     * @param bbox  optionally include a bbox definition as a double array
-     * @return a new instance of this class defined by the values passed inside this static factory
-     * method
-     * @since 3.0.0
-     */
-    constructor(outer: LineString, inner: List<LineString>, bbox: BoundingBox?) : this(
-        listOf(
-            outer.coordinates,
-            *inner.map { innerLine ->
-                ensureIsLinearRing(innerLine)
-                innerLine.coordinates
-            }.toTypedArray()
-        ),
-        bbox
-    ) {
-        ensureIsLinearRing(outer)
-    }
-
-    /**
-     * Convenience method to get the outer [LineString] which defines the outer perimeter of
-     * the polygon.
-     *
-     * @return a [LineString] defining the outer perimeter of this polygon
-     * @since 3.0.0
-     */
-    val outerLine: LineString by lazy { LineString(coordinates.first()) }
-
-    /**
-     * Convenience method to get a list of inner [LineString]s defining holes inside the
-     * polygon. It is not guaranteed that this instance of Polygon contains holes and thus, might
-     * return a null or empty list.
-     *
-     * @return a List of [LineString]s defining holes inside the polygon
-     * @since 3.0.0
-     */
-    val innerLines: List<LineString> by lazy {
-        coordinates.drop(1).map { points -> LineString(points) }
-    }
-
+    //TODO
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
      * string.
@@ -158,6 +108,7 @@ data class Polygon(
 
     companion object {
 
+        //TODO
         /**
          * Create a new instance of this class by passing in a formatted valid JSON String. If you are
          * creating a Polygon object from scratch it is better to use the constructor.
@@ -170,24 +121,5 @@ data class Polygon(
          */
         @JvmStatic
         fun fromJson(jsonString: String): Polygon = json.decodeFromString(jsonString)
-
-        /**
-         * Checks to ensure that the LineStrings defining the polygon correctly and adhering to the linear
-         * ring rules.
-         *
-         * @param lineString [LineString] the polygon geometry
-         * @throws GeoJsonException if number of coordinates are less than 4,
-         * or first and last coordinates are not identical (it is not linear ring)
-         * @since 3.0.0
-         */
-        private fun ensureIsLinearRing(lineString: LineString) {
-            if (lineString.coordinates.size < 4) {
-                throw GeoJsonException("LinearRings need to be made up of 4 or more coordinates.")
-            }
-
-            if (lineString.coordinates.first() != lineString.coordinates.last()) {
-                throw GeoJsonException("LinearRings require first and last coordinate to be identical.")
-            }
-        }
     }
 }

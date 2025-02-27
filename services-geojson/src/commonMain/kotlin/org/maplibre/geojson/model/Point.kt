@@ -3,6 +3,7 @@ package org.maplibre.geojson.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
+import org.maplibre.geojson.serializer.PointGeometrySerializer
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
@@ -40,25 +41,56 @@ import kotlin.jvm.JvmStatic
  * }
  * ```
  *
- * @param coordinates a list of double values representing the longitude, latitude, and optionally altitude position of this point
- * @param bbox      optionally include a bbox definition as a double array
+ * //TODO
+ * @param
+ * @param
  * @since 1.0.0
  */
-@Serializable
+@Serializable(with = PointGeometrySerializer::class)
 @SerialName("Point")
 data class Point(
-    val coordinates: List<Double>,
+    /**
+     * Double value representing the x or easting position of this point.
+     */
+    val longitude: Double,
+
+    /**
+     * Double value representing the y or northing position of this point.
+     */
+    val latitude: Double,
+
+    /**
+     * Double value representing altitude or elevation of this point.
+     */
+    val altitude: Double?,
+
+    /**
+     * Bounding box for this point.
+     */
     override val bbox: BoundingBox?,
 ) : Geometry {
 
+    //TODO
     /**
-     * Create a new instance by giving the Point a list of double values representing the longitude,
-     * latitude, and optionally altitude position of this point.
+     * Create a new instance of this class defining a longitude and latitude value in that respective
+     * order. While no limit is placed on decimal precision, for performance reasons
+     * when serializing and deserializing it is suggested to limit decimal precision to within 6
+     * decimal places. An optional altitude value can be passed in and can vary between negative
+     * infinity and positive infinity.
      *
-     * @param coordinates a list of double values representing the longitude, latitude, and optionally altitude position of this point
+     * @param longitude a double value representing the x position of this point
+     * @param latitude  a double value representing the y position of this point
+     * elevation or altitude
+     * @return a new instance of this class defined by the values passed inside this static factory
+     * method
+     * @since 7.0.0
      */
-    constructor(coordinates: List<Double>) : this(coordinates, null)
+    constructor(
+        longitude: Double,
+        latitude: Double,
+    ) : this(longitude, latitude, null, null)
 
+    //TODO
     /**
      * Create a new instance of this class defining a longitude and latitude value in that respective
      * order. While no limit is placed on decimal precision, for performance reasons
@@ -70,7 +102,6 @@ data class Point(
      * @param latitude  a double value representing the y position of this point
      * @param altitude  a double value which can be negative or positive infinity representing either
      * elevation or altitude
-     * @param bbox      optionally include a bbox definition as a double array
      * @return a new instance of this class defined by the values passed inside this static factory
      * method
      * @since 7.0.0
@@ -78,70 +109,23 @@ data class Point(
     constructor(
         longitude: Double,
         latitude: Double,
-        altitude: Double? = null,
-        bbox: BoundingBox? = null
-    ) : this(
-        listOfNotNull(
-            longitude,
-            latitude,
-            altitude
-        ),
-        bbox
-    )
+        altitude: Double?,
+    ) : this(longitude, latitude, altitude, null)
 
     /**
-     * This returns a double value representing the x or easting position of
-     * this point. ideally, this value would be restricted to 6 decimal places to correctly follow the
-     * GeoJson spec.
+     * Create GeoJSON representation of this [Point] geometry.
      *
-     * @return a double value representing the x or easting position of this
-     *   point
-     * @since 3.0.0
-     */
-    val longitude: Double by lazy { coordinates[0] }
-
-    /**
-     * This returns a double value representing the y or northing position of
-     * this point. ideally, this value would be restricted to 6 decimal places to correctly follow the
-     * GeoJson spec.
-     *
-     * @return a double value representing the y or northing position of this
-     *   point
-     * @since 3.0.0
-     */
-    val latitude: Double by lazy { coordinates[1] }
-
-    /**
-     * Optionally, the coordinate spec in GeoJson allows for altitude values to be placed inside the
-     * coordinate array. {@link #hasAltitude()} can be used to determine if this value was set during
-     * initialization of this Point instance. This double value should only be used to represent
-     * either the elevation or altitude value at this particular point.
-     *
-     * @return a double value ranging from negative to positive infinity
-     * @since 3.0.0
-     */
-    val altitude: Double? by lazy { coordinates.getOrNull(2) }
-
-    /**
-     * This takes the currently defined values found inside this instance and converts it to a GeoJson
-     * string.
-     *
-     * @return a JSON string which represents this Point geometry
-     * @since 1.0.0
+     * @return a string that contains GeoJSON
      */
     override fun toJson() = json.encodeToString(this)
 
     companion object {
 
         /**
-         * Create a new instance of this class by passing in a formatted valid JSON String. If you are
-         * creating a Point object from scratch it is better to use the constructor.
-         * While no limit is placed on decimal precision, for performance reasons when serializing
-         * and deserializing it is suggested to limit decimal precision to within 6 decimal places.
+         * Create a new [Point] from a GeoJSON String
          *
-         * @param jsonString a formatted valid JSON string defining a GeoJson Point
-         * @return a new instance of this class defined by the values in the JSON string method
-         * @since 1.0.0
+         * @param jsonString a GeoJSON string that represents a point
+         * @return a new instance Point instance
          */
         @JvmStatic
         fun fromJson(jsonString: String): Point = json.decodeFromString(jsonString)

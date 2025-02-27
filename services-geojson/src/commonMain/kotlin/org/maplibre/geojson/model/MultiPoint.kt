@@ -3,7 +3,6 @@ package org.maplibre.geojson.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
-import org.maplibre.geojson.serializer.PointDoubleArraySerializer
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
@@ -30,6 +29,7 @@ import kotlin.jvm.JvmStatic
  * Look over the [Point] documentation to get more
  * information about formatting your list of point objects correctly.
  *
+ * //TODO
  * @param coordinates a list of {@link Point}s which make up the LineString geometry
  * @param bbox   optionally include a bbox definition as a double array
  * @since 1.0.0
@@ -37,10 +37,13 @@ import kotlin.jvm.JvmStatic
 @Serializable
 @SerialName("MultiPoint")
 data class MultiPoint(
-    val coordinates: List<@Serializable(with = PointDoubleArraySerializer::class) Point>,
+    //TODO
+    val points: List<Point>,
+    //TODO
     override val bbox: BoundingBox?,
 ) : Geometry {
 
+    //TODO
     /**
      * Create a new instance by giving the MultiPoint a list of [Point] objects.
      *
@@ -48,6 +51,7 @@ data class MultiPoint(
      */
     constructor(coordinates: List<Point>) : this(coordinates, null)
 
+    //TODO
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
      * string.
@@ -59,6 +63,7 @@ data class MultiPoint(
 
     companion object {
 
+        //TODO
         /**
          * Create a new instance of this class by passing in a formatted valid JSON String. If you are
          * creating a MultiPoint object from scratch it is better to use the constructor.

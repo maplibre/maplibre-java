@@ -61,6 +61,7 @@ import kotlin.jvm.JvmStatic
  * Look over the [Polygon] documentation to get more information about
  * formatting your list of Polygon objects correctly.
  *
+ *  //TODO
  * @param coordinates a list of {@link Point}s which make up the MultiPolygon geometry
  * @param bbox   optionally include a bbox definition
  * @since 1.0.0
@@ -68,25 +69,21 @@ import kotlin.jvm.JvmStatic
 @Serializable
 @SerialName("MultiPolygon")
 data class MultiPolygon(
-    val coordinates: List<List<List<@Serializable(with = PointDoubleArraySerializer::class) Point>>>,
+    //TODO
+    val polygons: List<Polygon>,
+    //TODO
     override val bbox: BoundingBox?,
 ) : Geometry {
 
+    //TODO
     /**
      * Create a new instance by giving the MultiPolygon a list of [Polygon] objects.
      *
      * @param coordinates a list of Polygons which make up this MultiPolygon
      */
-    constructor(coordinates: List<List<List<Point>>>) : this(coordinates, null)
+    constructor(polygons: List<Polygon>) : this(polygons, null)
 
-    /**
-     * Returns a list of polygons which make up this MultiPolygon instance.
-     *
-     * @return a list of {@link Polygon}s which make up this MultiPolygon instance
-     * @since 3.0.0
-     */
-    val polygons: List<Polygon> by lazy { coordinates.map { points -> Polygon(points) } }
-
+    //TODO
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
      * string.
@@ -97,74 +94,7 @@ data class MultiPolygon(
     override fun toJson() = json.encodeToString(this)
 
     companion object {
-
-        /**
-         * Create a new instance of this class by defining a single [Polygon] objects and passing
-         * it in as a parameter in this method. The Polygon should comply with the GeoJson
-         * specifications described in the documentation.
-         *
-         * @param polygon a single Polygon which make up this MultiPolygon
-         * @param bbox    optionally include a bbox definition
-         * @return a new instance of this class defined by the values passed inside this static factory
-         * method
-         * @since 3.0.0
-         */
-        @JvmStatic
-        fun fromPolygon(
-            polygon: Polygon,
-        ) = fromPolygon(polygon, null)
-
-        /**
-         * Create a new instance of this class by defining a single [Polygon] objects and passing
-         * it in as a parameter in this method. The Polygon should comply with the GeoJson
-         * specifications described in the documentation.
-         *
-         * @param polygon a single Polygon which make up this MultiPolygon
-         * @param bbox    optionally include a bbox definition
-         * @return a new instance of this class defined by the values passed inside this static factory
-         * method
-         * @since 3.0.0
-         */
-        @JvmStatic
-        fun fromPolygon(
-            polygon: Polygon,
-            bbox: BoundingBox?,
-        ) = MultiPolygon(listOf(polygon.coordinates), bbox)
-
-        /**
-         * Create a new instance of this class by defining a list of [Polygon] objects and passing
-         * that list in as a parameter in this method. The Polygons should comply with the GeoJson
-         * specifications described in the documentation. Optionally, pass in an instance of a
-         * [BoundingBox] which better describes this MultiPolygon.
-         *
-         * @param polygons a list of Polygons which make up this MultiPolygon
-         * @return a new instance of this class defined by the values passed inside this static factory
-         * method
-         * @since 3.0.0
-         */
-        @JvmStatic
-        fun fromPolygons(
-            polygons: List<Polygon>,
-        ) = fromPolygons(polygons, null)
-
-        /**
-         * Create a new instance of this class by defining a list of [Polygon] objects and passing
-         * that list in as a parameter in this method. The Polygons should comply with the GeoJson
-         * specifications described in the documentation. Optionally, pass in an instance of a
-         * [BoundingBox] which better describes this MultiPolygon.
-         *
-         * @param polygons a list of Polygons which make up this MultiPolygon
-         * @param bbox     optionally include a bbox definition
-         * @return a new instance of this class defined by the values passed inside this static factory
-         * method
-         * @since 3.0.0
-         */
-        @JvmStatic
-        fun fromPolygons(
-            polygons: List<Polygon>,
-            bbox: BoundingBox?,
-        ) = MultiPolygon(polygons.map { polygon -> polygon.coordinates }, bbox)
-
+        //TODO
         /**
          * Create a new instance of this class by passing in a formatted valid JSON String. If you are
          * creating a MultiPolygon object from scratch it is better to use the constructor.

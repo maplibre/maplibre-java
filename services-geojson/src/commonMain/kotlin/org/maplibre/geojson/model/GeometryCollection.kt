@@ -58,21 +58,24 @@ import kotlin.jvm.JvmStatic
 @Serializable
 @SerialName("GeometryCollection")
 data class GeometryCollection(
+    //TODO
     val geometries: List<Geometry>,
+    //TODO
     override val bbox: BoundingBox?,
 ) : Geometry {
-
+//TODO
     /**
      * Create a new instance by giving the collection a list of GeoJSON [Geometry]
      */
     constructor(geometries: List<Geometry>) : this(geometries, null)
 
+//TODO
     /**
      * Create a new instance by giving the collection a single GeoJSON [Geometry].
      *
      * @param geometry a non-null object of type geometry which makes up this collection
      */
-    constructor(geometry: Geometry) : this(geometry, null)
+    constructor(geometry: Geometry) : this(listOf(geometry), null)
 
     /**
      * Create a new instance of this class by giving the collection a single GeoJSON [Geometry].
@@ -80,8 +83,9 @@ data class GeometryCollection(
      * @param geometry a non-null object of type geometry which makes up this collection
      * @param bbox     optionally include a bbox definition as a double array
      */
-    constructor(geometry: Geometry, bbox: BoundingBox?) : this(listOf(geometry), bbox)
+    constructor(geometry: Geometry, bbox: BoundingBox) : this(listOf(geometry), bbox)
 
+    //TODO
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
      * string.
@@ -93,6 +97,7 @@ data class GeometryCollection(
 
     companion object {
 
+        //TODO
         /**
          * Create a new instance of this class by passing in a formatted valid JSON String. If you are
          * creating a GeometryCollection object from scratch it is better to use the constructor.

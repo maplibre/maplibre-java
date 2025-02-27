@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
+//TODO
 /**
  * Each of the six geometries and [GeometryCollection]
  * which make up GeoJson implement this interface.
@@ -15,6 +16,7 @@ sealed interface Geometry : GeoJson {
 
     companion object {
 
+        //TODO
         /**
          * Create a new Geometry instance that is a sub class of one of the geometries and [GeometryCollection].
          *

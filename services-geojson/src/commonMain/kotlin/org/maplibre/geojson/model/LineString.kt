@@ -3,7 +3,6 @@ package org.maplibre.geojson.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
-import org.maplibre.geojson.serializer.PointDoubleArraySerializer
 import org.maplibre.geojson.utils.PolylineUtils
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
@@ -46,6 +45,7 @@ import kotlin.jvm.JvmStatic
  * Look over the [Point] documentation to get more
  * information about formatting your list of point objects correctly.
  *
+ * //TODO
  * @param coordinates a list of {@link Point}s which make up the LineString geometry
  * @param bbox   optionally include a bbox definition as a double array
  * @since 1.0.0
@@ -53,10 +53,13 @@ import kotlin.jvm.JvmStatic
 @Serializable
 @SerialName("LineString")
 data class LineString(
-    val coordinates: List<@Serializable(with = PointDoubleArraySerializer::class) Point>,
+    //TODO
+    val points: List<Point>,
+    //TODO
     override val bbox: BoundingBox?,
 ) : Geometry {
 
+    //TODO
     /**
      * Create a new instance by defining a list of [Point] objects. The list must have at least 2
      * points to be valid.
@@ -65,6 +68,7 @@ data class LineString(
      */
     constructor(coordinates: List<Point>) : this(coordinates, null)
 
+    //TODO
     /**
      * Create a new instance by defining a [MultiPoint] object and passing. The
      * multipoint object should comply with the GeoJson specifications described in the documentation.
@@ -73,6 +77,7 @@ data class LineString(
      */
     constructor(multiPoint: MultiPoint) : this(multiPoint, null)
 
+    //TODO
     /**
      * Create a new instance by defining a [MultiPoint] object and passing. The
      * multipoint object should comply with the GeoJson specifications described in the documentation.
@@ -85,6 +90,7 @@ data class LineString(
         bbox
     )
 
+    //TODO
     /**
      * Create a new instance by convert a polyline string into a lineString. This is
      * handy when an API provides you with an encoded string representing the line geometry and you'd
@@ -98,6 +104,7 @@ data class LineString(
      */
     constructor(polyline: String, precision: Int) : this(polyline, precision, null)
 
+    //TODO
     /**
      * Create a new instance by convert a polyline string into a lineString. This is
      * handy when an API provides you with an encoded string representing the line geometry and you'd
@@ -114,6 +121,7 @@ data class LineString(
         bbox
     )
 
+    //TODO
     /**
      * Encode this LineString into a Polyline string for easier serializing. When passing geometry
      * information over a mobile network connection, encoding the geometry first will generally result
@@ -124,9 +132,10 @@ data class LineString(
      * @since 1.0.0
      */
     fun toPolyline(precision: Int): String {
-        return PolylineUtils.encode(coordinates, precision)
+        return PolylineUtils.encode(points, precision)
     }
 
+    //TODO
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
      * string.
@@ -138,6 +147,7 @@ data class LineString(
 
     companion object {
 
+        //TODO
         /**
          * Create a new instance of this class by passing in a formatted valid JSON String. If you are
          * creating a LineString object from scratch it is better to use the constructor.
