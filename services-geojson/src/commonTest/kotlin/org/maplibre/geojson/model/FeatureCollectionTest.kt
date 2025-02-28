@@ -6,7 +6,6 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.Test
 import org.maplibre.geojson.TestUtils.DELTA
-import org.maplibre.geojson.TestUtils.compareJson
 import org.maplibre.geojson.TestUtils.loadJsonFixture
 
 class FeatureCollectionTest {
@@ -30,7 +29,7 @@ class FeatureCollectionTest {
         )
 
         val featureCollection = FeatureCollection(features)
-        assertNull(featureCollection.bbox)
+        assertNull(featureCollection.boundingBox)
     }
 
     @Test
@@ -62,11 +61,11 @@ class FeatureCollectionTest {
 
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val featureCollection = FeatureCollection(features, bbox)
-        assertNotNull(featureCollection.bbox)
-        assertEquals(1.0, featureCollection.bbox!!.west, DELTA)
-        assertEquals(2.0, featureCollection.bbox!!.south, DELTA)
-        assertEquals(3.0, featureCollection.bbox!!.east, DELTA)
-        assertEquals(4.0, featureCollection.bbox!!.north, DELTA)
+        assertNotNull(featureCollection.boundingBox)
+        assertEquals(1.0, featureCollection.boundingBox!!.west, DELTA)
+        assertEquals(2.0, featureCollection.boundingBox!!.south, DELTA)
+        assertEquals(3.0, featureCollection.boundingBox!!.east, DELTA)
+        assertEquals(4.0, featureCollection.boundingBox!!.north, DELTA)
     }
 
     @Test
@@ -99,7 +98,7 @@ class FeatureCollectionTest {
         val geo = FeatureCollection(feature)
         assertNotNull(geo.features)
         assertEquals(1, geo.features.size)
-        assertEquals(2.0, (geo.features.first().geometry as Point).coordinates[1], DELTA)
+        assertEquals(2.0, (geo.features.first().geometry as Point).latitude, DELTA)
     }
 
     @Test

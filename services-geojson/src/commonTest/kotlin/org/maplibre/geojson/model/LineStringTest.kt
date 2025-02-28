@@ -6,7 +6,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.Test
 import org.maplibre.geojson.TestUtils.DELTA
-import org.maplibre.geojson.TestUtils.compareJson
 import kotlin.test.assertFailsWith
 
 class LineStringTest {
@@ -44,7 +43,7 @@ class LineStringTest {
         )
 
         val lineString = LineString(points)
-        assertNull(lineString.bbox)
+        assertNull(lineString.boundingBox)
     }
 
     @Test
@@ -73,11 +72,11 @@ class LineStringTest {
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val lineString = LineString(points, bbox)
 
-        assertNotNull(lineString.bbox)
-        assertEquals(1.0, lineString.bbox!!.west, DELTA)
-        assertEquals(2.0, lineString.bbox!!.south, DELTA)
-        assertEquals(3.0, lineString.bbox!!.east, DELTA)
-        assertEquals(4.0, lineString.bbox!!.north, DELTA)
+        assertNotNull(lineString.boundingBox)
+        assertEquals(1.0, lineString.boundingBox!!.west, DELTA)
+        assertEquals(2.0, lineString.boundingBox!!.south, DELTA)
+        assertEquals(3.0, lineString.boundingBox!!.east, DELTA)
+        assertEquals(4.0, lineString.boundingBox!!.north, DELTA)
     }
 
     @Test
@@ -106,17 +105,18 @@ class LineStringTest {
         )
 
         assertNotNull(lineString)
-        assertNotNull(lineString.bbox)
-        assertEquals(1.0, lineString.bbox!!.southwest.longitude, DELTA)
-        assertEquals(2.0, lineString.bbox!!.southwest.latitude, DELTA)
-        assertEquals(3.0, lineString.bbox!!.northeast.longitude, DELTA)
-        assertEquals(4.0, lineString.bbox!!.northeast.latitude, DELTA)
-        assertEquals(1.0, lineString.coordinates[0].longitude, DELTA)
-        assertEquals(2.0, lineString.coordinates[0].latitude, DELTA)
-        assertEquals(2.0, lineString.coordinates[1].longitude, DELTA)
-        assertEquals(3.0, lineString.coordinates[1].latitude, DELTA)
-        assertEquals(3.0, lineString.coordinates[2].longitude, DELTA)
-        assertEquals(4.0, lineString.coordinates[2].latitude, DELTA)
+        assertEquals(1.0, lineString.points[0].longitude, DELTA)
+        assertEquals(2.0, lineString.points[0].latitude, DELTA)
+        assertEquals(2.0, lineString.points[1].longitude, DELTA)
+        assertEquals(3.0, lineString.points[1].latitude, DELTA)
+        assertEquals(3.0, lineString.points[2].longitude, DELTA)
+        assertEquals(4.0, lineString.points[2].latitude, DELTA)
+
+        assertNotNull(lineString.boundingBox)
+        assertEquals(1.0, lineString.boundingBox!!.southwest.longitude, DELTA)
+        assertEquals(2.0, lineString.boundingBox!!.southwest.latitude, DELTA)
+        assertEquals(3.0, lineString.boundingBox!!.northeast.longitude, DELTA)
+        assertEquals(4.0, lineString.boundingBox!!.northeast.latitude, DELTA)
     }
 
     @Test
@@ -124,9 +124,9 @@ class LineStringTest {
         val json = "{\"type\": \"LineString\"," +
                 "  \"coordinates\": [[ 100, 0], [101, 1]]} "
         val geo: LineString = LineString.fromJson(json)
-        assertEquals(geo.coordinates.first().longitude, 100.0, 0.0)
-        assertEquals(geo.coordinates.first().latitude, 0.0, 0.0)
-        assertNull(geo.coordinates.first().altitude)
+        assertEquals(geo.points.first().longitude, 100.0, 0.0)
+        assertEquals(geo.points.first().latitude, 0.0, 0.0)
+        assertNull(geo.points.first().altitude)
     }
 
     @Test

@@ -6,7 +6,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.Test
 import org.maplibre.geojson.TestUtils.DELTA
-import org.maplibre.geojson.TestUtils.compareJson
 import kotlin.test.assertFailsWith
 
 class MultiLineStringTest {
@@ -23,7 +22,7 @@ class MultiLineStringTest {
             LineString(points)
         )
 
-        val multiLineString = MultiLineString.fromLineStrings(lineStrings)
+        val multiLineString = MultiLineString(lineStrings)
         assertNotNull(multiLineString)
     }
 
@@ -39,8 +38,8 @@ class MultiLineStringTest {
             LineString(points)
         )
 
-        val multiLineString = MultiLineString.fromLineStrings(lineStrings)
-        assertNull(multiLineString.bbox)
+        val multiLineString = MultiLineString(lineStrings)
+        assertNull(multiLineString.boundingBox)
     }
 
     @Test
@@ -55,7 +54,7 @@ class MultiLineStringTest {
             LineString(points)
         )
 
-        val multiLineString: MultiLineString = MultiLineString.fromLineStrings(lineStrings)
+        val multiLineString = MultiLineString(lineStrings)
 
         val actualMultiLineString = MultiLineString.fromJson(multiLineString.toJson())
         val expectedMultiLineString = MultiLineString.fromJson("{\"type\":\"MultiLineString\",\"coordinates\":[[[1.0,2.0],[2.0,3.0]],[[1.0,2.0],[2.0,3.0]]]}")
@@ -76,12 +75,12 @@ class MultiLineStringTest {
             LineString(points)
         )
 
-        val multiLineString: MultiLineString = MultiLineString.fromLineStrings(lineStrings, bbox)
-        assertNotNull(multiLineString.bbox)
-        assertEquals(1.0, multiLineString.bbox!!.west, DELTA)
-        assertEquals(2.0, multiLineString.bbox!!.south, DELTA)
-        assertEquals(3.0, multiLineString.bbox!!.east, DELTA)
-        assertEquals(4.0, multiLineString.bbox!!.north, DELTA)
+        val multiLineString = MultiLineString(lineStrings, bbox)
+        assertNotNull(multiLineString.boundingBox)
+        assertEquals(1.0, multiLineString.boundingBox!!.west, DELTA)
+        assertEquals(2.0, multiLineString.boundingBox!!.south, DELTA)
+        assertEquals(3.0, multiLineString.boundingBox!!.east, DELTA)
+        assertEquals(4.0, multiLineString.boundingBox!!.north, DELTA)
     }
 
     @Test
@@ -92,15 +91,14 @@ class MultiLineStringTest {
         )
 
         val geometry = LineString(points)
-        val multiLineString: MultiLineString = MultiLineString.fromLineString(geometry)
+        val multiLineString = MultiLineString(listOf(geometry))
 
         assertNotNull(multiLineString)
         assertEquals(1, multiLineString.lineStrings.size)
-        assertEquals(
-            2.0,
-            multiLineString.lineStrings[0].coordinates[0].latitude,
-            DELTA
-        )
+        assertEquals(1.0, multiLineString.lineStrings[0].points[0].longitude, DELTA)
+        assertEquals(2.0, multiLineString.lineStrings[0].points[0].latitude, DELTA)
+        assertEquals(3.0, multiLineString.lineStrings[0].points[1].longitude, DELTA)
+        assertEquals(4.0, multiLineString.lineStrings[0].points[1].latitude, DELTA)
     }
 
     @Test
@@ -116,7 +114,7 @@ class MultiLineStringTest {
             LineString(points)
         )
 
-        val multiLineString: MultiLineString = MultiLineString.fromLineStrings(lineStrings, bbox)
+        val multiLineString = MultiLineString(lineStrings, bbox)
 
         val actualMultiLineString = MultiLineString.fromJson(multiLineString.toJson())
         val expectedMultiLineString = MultiLineString.fromJson("{\"type\":\"MultiLineString\",\"bbox\":[1.0,2.0,3.0,4.0],"
@@ -130,9 +128,9 @@ class MultiLineStringTest {
                 "\"coordinates\": [[[100.0, 0.0],[101.0, 1.0]],[[102.0, 2.0],[103.0, 3.0]]] }"
 
         val geo: MultiLineString = MultiLineString.fromJson(json)
-        assertEquals(geo.coordinates[0][0].longitude, 100.0, DELTA)
-        assertEquals(geo.coordinates[0][0].latitude, 0.0, DELTA)
-        assertNull(geo.coordinates[0][0].altitude)
+        assertEquals(geo.lineStrings[0].points[0].longitude, 100.0, DELTA)
+        assertEquals(geo.lineStrings[0].points[0].latitude, 0.0, DELTA)
+        assertNull(geo.lineStrings[0].points[0].altitude)
     }
 
     @Test

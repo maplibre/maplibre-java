@@ -3,6 +3,7 @@ package org.maplibre.geojson.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
+import org.maplibre.geojson.serializer.LineStringSerializer
 import org.maplibre.geojson.utils.PolylineUtils
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
@@ -50,13 +51,13 @@ import kotlin.jvm.JvmStatic
  * @param bbox   optionally include a bbox definition as a double array
  * @since 1.0.0
  */
-@Serializable
+@Serializable(with = LineStringSerializer::class)
 @SerialName("LineString")
 data class LineString(
     //TODO
     val points: List<Point>,
     //TODO
-    override val bbox: BoundingBox?,
+    override val boundingBox: BoundingBox?
 ) : Geometry {
 
     //TODO
@@ -86,7 +87,7 @@ data class LineString(
      * @param bbox       optionally include a bbox definition as a double array
      */
     constructor(multiPoint: MultiPoint, bbox: BoundingBox?) : this(
-        multiPoint.coordinates,
+        multiPoint.points,
         bbox
     )
 
@@ -121,6 +122,10 @@ data class LineString(
         bbox
     )
 
+    init {
+        require(points.size >= 2) { "LineString must have at least two Points" }
+    }
+
     //TODO
     /**
      * Encode this LineString into a Polyline string for easier serializing. When passing geometry
@@ -143,7 +148,7 @@ data class LineString(
      * @return a JSON string which represents this LineString geometry
      * @since 1.0.0
      */
-    override fun toJson() = json.encodeToString(this)
+    override fun toJson(): String = json.encodeToString(this)
 
     companion object {
 

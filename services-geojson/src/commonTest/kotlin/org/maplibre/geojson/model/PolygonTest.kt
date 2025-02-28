@@ -32,7 +32,7 @@ class PolygonTest {
             Point(3.0, 2.0)
         )
 
-        assertFailsWith(GeoJsonException::class) {
+        assertFailsWith(IllegalArgumentException::class) {
             Polygon(LineString(points))
         }
     }
@@ -46,7 +46,7 @@ class PolygonTest {
             Point(5.0, 2.0),
         )
 
-        assertFailsWith(GeoJsonException::class) {
+        assertFailsWith(IllegalArgumentException::class) {
             Polygon(LineString(points))
         }
     }
@@ -61,7 +61,7 @@ class PolygonTest {
         )
 
         val polygon = Polygon(LineString(points))
-        assertEquals(Point(10.0, 2.0), polygon.coordinates.first().first())
+        assertEquals(Point(10.0, 2.0), polygon.outerLineStringRing.points.first())
     }
 
     @Test
@@ -83,10 +83,9 @@ class PolygonTest {
         val innerLineString = LineString(innerPoints)
 
         val polygon = Polygon(outerLineString, listOf(innerLineString))
-        assertEquals(Point(10.0, 2.0), polygon.coordinates.first().first())
-        assertEquals(outerLineString, polygon.outerLine)
-        assertEquals(1, polygon.innerLines.size)
-        assertEquals(innerLineString, polygon.innerLines.first())
+        assertEquals(outerLineString, polygon.outerLineStringRing)
+        assertEquals(1, polygon.holeLineStringRings.size)
+        assertEquals(innerLineString, polygon.holeLineStringRings.first())
     }
 
     @Test
@@ -110,10 +109,10 @@ class PolygonTest {
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val polygon = Polygon(outerLineString, listOf(innerLineString), bbox)
 
-        assertEquals(bbox, polygon.bbox)
-        assertEquals(outerLineString, polygon.outerLine)
-        assertEquals(1, polygon.innerLines.size)
-        assertEquals(innerLineString, polygon.innerLines.first())
+        assertEquals(bbox, polygon.boundingBox)
+        assertEquals(outerLineString, polygon.outerLineStringRing)
+        assertEquals(1, polygon.holeLineStringRings.size)
+        assertEquals(innerLineString, polygon.holeLineStringRings.first())
     }
 
     @Test
@@ -129,7 +128,7 @@ class PolygonTest {
         val innerLines = listOf(LineString(points), LineString(points))
 
         val polygon = Polygon(outerLine, inner = innerLines)
-        assertNull(polygon.bbox)
+        assertNull(polygon.boundingBox)
     }
 
     @Test
@@ -166,11 +165,11 @@ class PolygonTest {
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val polygon = Polygon(outerLine, innerLines, bbox)
 
-        assertNotNull(polygon.bbox)
-        assertEquals(1.0, polygon.bbox!!.west, DELTA)
-        assertEquals(2.0, polygon.bbox!!.south, DELTA)
-        assertEquals(3.0, polygon.bbox!!.east, DELTA)
-        assertEquals(4.0, polygon.bbox!!.north, DELTA)
+        assertNotNull(polygon.boundingBox)
+        assertEquals(1.0, polygon.boundingBox!!.west, DELTA)
+        assertEquals(2.0, polygon.boundingBox!!.south, DELTA)
+        assertEquals(3.0, polygon.boundingBox!!.east, DELTA)
+        assertEquals(4.0, polygon.boundingBox!!.north, DELTA)
     }
 
     @Test
@@ -198,9 +197,9 @@ class PolygonTest {
         val json = "{\"type\": \"Polygon\", " +
                 "\"coordinates\": [[[100, 0], [101, 0], [101, 1], [100, 1],[100, 0]]]}"
         val geo = Polygon.fromJson(json)
-        assertEquals(100.0, geo.coordinates.first().first().longitude, DELTA)
-        assertEquals(0.0, geo.coordinates.first().first().latitude, DELTA)
-        assertNull(geo.coordinates.first().first().altitude)
+        assertEquals(100.0, geo.outerLineStringRing.points.first().longitude, DELTA)
+        assertEquals(0.0, geo.outerLineStringRing.points.first().latitude, DELTA)
+        assertNull(geo.outerLineStringRing.points.first().altitude)
     }
 
     @Test
@@ -209,12 +208,12 @@ class PolygonTest {
                 "\"coordinates\": [[[100, 0], [101, 0], [101, 1], [100, 1],[100, 0]], " +
                 " [[100.8, 0.8],[100.8, 0.2],[100.2, 0.2],[100.2, 0.8],[100.8, 0.8]]]}"
         val geo: Polygon = Polygon.fromJson(json)
-        assertEquals(100.0, geo.coordinates.first().first().longitude, DELTA)
-        assertEquals(0.0, geo.coordinates.first().first().latitude, DELTA)
-        assertEquals(2, geo.coordinates.size)
-        assertEquals(100.8, geo.coordinates[1].first().longitude, DELTA)
-        assertEquals(0.8, geo.coordinates[1].first().latitude, DELTA)
-        assertNull(geo.coordinates.first().first().altitude)
+        assertEquals(100.0, geo.outerLineStringRing.points.first().longitude, DELTA)
+        assertEquals(0.0, geo.outerLineStringRing.points.first().latitude, DELTA)
+        assertEquals(1, geo.holeLineStringRings.size)
+        assertEquals(100.8, geo.holeLineStringRings.first().points.first().longitude, DELTA)
+        assertEquals(0.8, geo.holeLineStringRings.first().points.first().latitude, DELTA)
+        assertNull(geo.holeLineStringRings.first().points.first().altitude)
     }
 
     @Test

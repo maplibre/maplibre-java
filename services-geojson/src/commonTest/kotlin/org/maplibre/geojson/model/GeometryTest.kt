@@ -5,7 +5,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.test.Test
 import org.maplibre.geojson.TestUtils.DELTA
-import org.maplibre.geojson.TestUtils.compareJson
 
 class GeometryTest {
 
@@ -34,12 +33,12 @@ class GeometryTest {
         )
 
         assertNotNull(geometry)
-        assertNotNull(geometry.bbox)
-        assertEquals(1.0, geometry.bbox!!.southwest.longitude, DELTA)
-        assertEquals(2.0, geometry.bbox!!.southwest.latitude, DELTA)
-        assertEquals(3.0, geometry.bbox!!.northeast.longitude, DELTA)
-        assertEquals(4.0, geometry.bbox!!.northeast.latitude, DELTA)
-        assertNotNull((geometry as Point).coordinates)
+        assertNotNull(geometry.boundingBox)
+        assertEquals(1.0, geometry.boundingBox!!.southwest.longitude, DELTA)
+        assertEquals(2.0, geometry.boundingBox!!.southwest.latitude, DELTA)
+        assertEquals(3.0, geometry.boundingBox!!.northeast.longitude, DELTA)
+        assertEquals(4.0, geometry.boundingBox!!.northeast.latitude, DELTA)
+        assertTrue(geometry is Point)
         assertEquals(2.0, geometry.longitude, DELTA)
         assertEquals(3.0, geometry.latitude, DELTA)
     }
@@ -47,7 +46,7 @@ class GeometryTest {
     @Test
     fun pointToJson() {
         val geometry: Geometry = Point(
-            2.0, 3.0, bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
+            2.0, 3.0, boundingBox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         )
 
         val actualPoint = Point.fromJson(geometry.toJson())
@@ -64,18 +63,18 @@ class GeometryTest {
         )
 
         assertNotNull(lineString)
-        assertNotNull(lineString.bbox)
-        assertEquals(1.0, lineString.bbox!!.southwest.longitude, DELTA)
-        assertEquals(2.0, lineString.bbox!!.southwest.latitude, DELTA)
-        assertEquals(3.0, lineString.bbox!!.northeast.longitude, DELTA)
-        assertEquals(4.0, lineString.bbox!!.northeast.latitude, DELTA)
-        assertNotNull((lineString as LineString).coordinates)
-        assertEquals(1.0, lineString.coordinates[0].longitude, DELTA)
-        assertEquals(2.0, lineString.coordinates[0].latitude, DELTA)
-        assertEquals(2.0, lineString.coordinates[1].longitude, DELTA)
-        assertEquals(3.0, lineString.coordinates[1].latitude, DELTA)
-        assertEquals(3.0, lineString.coordinates[2].longitude, DELTA)
-        assertEquals(4.0, lineString.coordinates[2].latitude, DELTA)
+        assertNotNull(lineString.boundingBox)
+        assertEquals(1.0, lineString.boundingBox!!.southwest.longitude, DELTA)
+        assertEquals(2.0, lineString.boundingBox!!.southwest.latitude, DELTA)
+        assertEquals(3.0, lineString.boundingBox!!.northeast.longitude, DELTA)
+        assertEquals(4.0, lineString.boundingBox!!.northeast.latitude, DELTA)
+        assertTrue(lineString is LineString)
+        assertEquals(1.0, lineString.points[0].longitude, DELTA)
+        assertEquals(2.0, lineString.points[0].latitude, DELTA)
+        assertEquals(2.0, lineString.points[1].longitude, DELTA)
+        assertEquals(3.0, lineString.points[1].latitude, DELTA)
+        assertEquals(3.0, lineString.points[2].longitude, DELTA)
+        assertEquals(4.0, lineString.points[2].latitude, DELTA)
     }
 
     @Test

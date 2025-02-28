@@ -39,7 +39,8 @@ data class FeatureCollection(
     //TODO
     val features: List<Feature>,
     //TODO
-    override val bbox: BoundingBox?,
+    @SerialName("bbox")
+    override val boundingBox: BoundingBox?,
 ) : GeoJson {
 
     //TODO

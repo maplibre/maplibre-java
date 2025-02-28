@@ -38,7 +38,7 @@ class PointTest {
     @Test
     fun bbox_nullWhenNotSet() {
         val point = Point(1.0, 2.0)
-        assertNull(point.bbox)
+        assertNull(point.boundingBox)
     }
 
     @Test
@@ -60,17 +60,17 @@ class PointTest {
 
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val lineString = LineString(points, bbox)
-        assertNotNull(lineString.bbox)
-        assertEquals(1.0, lineString.bbox!!.west, DELTA)
-        assertEquals(2.0, lineString.bbox!!.south, DELTA)
-        assertEquals(3.0, lineString.bbox!!.east, DELTA)
-        assertEquals(4.0, lineString.bbox!!.north, DELTA)
+        assertNotNull(lineString.boundingBox)
+        assertEquals(1.0, lineString.boundingBox!!.west, DELTA)
+        assertEquals(2.0, lineString.boundingBox!!.south, DELTA)
+        assertEquals(3.0, lineString.boundingBox!!.east, DELTA)
+        assertEquals(4.0, lineString.boundingBox!!.north, DELTA)
     }
 
     @Test
     fun bbox_doesSerializeWhenPresent() {
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
-        val point = Point(2.0, 2.0, bbox = bbox)
+        val point = Point(2.0, 2.0, boundingBox = bbox)
 
         val actualPoint = Point.fromJson(point.toJson())
         val expectedPoint = Point.fromJson("{\"coordinates\": [2.0,2.0],"
@@ -86,14 +86,13 @@ class PointTest {
         )
 
         assertNotNull(point)
-        assertNotNull(point.bbox)
-        assertEquals(1.0, point.bbox!!.southwest.longitude, DELTA)
-        assertEquals(2.0, point.bbox!!.southwest.latitude, DELTA)
-        assertEquals(3.0, point.bbox!!.northeast.longitude, DELTA)
-        assertEquals(4.0, point.bbox!!.northeast.latitude, DELTA)
-        assertNotNull(point.coordinates)
         assertEquals(2.0, point.longitude, DELTA)
         assertEquals(3.0, point.latitude, DELTA)
+        assertNotNull(point.boundingBox)
+        assertEquals(1.0, point.boundingBox!!.southwest.longitude, DELTA)
+        assertEquals(2.0, point.boundingBox!!.southwest.latitude, DELTA)
+        assertEquals(3.0, point.boundingBox!!.northeast.longitude, DELTA)
+        assertEquals(4.0, point.boundingBox!!.northeast.latitude, DELTA)
     }
 
     @Test
@@ -101,12 +100,10 @@ class PointTest {
         val json =
             "{ \"type\": \"Point\", \"coordinates\": [ 100, 0] }"
         val geo: Point = Point.fromJson(json)
+
         assertEquals(geo.longitude, 100.0, DELTA)
         assertEquals(geo.latitude, 0.0, DELTA)
         assertNull(geo.altitude)
-        assertEquals(geo.coordinates.first(), 100.0, DELTA)
-        assertEquals(geo.coordinates[1], 0.0, DELTA)
-        assertEquals(geo.coordinates.size, 2)
     }
 
     @Test

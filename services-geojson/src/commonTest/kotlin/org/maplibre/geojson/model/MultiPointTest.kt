@@ -6,7 +6,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.Test
 import org.maplibre.geojson.TestUtils.DELTA
-import org.maplibre.geojson.TestUtils.compareJson
 import kotlin.test.assertFailsWith
 
 class MultiPointTest {
@@ -30,7 +29,7 @@ class MultiPointTest {
         )
 
         val multiPoint = MultiPoint(points)
-        assertNull(multiPoint.bbox)
+        assertNull(multiPoint.boundingBox)
     }
 
     @Test
@@ -56,11 +55,11 @@ class MultiPointTest {
 
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val multiPoint = MultiPoint(points, bbox)
-        assertNotNull(multiPoint.bbox)
-        assertEquals(1.0, multiPoint.bbox!!.west, DELTA)
-        assertEquals(2.0, multiPoint.bbox!!.south, DELTA)
-        assertEquals(3.0, multiPoint.bbox!!.east, DELTA)
-        assertEquals(4.0, multiPoint.bbox!!.north, DELTA)
+        assertNotNull(multiPoint.boundingBox)
+        assertEquals(1.0, multiPoint.boundingBox!!.west, DELTA)
+        assertEquals(2.0, multiPoint.boundingBox!!.south, DELTA)
+        assertEquals(3.0, multiPoint.boundingBox!!.east, DELTA)
+        assertEquals(4.0, multiPoint.boundingBox!!.north, DELTA)
     }
 
     @Test
@@ -83,11 +82,11 @@ class MultiPointTest {
         val json = ("{ \"type\": \"MultiPoint\","
                 + "\"coordinates\": [ [100, 0], [101, 1] ] } ")
         val geo: MultiPoint = MultiPoint.fromJson(json)
-        assertEquals(geo.coordinates.first().longitude, 100.0, DELTA)
-        assertEquals(geo.coordinates.first().latitude, 0.0, DELTA)
-        assertEquals(geo.coordinates[1].longitude, 101.0, DELTA)
-        assertEquals(geo.coordinates[1].latitude, 1.0, DELTA)
-        assertNull(geo.coordinates.first().altitude)
+        assertEquals(geo.points.first().longitude, 100.0, DELTA)
+        assertEquals(geo.points.first().latitude, 0.0, DELTA)
+        assertEquals(geo.points[1].longitude, 101.0, DELTA)
+        assertEquals(geo.points[1].latitude, 1.0, DELTA)
+        assertNull(geo.points.first().altitude)
     }
 
     @Test

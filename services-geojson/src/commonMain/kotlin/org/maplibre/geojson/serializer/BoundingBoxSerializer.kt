@@ -9,10 +9,6 @@ import kotlinx.serialization.encoding.Encoder
 import org.maplibre.geojson.model.BoundingBox
 import org.maplibre.geojson.model.Point
 
-/**
- * Internal serializer/deserializer that is converting a [BoundingBox] object into
- * a double array (aka GeoJSON BoundingBox).
- */
 internal class BoundingBoxSerializer : KSerializer<BoundingBox> {
     private val delegateSerializer = DoubleArraySerializer()
 

@@ -61,7 +61,8 @@ data class GeometryCollection(
     //TODO
     val geometries: List<Geometry>,
     //TODO
-    override val bbox: BoundingBox?,
+    @SerialName("bbox")
+    override val boundingBox: BoundingBox?,
 ) : Geometry {
 //TODO
     /**

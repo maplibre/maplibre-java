@@ -3,8 +3,7 @@ package org.maplibre.geojson.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
-import org.maplibre.geojson.exception.GeoJsonException
-import org.maplibre.geojson.serializer.PointDoubleArraySerializer
+import org.maplibre.geojson.serializer.PolygonSerializer
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
@@ -52,15 +51,15 @@ import kotlin.jvm.JvmStatic
  * @param bbox        optionally include a bbox definition as a double array
  * @since 1.0.0
  */
-@Serializable
+@Serializable(with = PolygonSerializer::class)
 @SerialName("Polygon")
 data class Polygon(
     //TODO
-    val outerLineString: LineString,
+    val outerLineStringRing: LineString,
     //TODO
-    val holeLineStrings: List<LineString>,
+    val holeLineStringRings: List<LineString>,
     //TODO
-    override val bbox: BoundingBox?,
+    override val boundingBox: BoundingBox?,
 ) : Geometry {
 
     //TODO
@@ -96,6 +95,11 @@ data class Polygon(
      */
     constructor(outer: LineString, inner: List<LineString>) : this(outer, inner, null)
 
+    init {
+        outerLineStringRing.ensureIsLinearRing()
+        holeLineStringRings.forEach { line -> line.ensureIsLinearRing() }
+    }
+
     //TODO
     /**
      * This takes the currently defined values found inside this instance and converts it to a GeoJson
@@ -105,6 +109,25 @@ data class Polygon(
      * @since 1.0.0
      */
     override fun toJson(): String = json.encodeToString(this)
+
+    /**
+     * Checks to ensure that the LineStrings defining the polygon correctly and
+     * adhering to the linear ring rules.
+     *
+     * @param lineString [LineString] the polygon geometry
+     * @throws GeoJsonException if number of coordinates are less than 4,
+     * or first and last coordinates are not identical (it is not linear ring)
+     * @since 3.0.0
+     */
+    private fun LineString.ensureIsLinearRing() {
+        require(points.size >= 4) {
+            "LinearString for Polygon rings need to be made up of 4 or more Points."
+        }
+
+        require(points.first() == points.last()) {
+            "LinearString for Polygon rings require first and last Point to be identical."
+        }
+    }
 
     companion object {
 

@@ -1,7 +1,8 @@
 package org.maplibre.geojson.model
 
-import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -35,7 +36,7 @@ class FeatureTest {
 
         val lineString = LineString(points)
         val feature = Feature(lineString)
-        assertNull(feature.bbox)
+        assertNull(feature.boundingBox)
     }
 
     @Test
@@ -67,12 +68,12 @@ class FeatureTest {
         val lineString = LineString(points)
 
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
-        val feature = Feature(lineString, bbox = bbox)
-        assertNotNull(feature.bbox)
-        assertEquals(1.0, feature.bbox!!.west, DELTA)
-        assertEquals(2.0, feature.bbox!!.south, DELTA)
-        assertEquals(3.0, feature.bbox!!.east, DELTA)
-        assertEquals(4.0, feature.bbox!!.north, DELTA)
+        val feature = Feature(lineString, boundingBox = bbox)
+        assertNotNull(feature.boundingBox)
+        assertEquals(1.0, feature.boundingBox!!.west, DELTA)
+        assertEquals(2.0, feature.boundingBox!!.south, DELTA)
+        assertEquals(3.0, feature.boundingBox!!.east, DELTA)
+        assertEquals(4.0, feature.boundingBox!!.north, DELTA)
     }
 
     @Test
@@ -85,12 +86,12 @@ class FeatureTest {
         val lineString = LineString(points)
 
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
-        val feature = Feature(lineString, bbox = bbox)
+        val feature = Feature(lineString, boundingBox = bbox)
 
         val actualFeature = Feature.fromJson(feature.toJson())
         val expectedFeature = Feature.fromJson(
             "{\"type\":\"Feature\",\"bbox\":[1.0,2.0,3.0,4.0],\"geometry\":"
-                + "{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}"
+                    + "{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}"
         )
 
         assertEquals(expectedFeature, actualFeature)
@@ -104,7 +105,10 @@ class FeatureTest {
         val feature = Feature.fromJson(json)
         assertEquals((feature.geometry as Point).longitude, 125.6, DELTA)
         assertEquals((feature.geometry as Point).latitude, 10.1, DELTA)
-        assertEquals(feature.properties!!["name"]!!.jsonPrimitive.content, "Dinagat Islands")
+        assertEquals(
+            feature.properties!!.jsonObject["name"]!!.jsonPrimitive.content,
+            "Dinagat Islands"
+        )
     }
 
     @Test
@@ -115,18 +119,20 @@ class FeatureTest {
                 "\"properties\": {\"name\": \"line name\" }}"
         val feature = Feature.fromJson(json)
         assertNotNull(feature.geometry)
-        val coordinates = (feature.geometry as LineString).coordinates
-        assertNotNull(coordinates)
-        assertEquals(4, coordinates.size.toLong())
-        assertEquals(105.0, coordinates[3].longitude, DELTA)
-        assertEquals(5.0, coordinates[3].latitude, DELTA)
-        assertEquals("line name", feature.properties!!["name"]!!.jsonPrimitive.content)
+        val points = (feature.geometry as LineString).points
+        assertNotNull(points)
+        assertEquals(4, points.size.toLong())
+        assertEquals(105.0, points[3].longitude, DELTA)
+        assertEquals(5.0, points[3].latitude, DELTA)
+        assertEquals("line name", feature.properties!!.jsonObject["name"]!!.jsonPrimitive.content)
     }
 
     @Test
     fun point_feature_toJson() {
-        val properties: MutableMap<String, JsonElement> = mutableMapOf(
-            "name" to JsonPrimitive("Dinagat Islands")
+        val properties = JsonObject(
+            content = mapOf(
+                "name" to JsonPrimitive("Dinagat Islands")
+            )
         )
         val geo = Feature(
             Point(125.6, 10.1),
@@ -143,8 +149,10 @@ class FeatureTest {
 
     @Test
     fun linestring_feature_toJson() {
-        val properties: MutableMap<String, JsonElement> = mutableMapOf(
-            "name" to JsonPrimitive("Dinagat Islands")
+        val properties = JsonObject(
+            content = mapOf(
+                "name" to JsonPrimitive("Dinagat Islands")
+            )
         )
 
         val points = listOf(
@@ -192,8 +200,10 @@ class FeatureTest {
         )
 
         val line = LineString(points)
-        val properties: MutableMap<String, JsonElement> = mutableMapOf(
-            "key" to JsonPrimitive("value")
+        val properties = JsonObject(
+            content = mapOf(
+                "key" to JsonPrimitive("value")
+            )
         )
 
         val feature = Feature(line, properties)
@@ -233,65 +243,5 @@ class FeatureTest {
         val actualFeature = Feature.fromJson(Feature.fromJson(jsonString).toJson())
         val expectedFeature = Feature.fromJson(jsonString)
         assertEquals(expectedFeature, actualFeature)
-    }
-
-    @Test
-    fun feature_getProperty_empty_property() {
-        val jsonString =
-            ("{\"type\":\"Feature\"," +
-                    " \"geometry\":"
-                    + "{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}")
-
-        val feature = Feature.fromJson(jsonString)
-        var value: Any? = feature.getStringProperty("does_not_exist")
-        assertNull(value)
-
-        value = feature.getBooleanProperty("does_not_exist")
-        assertNull(value)
-
-        value = feature.getIntProperty("does_not_exist")
-        assertNull(value)
-
-        value = feature.getLongProperty("does_not_exist")
-        assertNull(value)
-
-        value = feature.getFloatProperty("does_not_exist")
-        assertNull(value)
-
-        value = feature.getDoubleProperty("does_not_exist")
-        assertNull(value)
-    }
-
-    @Test
-    fun feature_property_doesnotexist() {
-        val jsonString =
-            "{ \"type\": \"Feature\"," +
-                    "\"geometry\": { \"type\": \"LineString\", \"coordinates\": [[1,1],[2,2],[3,3]]}," +
-                    "\"properties\": {\"some_name\": \"some_value\" }}"
-        val feature = Feature.fromJson(jsonString)
-        var value: Any? = feature.getStringProperty("does_not_exist")
-        assertNull(value)
-
-        value = feature.getBooleanProperty("does_not_exist")
-        assertNull(value)
-
-        value = feature.getFloatProperty("does_not_exist")
-        assertNull(value)
-    }
-
-    @Test
-    fun feature_getProperty_content_property() {
-        val jsonString =
-            "{ \"type\": \"Feature\"," +
-                    "\"geometry\": { \"type\": \"LineString\", \"coordinates\": [[1,1],[2,2],[3,3]]}," +
-                    "\"properties\": {\"long\": 42, \"double\": 4.2, \"string\": \"string\", \"boolean\": true }}"
-
-        val feature = Feature.fromJson(jsonString)
-        assertEquals(42, feature.getIntProperty("long"))
-        assertEquals(42L, feature.getLongProperty("long"))
-        assertEquals(4.2f, feature.getFloatProperty("double"))
-        assertEquals(4.2, feature.getDoubleProperty("double"))
-        assertEquals("string", feature.getStringProperty("string"))
-        assertEquals(true, feature.getBooleanProperty("boolean"))
     }
 }

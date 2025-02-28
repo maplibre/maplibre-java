@@ -3,7 +3,7 @@ package org.maplibre.geojson.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
-import org.maplibre.geojson.serializer.PointGeometrySerializer
+import org.maplibre.geojson.serializer.PointSerializer
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
@@ -46,7 +46,7 @@ import kotlin.jvm.JvmStatic
  * @param
  * @since 1.0.0
  */
-@Serializable(with = PointGeometrySerializer::class)
+@Serializable(with = PointSerializer::class)
 @SerialName("Point")
 data class Point(
     /**
@@ -62,12 +62,12 @@ data class Point(
     /**
      * Double value representing altitude or elevation of this point.
      */
-    val altitude: Double?,
+    val altitude: Double? = null,
 
     /**
      * Bounding box for this point.
      */
-    override val bbox: BoundingBox?,
+    override val boundingBox: BoundingBox? = null,
 ) : Geometry {
 
     //TODO
@@ -117,7 +117,7 @@ data class Point(
      *
      * @return a string that contains GeoJSON
      */
-    override fun toJson() = json.encodeToString(this)
+    override fun toJson(): String = json.encodeToString(this)
 
     companion object {
 

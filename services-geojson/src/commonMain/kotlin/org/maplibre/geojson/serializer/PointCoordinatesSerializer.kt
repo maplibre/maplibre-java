@@ -8,11 +8,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import org.maplibre.geojson.model.Point
 
-/**
- * Internal serializer/deserializer that is converting a [Point] object into a
- * double array (aka GeoJSON Position).
- */
-internal class PointDoubleArraySerializer : KSerializer<Point> {
+internal class PointCoordinatesSerializer : KSerializer<Point> {
     private val delegateSerializer = DoubleArraySerializer()
 
     @OptIn(ExperimentalSerializationApi::class)

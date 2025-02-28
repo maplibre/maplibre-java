@@ -66,7 +66,8 @@ data class Feature(
     //TODO
     val id: String? = null,
     //TODO
-    override val bbox: BoundingBox? = null,
+    @SerialName("bbox")
+    override val boundingBox: BoundingBox? = null,
 ) : GeoJson {
 
     //TODO

@@ -27,7 +27,7 @@ sealed interface GeoJson {
      * the contained geometries
      * @since 3.0.0
      */
-    val bbox: BoundingBox?
+    val boundingBox: BoundingBox?
 
     //TODO
     /**

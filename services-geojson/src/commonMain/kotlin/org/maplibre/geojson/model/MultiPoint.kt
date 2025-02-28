@@ -3,6 +3,7 @@ package org.maplibre.geojson.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
+import org.maplibre.geojson.serializer.MultiPointSerializer
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
@@ -34,13 +35,13 @@ import kotlin.jvm.JvmStatic
  * @param bbox   optionally include a bbox definition as a double array
  * @since 1.0.0
  */
-@Serializable
+@Serializable(with = MultiPointSerializer::class)
 @SerialName("MultiPoint")
 data class MultiPoint(
     //TODO
     val points: List<Point>,
     //TODO
-    override val bbox: BoundingBox?,
+    override val boundingBox: BoundingBox?,
 ) : Geometry {
 
     //TODO

@@ -6,7 +6,6 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.Test
 import org.maplibre.geojson.TestUtils.DELTA
-import org.maplibre.geojson.TestUtils.compareJson
 
 class GeometryCollectionTest {
 
@@ -35,7 +34,7 @@ class GeometryCollectionTest {
         val geometries = listOf(points[0], lineString)
 
         val geometryCollection = GeometryCollection(geometries)
-        assertNull(geometryCollection.bbox)
+        assertNull(geometryCollection.boundingBox)
     }
 
     @Test
@@ -68,11 +67,11 @@ class GeometryCollectionTest {
 
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
         val geometryCollection = GeometryCollection(geometries, bbox)
-        assertNotNull(geometryCollection.bbox)
-        assertEquals(1.0, geometryCollection.bbox!!.west, DELTA)
-        assertEquals(2.0, geometryCollection.bbox!!.south, DELTA)
-        assertEquals(3.0, geometryCollection.bbox!!.east, DELTA)
-        assertEquals(4.0, geometryCollection.bbox!!.north, DELTA)
+        assertNotNull(geometryCollection.boundingBox)
+        assertEquals(1.0, geometryCollection.boundingBox!!.west, DELTA)
+        assertEquals(2.0, geometryCollection.boundingBox!!.south, DELTA)
+        assertEquals(3.0, geometryCollection.boundingBox!!.east, DELTA)
+        assertEquals(4.0, geometryCollection.boundingBox!!.north, DELTA)
     }
 
     @Test
@@ -137,7 +136,7 @@ class GeometryCollectionTest {
         val geometries = listOf(
             Point(
                 100.0, 0.0,
-                bbox = BoundingBox(-110.0, -30.0, 110.0, 30.0)
+                boundingBox = BoundingBox(-110.0, -30.0, 110.0, 30.0)
             ),
             LineString(
                 listOf(
