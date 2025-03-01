@@ -13,6 +13,11 @@ import org.maplibre.geojson.model.BoundingBox
 import org.maplibre.geojson.model.LineString
 import org.maplibre.geojson.model.MultiLineString
 
+/**
+ * Internal JSON serializer for [MultiLineString] model.
+ *
+ * @see MultiLineString
+ */
 @OptIn(ExperimentalSerializationApi::class)
 internal class MultiLineStringSerializer : KSerializer<MultiLineString> {
     private val lineStringCoordinatesListSerializer = ListSerializer(LineStringCoordinatesSerializer())

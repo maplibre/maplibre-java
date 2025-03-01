@@ -11,6 +11,11 @@ import kotlinx.serialization.encoding.encodeStructure
 import org.maplibre.geojson.model.BoundingBox
 import org.maplibre.geojson.model.Point
 
+/**
+ * Internal JSON serializer for [Point] model.
+ *
+ * @see Point
+ */
 @OptIn(ExperimentalSerializationApi::class)
 internal class PointSerializer : KSerializer<Point> {
     private val pointCoordinatesSerializer = PointCoordinatesSerializer()

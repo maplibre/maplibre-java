@@ -8,6 +8,11 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import org.maplibre.geojson.model.Polygon
 
+/**
+ * Internal JSON serializer for [Polygon] coordinates arrays.
+ *
+ * @see Polygon
+ */
 @OptIn(ExperimentalSerializationApi::class)
 internal class PolygonCoordinatesSerializer : KSerializer<Polygon> {
     private val lineStringCoordinatesListSerializer = ListSerializer(LineStringCoordinatesSerializer())

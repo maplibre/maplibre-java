@@ -8,71 +8,36 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 /**
- * A MultiPoint represents two or more geographic points that share a relationship and is one of the
- * seven geometries found in the GeoJson spec.
  *
- * This adheres to the RFC 7946 internet standard
- * when serialized into JSON. When deserialized, this class becomes an immutable object which should
- * be initiated using its static factory methods. The list of points must be equal to or greater
- * than 2.
- *
- * A sample GeoJson MultiPoint's provided below (in it's serialized state).
- * ```json
- * {
- *   "TYPE": "MultiPoint",
- *   "coordinates": [
- *     [100.0, 0.0],
- *     [101.0, 1.0]
- *   ]
- * }
- * ```
- *
- * Look over the [Point] documentation to get more
- * information about formatting your list of point objects correctly.
- *
- * //TODO
- * @param coordinates a list of {@link Point}s which make up the LineString geometry
- * @param bbox   optionally include a bbox definition as a double array
- * @since 1.0.0
  */
 @Serializable(with = MultiPointSerializer::class)
 @SerialName("MultiPoint")
 data class MultiPoint(
-    //TODO
+    /**
+     *
+     */
     val points: List<Point>,
-    //TODO
+
+    /**
+     *
+     */
     override val boundingBox: BoundingBox?,
 ) : Geometry {
 
-    //TODO
     /**
-     * Create a new instance by giving the MultiPoint a list of [Point] objects.
      *
-     * @param coordinates a list of points
      */
     constructor(coordinates: List<Point>) : this(coordinates, null)
 
-    //TODO
     /**
-     * This takes the currently defined values found inside this instance and converts it to a GeoJson
-     * string.
      *
-     * @return a JSON string which represents this MultiPoint geometry
-     * @since 1.0.0
      */
     override fun toJson() = json.encodeToString(this)
 
     companion object {
 
-        //TODO
         /**
-         * Create a new instance of this class by passing in a formatted valid JSON String. If you are
-         * creating a MultiPoint object from scratch it is better to use the constructor.
-         * For a valid MultiPoint to exist, it must have at least 2 coordinate entries.
          *
-         * @param jsonString a formatted valid JSON string defining a GeoJson MultiPoint
-         * @return a new instance of this class defined by the values in the JSON string
-         * @since 1.0.0
          */
         @JvmStatic
         fun fromJson(jsonString: String): MultiPoint = json.decodeFromString(jsonString)

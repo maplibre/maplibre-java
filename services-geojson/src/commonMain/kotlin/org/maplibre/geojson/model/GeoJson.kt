@@ -4,50 +4,45 @@ import kotlinx.serialization.Serializable
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
-//TODO
 /**
- * Generic implementation for all GeoJson objects defining common traits that each GeoJson object
- * has. This logic is carried over to [Geometry] which is an interface which all seven GeoJson
- * geometries implement.
+ * The core model interface that is implemented by all available models in this package.
  *
- * @since 1.0.0
+ * See [GeoJSON specification](https://tools.ietf.org/html/rfc7946) for more details.
+ *
+ * @see Point
+ * @see MultiPoint
+ * @see LineString
+ * @see MultiLineString
+ * @see Polygon
+ * @see MultiPolygon
+ * @see GeometryCollection
+ * @see Feature
+ * @see FeatureCollection
+ * @see BoundingBox
+ * @see Geometry
  */
 @Serializable
 sealed interface GeoJson {
 
-    //TODO
     /**
-     * A GeoJson object MAY have a member named "bbox" to include information on the coordinate range
-     * for its Geometries, Features, or FeatureCollections.  The value of the bbox member MUST be an
-     * array of length 2*n where n is the number of dimensions represented in the contained
-     * geometries, with all axes of the most southwesterly point followed by all axes of the more
-     * northeasterly point.  The axes order of a bbox follows the axes order of geometries.
-     *
-     * @return a double array with the length 2*n where n is the number of dimensions represented in
-     * the contained geometries
-     * @since 3.0.0
+     * The [BoundingBox] of this GeoJson.
      */
     val boundingBox: BoundingBox?
 
-    //TODO
     /**
-     * This takes the currently defined values found inside the GeoJson instance and converts it to a
-     * GeoJson string.
+     * Converts this [GeoJson] to its GeoJSON representation, as [String].
      *
-     * @return a JSON string which represents this Feature
-     * @since 1.0.0
+     * @return a [String] that contains JSON
      */
     fun toJson(): String
 
     companion object {
 
-        //TODO
         /**
-         * Create a new GeoJSON instance that is a sub class of this GeoJSON interface.
+         * Create a new [GeoJson] instance from a GeoJSON representation. This will return one of
+         * all available models in this package.
          *
-         * @param jsonString a formatted valid JSON string defining a Geometry
-         * @return a new instance of this class defined by the values in the JSON string
-         * @since 1.0.0
+         * @param jsonString the GeoJSON [String]
          */
         @JvmStatic
         fun fromJson(jsonString: String): GeoJson = json.decodeFromString(jsonString)

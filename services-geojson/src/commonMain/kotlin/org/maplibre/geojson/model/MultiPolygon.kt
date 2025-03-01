@@ -8,100 +8,36 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 /**
- * A multiPolygon is an array of Polygon coordinate arrays.
  *
- *
- * This adheres to the RFC 7946 internet standard when serialized into JSON. When deserialized, this
- * class becomes an immutable object which should be initiated using its static factory methods.
- *
- *
- * When representing a Polygon that crosses the antimeridian, interoperability is improved by
- * modifying their geometry. Any geometry that crosses the antimeridian SHOULD be represented by
- * cutting it in two such that neither part's representation crosses the antimeridian.
- *
- *
- * For example, a line extending from 45 degrees N, 170 degrees E across the antimeridian to 45
- * degrees N, 170 degrees W should be cut in two and represented as a MultiLineString.
- *
- *
- * A sample GeoJson MultiPolygon's provided below (in it's serialized state).
- * ```json
- * {
- *   "type": "MultiPolygon",
- *   "coordinates": [
- *     [
- *       [
- *         [102.0, 2.0],
- *         [103.0, 2.0],
- *         [103.0, 3.0],
- *         [102.0, 3.0],
- *         [102.0, 2.0]
- *       ]
- *     ],
- *     [
- *       [
- *         [100.0, 0.0],
- *         [101.0, 0.0],
- *         [101.0, 1.0],
- *         [100.0, 1.0],
- *         [100.0, 0.0]
- *       ],
- *       [
- *         [100.2, 0.2],
- *         [100.2, 0.8],
- *         [100.8, 0.8],
- *         [100.8, 0.2],
- *         [100.2, 0.2]
- *       ]
- *     ]
- *   ]
- * }
- * ```
- *
- * Look over the [Polygon] documentation to get more information about
- * formatting your list of Polygon objects correctly.
- *
- *  //TODO
- * @param coordinates a list of {@link Point}s which make up the MultiPolygon geometry
- * @param bbox   optionally include a bbox definition
- * @since 1.0.0
  */
 @Serializable(with = MultiPolygonSerializer::class)
 @SerialName("MultiPolygon")
 data class MultiPolygon(
-    //TODO
+    /**
+     *
+     */
     val polygons: List<Polygon>,
-    //TODO
+
+    /**
+     *
+     */
     override val boundingBox: BoundingBox?,
 ) : Geometry {
 
-    //TODO
     /**
-     * Create a new instance by giving the MultiPolygon a list of [Polygon] objects.
      *
-     * @param coordinates a list of Polygons which make up this MultiPolygon
      */
     constructor(polygons: List<Polygon>) : this(polygons, null)
 
-    //TODO
     /**
-     * This takes the currently defined values found inside this instance and converts it to a GeoJson
-     * string.
      *
-     * @return a JSON string which represents this MultiPolygon geometry
-     * @since 1.0.0
      */
     override fun toJson() = json.encodeToString(this)
 
     companion object {
-        //TODO
+
         /**
-         * Create a new instance of this class by passing in a formatted valid JSON String. If you are
-         * creating a MultiPolygon object from scratch it is better to use the constructor.
          *
-         * @param jsonString a formatted valid JSON string defining a GeoJson MultiPolygon
-         * @return  a new instance of this class defined by the values in the JSON string
-         * @since 1.0.0
          */
         @JvmStatic
         fun fromJson(jsonString: String): MultiPolygon = json.decodeFromString(jsonString)

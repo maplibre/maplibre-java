@@ -14,6 +14,11 @@ import org.maplibre.geojson.model.LineString
 import org.maplibre.geojson.model.MultiPoint
 import org.maplibre.geojson.model.Point
 
+/**
+ * Internal JSON serializer for [MultiPoint] model.
+ *
+ * @see MultiPoint
+ */
 @OptIn(ExperimentalSerializationApi::class)
 internal class MultiPointSerializer : KSerializer<MultiPoint> {
     private val pointListSerializer = ListSerializer(PointCoordinatesSerializer())

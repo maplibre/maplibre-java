@@ -15,6 +15,11 @@ import org.maplibre.geojson.model.MultiLineString
 import org.maplibre.geojson.model.MultiPolygon
 import org.maplibre.geojson.model.Polygon
 
+/**
+ * Internal JSON serializer for [MultiPolygon] model.
+ *
+ * @see MultiPolygon
+ */
 @OptIn(ExperimentalSerializationApi::class)
 internal class MultiPolygonSerializer : KSerializer<MultiPolygon> {
     private val polygonsCoordinatesListSerializer = ListSerializer(PolygonCoordinatesSerializer())

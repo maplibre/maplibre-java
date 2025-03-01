@@ -8,8 +8,6 @@ import kotlin.jvm.JvmStatic
 /**
  * Polyline utils class contains method that can decode/encode a polyline, simplify a line, and
  * more.
- *
- * @since 1.0.0
  */
 object PolylineUtils {
     // 1 by default (in the same metric as the point coordinates)
@@ -25,7 +23,6 @@ object PolylineUtils {
      * @param path      list of [Point]s making up the line
      * @param precision OSRMv4 uses 6, OSRMv5 and Google uses 5
      * @return a String representing a path string
-     * @since 1.0.0
      */
     @JvmStatic
     fun encode(path: List<Point>, precision: Int): String {
@@ -73,8 +70,6 @@ object PolylineUtils {
      * @see [Part of algorithm came from this source](https://github.com/mapbox/polyline/blob/master/src/polyline.js)
      *
      * @see [Part of algorithm came from this source.](https://github.com/googlemaps/android-maps-utils/blob/master/library/src/com/google/maps/android/PolyUtil.java)
-     *
-     * @since 1.0.0
      */
     @JvmStatic
     fun decode(encodedPath: String, precision: Int): List<Point> {
@@ -124,8 +119,6 @@ object PolylineUtils {
      * simplification
      * @return an array of simplified points
      * @see [JavaScript implementation](https://github.com/mourner/simplify-js/blob/master/simplify.js)
-     *
-     * @since 1.2.0
      */
     fun simplify(
         points: List<Point>,
@@ -140,7 +133,6 @@ object PolylineUtils {
      * @return an array of simplified points
      * @see [JavaScript implementation](https://github.com/mourner/simplify-js/blob/master/simplify.js)
      *
-     * @since 1.2.0
      */
     fun simplify(points: List<Point>, tolerance: Double): List<Point> =
         simplify(points, tolerance, SIMPLIFY_DEFAULT_HIGHEST_QUALITY)
@@ -155,8 +147,6 @@ object PolylineUtils {
      * simplification
      * @return an array of simplified points
      * @see [JavaScript implementation](https://github.com/mourner/simplify-js/blob/master/simplify.js)
-     *
-     * @since 1.2.0
      */
     fun simplify(
         points: List<Point>,
