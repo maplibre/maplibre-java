@@ -116,7 +116,6 @@ class PointTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun fromJson_coordinatesPresent() {
         assertFailsWith(SerializationException::class) {
             Point.fromJson("{\"type\":\"Point\",\"coordinates\":null}")
