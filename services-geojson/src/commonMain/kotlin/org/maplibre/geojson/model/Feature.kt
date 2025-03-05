@@ -3,7 +3,7 @@ package org.maplibre.geojson.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
@@ -30,7 +30,7 @@ data class Feature(
     /**
      * Additional custom properties for this feature.
      */
-    var properties: JsonElement? = null,
+    val properties: JsonObject? = null,
 
     /**
      * A unique identifier of this feature.
@@ -62,7 +62,7 @@ data class Feature(
      * @param geometry The geometry of this feature.
      * @param properties The properties of this feature.
      */
-    constructor(geometry: Geometry?, properties: JsonElement?): this(geometry, properties, null, null)
+    constructor(geometry: Geometry?, properties: JsonObject?): this(geometry, properties, null, null)
 
     /**
      * Constructor to create a feature with [Geometry], properties and id.
@@ -71,7 +71,7 @@ data class Feature(
      * @param properties The properties of this feature.
      * @param id The id of this feature.
      */
-    constructor(geometry: Geometry?, properties: JsonElement?, id: String?): this(geometry, properties, id, null)
+    constructor(geometry: Geometry?, properties: JsonObject?, id: String?): this(geometry, properties, id, null)
 
     /**
      * Converts this [Feature] to its GeoJSON representation, as [String].
