@@ -2,7 +2,6 @@ package org.maplibre.geojson.utils
 
 import org.maplibre.geojson.model.LineString
 import org.maplibre.geojson.model.Point
-import org.maplibre.geojson.TestUtils.expectNearNumber
 import org.maplibre.geojson.TestUtils.loadJsonFixture
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,8 +18,8 @@ class PolylineUtilsTest {
         assertEquals(expectedLength.toLong(), latLngs.size.toLong(), "Wrong length.")
 
         val lastPoint = latLngs[expectedLength - 1]
-        expectNearNumber(37.76953, lastPoint.latitude, 1e-6)
-        expectNearNumber(-122.41488, lastPoint.longitude, 1e-6)
+        assertEquals(37.76953, lastPoint.latitude, 1e-6)
+        assertEquals(-122.41488, lastPoint.longitude, 1e-6)
     }
 
     @Test

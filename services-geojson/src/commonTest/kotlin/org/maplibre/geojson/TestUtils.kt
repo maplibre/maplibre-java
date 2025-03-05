@@ -20,11 +20,4 @@ internal object TestUtils {
     fun loadJsonFixture(filename: String): String {
         return readResourceFile(filename)
     }
-
-    fun expectNearNumber(expected: Double, actual: Double, epsilon: Double) {
-        assertTrue(
-            abs(expected - actual) <= epsilon,
-            "Expected $actual to be near $expected",
-        )
-    }
 }
