@@ -35,16 +35,6 @@ data class FeatureCollection(
     constructor(features: List<Feature>) : this(features, null)
 
     /**
-     * Constructor to create a [FeatureCollection] with a single [Feature].
-     */
-    constructor(feature: Feature) : this(listOf(feature), null)
-
-    /**
-     * Constructor to create a [FeatureCollection] with a single [Feature] and a [BoundingBox].
-     */
-    constructor(feature: Feature, bbox: BoundingBox) : this(listOf(feature), bbox)
-
-    /**
      * Converts this [FeatureCollection] to its GeoJSON representation, as [String].
      *
      * @return a [String] that contains JSON

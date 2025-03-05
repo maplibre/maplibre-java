@@ -23,20 +23,11 @@ data class GeometryCollection(
     @SerialName("bbox")
     override val boundingBox: BoundingBox?,
 ) : Geometry {
+
     /**
      *
      */
     constructor(geometries: List<Geometry>) : this(geometries, null)
-
-    /**
-     *
-     */
-    constructor(geometry: Geometry) : this(listOf(geometry), null)
-
-    /**
-     *
-     */
-    constructor(geometry: Geometry, bbox: BoundingBox) : this(listOf(geometry), bbox)
 
     /**
      *

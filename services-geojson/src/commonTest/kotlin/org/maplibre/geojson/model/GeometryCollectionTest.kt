@@ -77,7 +77,7 @@ class GeometryCollectionTest {
     @Test
     fun passingInSingleGeometry_doesHandleCorrectly() {
         val geometry = Point(1.0, 2.0)
-        val collection = GeometryCollection(geometry)
+        val collection = GeometryCollection(listOf(geometry))
         assertNotNull(collection)
         assertEquals(1, collection.geometries.size)
         assertEquals(2.0, (collection.geometries.first() as Point).latitude, DELTA)

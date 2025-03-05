@@ -95,7 +95,7 @@ class FeatureCollectionTest {
     fun passingInSingleFeature_doesHandleCorrectly() {
         val point = Point(1.0, 2.0)
         val feature = Feature(point)
-        val geo = FeatureCollection(feature)
+        val geo = FeatureCollection(listOf(feature))
         assertNotNull(geo.features)
         assertEquals(1, geo.features.size)
         assertEquals(2.0, (geo.features.first().geometry as Point).latitude, DELTA)
