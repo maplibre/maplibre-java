@@ -21,12 +21,12 @@ data class Polygon(
     /**
      *
      */
-    val holeLineStringRings: List<LineString>,
+    val holeLineStringRings: List<LineString> = emptyList(),
 
     /**
      *
      */
-    override val boundingBox: BoundingBox?,
+    override val boundingBox: BoundingBox? = null,
 ) : Geometry {
 
     /**

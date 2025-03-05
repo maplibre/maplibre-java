@@ -22,7 +22,7 @@ data class LineString(
     /**
      *
      */
-    override val boundingBox: BoundingBox?
+    override val boundingBox: BoundingBox? = null
 ) : Geometry {
 
     /**

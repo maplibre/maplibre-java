@@ -21,7 +21,7 @@ data class MultiLineString(
     /**
      *
      */
-    override val boundingBox: BoundingBox?,
+    override val boundingBox: BoundingBox? = null,
 ) : Geometry {
 
     /**

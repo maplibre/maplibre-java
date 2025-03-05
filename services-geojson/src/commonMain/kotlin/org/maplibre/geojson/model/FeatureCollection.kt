@@ -26,7 +26,7 @@ data class FeatureCollection(
      * The [BoundingBox] of this collection.
      */
     @SerialName("bbox")
-    override val boundingBox: BoundingBox?,
+    override val boundingBox: BoundingBox? = null,
 ) : GeoJson {
 
     /**
