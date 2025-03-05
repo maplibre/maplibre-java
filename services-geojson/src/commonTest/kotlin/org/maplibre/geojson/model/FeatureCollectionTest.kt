@@ -45,9 +45,35 @@ class FeatureCollectionTest {
         val features = listOf(feature, feature)
 
         val actualFeatureCollection = FeatureCollection.fromJson(FeatureCollection(features).toJson())
-        val expectedFeatureCollection = FeatureCollection.fromJson("{\"type\":\"FeatureCollection\",\"features\":[" +
-                "{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}," +
-                "{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}]}")
+        val expectedFeatureCollection = FeatureCollection.fromJson(
+                    """
+                    {
+                        "type": "FeatureCollection",
+                        "features": [
+                            {
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "LineString",
+                                    "coordinates": [
+                                        [1.0, 2.0],
+                                        [2.0, 3.0]
+                                    ]
+                                }
+                            },
+                            {
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "LineString",
+                                    "coordinates": [
+                                        [1.0, 2.0],
+                                        [2.0, 3.0]
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                    """.trimIndent()
+                )
 
         assertEquals(expectedFeatureCollection, actualFeatureCollection)
     }
@@ -81,12 +107,36 @@ class FeatureCollectionTest {
         val bbox = BoundingBox(1.0, 2.0, 3.0, 4.0)
 
         val actualFeatureCollection = FeatureCollection.fromJson(FeatureCollection(features, bbox).toJson())
-        val expectedFeatureCollection = FeatureCollection.fromJson("{\"type\":\"FeatureCollection\",\"bbox\":[1.0,2.0,3.0,4.0],"
-                + "\"features\":[{\"type\":\"Feature\","
-                + "\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}},"
-                + "{\"type\":\"Feature\","
-                + "\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}}"
-                + "]}")
+        val expectedFeatureCollection = FeatureCollection.fromJson(
+                    """
+                    {
+                        "type": "FeatureCollection",
+                        "bbox": [1.0, 2.0, 3.0, 4.0],
+                        "features": [
+                            {
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "LineString",
+                                    "coordinates": [
+                                        [1.0, 2.0],
+                                        [2.0, 3.0]
+                                    ]
+                                }
+                            },
+                            {
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "LineString",
+                                    "coordinates": [
+                                        [1.0, 2.0],
+                                        [2.0, 3.0]
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                    """.trimIndent()
+                )
 
         assertEquals(expectedFeatureCollection, actualFeatureCollection)
     }

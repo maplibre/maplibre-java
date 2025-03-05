@@ -50,8 +50,26 @@ class GeometryCollectionTest {
         val geometryCollection = GeometryCollection(geometries)
 
         val actualGeometryCollection = GeometryCollection.fromJson(geometryCollection.toJson())
-            val expectedGeometryCollection = GeometryCollection.fromJson("{\"type\":\"GeometryCollection\",\"geometries\":[" + "{\"type\":\"Point\","
-                    + "\"coordinates\":[1.0,2.0]},{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}]}")
+        val expectedGeometryCollection = GeometryCollection.fromJson(
+            """
+            {
+                "type": "GeometryCollection",
+                "geometries": [
+                    {
+                        "type": "Point",
+                        "coordinates": [1.0, 2.0]
+                    },
+                    {
+                        "type": "LineString",
+                        "coordinates": [
+                            [1.0, 2.0],
+                            [2.0, 3.0]
+                        ]
+                    }
+                ]
+            }
+            """
+        )
         assertEquals(expectedGeometryCollection, actualGeometryCollection)
     }
 
@@ -97,24 +115,54 @@ class GeometryCollectionTest {
         val geometryCollection = GeometryCollection(geometries, bbox)
 
         val actualGeometryCollection = GeometryCollection.fromJson(geometryCollection.toJson())
-        val expectedGeometryCollection = GeometryCollection.fromJson("{\"type\":\"GeometryCollection\",\"bbox\":[1.0,2.0,3.0,4.0],"
-                + "\"geometries\":[{\"type\":\"Point\",\"coordinates\":[1.0,2.0]},"
-                + "{\"type\":\"LineString\",\"coordinates\":[[1.0,2.0],[2.0,3.0]]}]}")
+        val expectedGeometryCollection = GeometryCollection.fromJson(
+            """
+            {
+                "type": "GeometryCollection",
+                "bbox": [1.0, 2.0, 3.0, 4.0],
+                "geometries": [
+                    {
+                        "type": "Point",
+                        "coordinates": [1.0, 2.0]
+                    },
+                    {
+                        "type": "LineString",
+                        "coordinates": [
+                            [1.0, 2.0],
+                            [2.0, 3.0]
+                        ]
+                    }
+                ]
+            }
+            """
+        )
         assertEquals(expectedGeometryCollection, actualGeometryCollection)
     }
 
     @Test
     fun fromJson() {
         val json =
-            "    { \"type\": \"GeometryCollection\"," +
-                    "            \"bbox\": [120, 40, -120, -40]," +
-                    "      \"geometries\": [" +
-                    "      { \"type\": \"Point\"," +
-                    "              \"bbox\": [110, 30, -110, -30]," +
-                    "        \"coordinates\": [100, 0]}," +
-                    "      { \"type\": \"LineString\"," +
-                    "              \"bbox\": [110, 30, -110, -30]," +
-                    "        \"coordinates\": [[101, 0], [102, 1]]}]}"
+            """
+            {
+                "type": "GeometryCollection",
+                "geometries": [
+                    {
+                        "type": "Point",
+                        "coordinates": [100, 0],
+                        "bbox": [110, 30, -110, -30]
+                    },
+                    {
+                        "type": "LineString",
+                        "coordinates": [
+                            [101, 0],
+                            [102, 1]
+                        ],
+                        "bbox": [110, 30, -110, -30]
+                    }
+                ],
+                "bbox": [ 120, 40, -120, -40]
+            }
+            """.trimIndent()
         val geo = GeometryCollection.fromJson(json)
         assertTrue(geo.geometries.first() is Point)
         assertTrue(geo.geometries[1] is LineString)
@@ -123,16 +171,27 @@ class GeometryCollectionTest {
     @Test
     fun toJson() {
         val jsonOriginal =
-            "    { \"type\": \"GeometryCollection\"," +
-                    "            \"bbox\": [-120.0, -40.0, 120.0, 40.0]," +
-                    "      \"geometries\": [" +
-                    "      { \"type\": \"Point\"," +
-                    "              \"bbox\": [-110.0, -30.0, 110.0, 30.0]," +
-                    "        \"coordinates\": [100.0, 0.0]}," +
-                    "      { \"type\": \"LineString\"," +
-                    "              \"bbox\": [-110.0, -30.0, 110.0, 30.0]," +
-                    "        \"coordinates\": [[101.0, 0.0], [102.0, 1.0]]}]}"
-
+            """
+            {
+                "type": "GeometryCollection",
+                "bbox": [-120.0, -40.0, 120.0, 40.0],
+                "geometries": [
+                    {
+                        "type": "Point",
+                        "bbox": [-110.0, -30.0, 110.0, 30.0],
+                        "coordinates": [100.0, 0.0]
+                    },
+                    {
+                        "type": "LineString",
+                        "bbox": [-110.0, -30.0, 110.0, 30.0],
+                        "coordinates": [
+                            [101.0, 0.0],
+                            [102.0, 1.0]
+                        ]
+                    }
+                ]
+            }
+            """
         val geometries = listOf(
             Point(
                 100.0, 0.0,

@@ -46,7 +46,14 @@ class PointTest {
         val point = Point(1.0, 2.0)
 
         val actualPoint = Point.fromJson(point.toJson())
-        val expectedPoint = Point.fromJson("{\"type\":\"Point\",\"coordinates\":[1.0, 2.0]}")
+        val expectedPoint = Point.fromJson(
+            """
+                {
+                    "type": "Point",
+                    "coordinates": [1.0, 2.0]
+                }
+            """
+        )
         assertEquals(expectedPoint, actualPoint)
     }
 
@@ -73,16 +80,28 @@ class PointTest {
         val point = Point(2.0, 2.0, boundingBox = bbox)
 
         val actualPoint = Point.fromJson(point.toJson())
-        val expectedPoint = Point.fromJson("{\"coordinates\": [2.0,2.0],"
-                + "\"type\":\"Point\",\"bbox\":[1.0,2.0,3.0,4.0]}")
+        val expectedPoint = Point.fromJson(
+            """
+                        {
+                            "coordinates": [2.0, 2.0],
+                            "type": "Point",
+                            "bbox": [1.0, 2.0, 3.0, 4.0]
+                        }
+                    """
+        )
         assertEquals(expectedPoint, actualPoint)
     }
 
     @Test
     fun bbox_doesDeserializeWhenPresent() {
         val point: Point = Point.fromJson(
-            "{\"coordinates\": [2,3],"
-                    + "\"type\":\"Point\",\"bbox\":[1.0,2.0,3.0,4.0]}"
+            """
+                    {
+                        "coordinates": [2, 3],
+                        "type": "Point",
+                        "bbox": [1.0, 2.0, 3.0, 4.0]
+                    }
+                    """
         )
 
         assertNotNull(point)
@@ -97,8 +116,12 @@ class PointTest {
 
     @Test
     fun fromJson() {
-        val json =
-            "{ \"type\": \"Point\", \"coordinates\": [ 100, 0] }"
+        val json = """
+                    {
+                        "type": "Point",
+                        "coordinates": [100, 0]
+                    }
+                    """.trimIndent()
         val geo: Point = Point.fromJson(json)
 
         assertEquals(geo.longitude, 100.0, DELTA)
@@ -108,7 +131,12 @@ class PointTest {
 
     @Test
     fun toJson() {
-        val json = "{ \"type\": \"Point\", \"coordinates\": [ 100.0, 0.0] }"
+        val json = """
+            {
+                "type": "Point",
+                "coordinates": [100.0, 0.0]
+            }
+            """.trimIndent()
 
         val actualPoint = Point.fromJson(Point.fromJson(json).toJson())
         val expectedPoint = Point.fromJson(json)
@@ -118,7 +146,14 @@ class PointTest {
     @Test
     fun fromJson_coordinatesPresent() {
         assertFailsWith(SerializationException::class) {
-            Point.fromJson("{\"type\":\"Point\",\"coordinates\":null}")
+            Point.fromJson(
+                """
+                    {
+                        "type": "Point",
+                        "coordinates": null
+                    }
+                """
+            )
         }
     }
 }

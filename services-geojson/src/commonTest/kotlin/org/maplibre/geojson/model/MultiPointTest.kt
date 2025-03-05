@@ -42,7 +42,17 @@ class MultiPointTest {
         val multiPoint = MultiPoint(points)
 
         val actualMultiPoint = MultiPoint.fromJson(multiPoint.toJson())
-        val expectedMultiPoint = MultiPoint.fromJson("{\"coordinates\":[[1.0,2.0],[2.0,3.0]],\"type\":\"MultiPoint\"}")
+        val expectedMultiPoint = MultiPoint.fromJson(
+            """
+            {
+                "coordinates": [
+                    [1.0, 2.0],
+                    [2.0, 3.0]
+                ],
+                "type": "MultiPoint"
+            }
+            """.trimIndent()
+        )
         assertEquals(expectedMultiPoint, actualMultiPoint)
     }
 
@@ -73,14 +83,32 @@ class MultiPointTest {
         val multiPoint = MultiPoint(points, bbox)
 
         val actualMultiPoint = MultiPoint.fromJson(multiPoint.toJson())
-        val expectedMultiPoint = MultiPoint.fromJson("{\"coordinates\":[[1.0,2.0],[2.0,3.0]],\"type\":\"MultiPoint\",\"bbox\":[1.0,2.0,3.0,4.0]}")
+        val expectedMultiPoint = MultiPoint.fromJson(
+            """
+            {
+                "coordinates": [
+                    [1.0, 2.0],
+                    [2.0, 3.0]
+                ],
+                "type": "MultiPoint",
+                "bbox": [1.0, 2.0, 3.0, 4.0]
+            }
+            """.trimIndent()
+        )
         assertEquals(expectedMultiPoint, actualMultiPoint)
     }
 
     @Test
     fun fromJson() {
-        val json = ("{ \"type\": \"MultiPoint\","
-                + "\"coordinates\": [ [100, 0], [101, 1] ] } ")
+        val json = """
+                    {
+                        "type": "MultiPoint",
+                        "coordinates": [
+                            [100, 0],
+                            [101, 1]
+                        ]
+                    }
+                """.trimIndent()
         val geo: MultiPoint = MultiPoint.fromJson(json)
         assertEquals(geo.points.first().longitude, 100.0, DELTA)
         assertEquals(geo.points.first().latitude, 0.0, DELTA)
@@ -91,8 +119,15 @@ class MultiPointTest {
 
     @Test
     fun toJson() {
-        val json = ("{ \"type\": \"MultiPoint\","
-                + "\"coordinates\": [ [100.0, 0.0], [101.0, 1.0] ] } ")
+        val json = """
+                    {
+                        "type": "MultiPoint",
+                        "coordinates": [
+                            [100.0, 0.0],
+                            [101.0, 1.0]
+                        ]
+                    }
+                    """.trimIndent()
         val geo: MultiPoint = MultiPoint.fromJson(json)
 
         val actualMultiPoint = MultiPoint.fromJson(geo.toJson())
@@ -103,7 +138,14 @@ class MultiPointTest {
     @Test
     fun fromJson_coordinatesPresent() {
         assertFailsWith(SerializationException::class) {
-            MultiPoint.fromJson("{\"type\":\"MultiPoint\",\"coordinates\":null}")
+            MultiPoint.fromJson(
+                """
+                {
+                    "type": "MultiPoint",
+                    "coordinates": null
+                }
+                """.trimIndent()
+            )
         }
     }
 }

@@ -10,16 +10,25 @@ class GeometryTest {
 
     @Test
     fun fromJson() {
-        val json =
-            "    { \"type\": \"GeometryCollection\"," +
-                    "            \"bbox\": [120, 40, -120, -40]," +
-                    "      \"geometries\": [" +
-                    "      { \"type\": \"Point\"," +
-                    "              \"bbox\": [110, 30, -110, -30]," +
-                    "        \"coordinates\": [100, 0]}," +
-                    "      { \"type\": \"LineString\"," +
-                    "              \"bbox\": [110, 30, -110, -30]," +
-                    "        \"coordinates\": [[101, 0], [102, 1]]}]}"
+val json =
+    """
+    {
+        "type": "GeometryCollection",
+        "bbox": [120, 40, -120, -40],
+        "geometries": [
+            {
+                "type": "Point",
+                "bbox": [110, 30, -110, -30],
+                "coordinates": [100, 0]
+            },
+            {
+                "type": "LineString",
+                "bbox": [110, 30, -110, -30],
+                "coordinates": [[101, 0], [102, 1]]
+            }
+        ]
+    }
+    """.trimIndent()
 
         val geometry = Geometry.fromJson(json)
         assertTrue(geometry is GeometryCollection)
@@ -28,8 +37,13 @@ class GeometryTest {
     @Test
     fun pointFromJson() {
         val geometry = Geometry.fromJson(
-            "{\"coordinates\": [2,3],"
-                    + "\"type\":\"Point\",\"bbox\":[1.0,2.0,3.0,4.0]}"
+            """
+            {
+                "coordinates": [2, 3],
+                "type": "Point",
+                "bbox": [1.0, 2.0, 3.0, 4.0]
+            }
+            """.trimIndent()
         )
 
         assertNotNull(geometry)
@@ -50,16 +64,32 @@ class GeometryTest {
         )
 
         val actualPoint = Point.fromJson(geometry.toJson())
-        val expectedPoint = Point.fromJson("{\"coordinates\": [2.0,3.0],"
-                + "\"type\":\"Point\",\"bbox\":[1.0,2.0,3.0,4.0]}")
+val expectedPoint = Point.fromJson(
+    """
+    {
+        "coordinates": [2.0, 3.0],
+        "type": "Point",
+        "bbox": [1.0, 2.0, 3.0, 4.0]
+    }
+    """.trimIndent()
+)
         assertEquals(expectedPoint, actualPoint)
     }
 
     @Test
     fun lineStringFromJson() {
         val lineString = Geometry.fromJson(
-            "{\"coordinates\":[[1,2],[2,3],[3,4]],"
-                    + "\"type\":\"LineString\",\"bbox\":[1.0,2.0,3.0,4.0]}"
+            """
+            {
+                "coordinates": [
+                    [1, 2],
+                    [2, 3],
+                    [3, 4]
+                ],
+                "type": "LineString",
+                "bbox": [1.0, 2.0, 3.0, 4.0]
+            }
+            """.trimIndent()
         )
 
         assertNotNull(lineString)
@@ -89,8 +119,19 @@ class GeometryTest {
         )
 
         val actualLineString = LineString.fromJson(geometry.toJson())
-        val expectedLineString = LineString.fromJson("{\"coordinates\":[[1.0,2.0],[2.0,3.0],[3.0,4.0]],"
-                + "\"type\":\"LineString\",\"bbox\":[1.0,2.0,3.0,4.0]}")
+        val expectedLineString = LineString.fromJson(
+                    """
+                    {
+                        "coordinates": [
+                            [1.0, 2.0],
+                            [2.0, 3.0],
+                            [3.0, 4.0]
+                        ],
+                        "type": "LineString",
+                        "bbox": [1.0, 2.0, 3.0, 4.0]
+                    }
+                    """.trimIndent()
+                )
 
         assertEquals(expectedLineString, actualLineString)
     }

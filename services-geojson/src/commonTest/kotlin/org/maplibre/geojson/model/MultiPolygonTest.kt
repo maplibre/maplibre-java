@@ -63,8 +63,31 @@ class MultiPolygonTest {
         val multiPolygon = MultiPolygon(polygons)
 
         val actualMultiPolygon = MultiPolygon.fromJson(multiPolygon.toJson())
-        val expectedMultiPolygon = MultiPolygon.fromJson("{\"type\":\"MultiPolygon\","
-                + "\"coordinates\":[[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]],[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]]]}")
+        val expectedMultiPolygon = MultiPolygon.fromJson(
+            """
+            {
+                "type": "MultiPolygon",
+                "coordinates": [
+                    [
+                        [
+                            [1.0, 2.0],
+                            [2.0, 3.0],
+                            [3.0, 4.0],
+                            [1.0, 2.0]
+                        ]
+                    ],
+                    [
+                        [
+                            [1.0, 2.0],
+                            [2.0, 3.0],
+                            [3.0, 4.0],
+                            [1.0, 2.0]
+                        ]
+                    ]
+                ]
+            }
+            """.trimIndent()
+        )
         assertEquals(expectedMultiPolygon, actualMultiPolygon)
     }
 
@@ -129,17 +152,69 @@ class MultiPolygonTest {
         val multiPolygon = MultiPolygon(polygons, bbox)
 
         val actualMultiPolygon = MultiPolygon.fromJson(multiPolygon.toJson())
-        val expectedMultiPolygon = MultiPolygon.fromJson("{\"type\":\"MultiPolygon\",\"bbox\":[1.0,2.0,3.0,4.0],"
-                + "\"coordinates\":[[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]],[[[1.0,2.0],[2.0,3.0],[3.0,4.0],[1.0,2.0]]]]}")
+        val expectedMultiPolygon = MultiPolygon.fromJson(
+            """
+            {
+                "type": "MultiPolygon",
+                "bbox": [1.0, 2.0, 3.0, 4.0],
+                "coordinates": [
+                    [
+                        [
+                            [1.0, 2.0],
+                            [2.0, 3.0],
+                            [3.0, 4.0],
+                            [1.0, 2.0]
+                        ]
+                    ],
+                    [
+                        [
+                            [1.0, 2.0],
+                            [2.0, 3.0],
+                            [3.0, 4.0],
+                            [1.0, 2.0]
+                        ]
+                    ]
+                ]
+            }
+            """.trimIndent()
+        )
         assertEquals(expectedMultiPolygon, actualMultiPolygon)
     }
 
     @Test
     fun fromJson() {
-        val json = "{\"type\":\"MultiPolygon\",\"coordinates\": " +
-                "    [[[[102, 2], [103, 2], [103, 3], [102, 3], [102, 2]]]," +
-                "     [[[100, 0], [101, 0], [101, 1], [100, 1], [100, 0]]," +
-                "      [[100.2, 0.2], [100.2, 0.8], [100.8, 0.8], [100.8, 0.2], [100.2, 0.2]]]]}"
+        val json = """
+                                        {
+                                            "type": "MultiPolygon",
+                                            "coordinates": [
+                                                [
+                                                    [
+                                                        [102, 2],
+                                                        [103, 2],
+                                                        [103, 3],
+                                                        [102, 3],
+                                                        [102, 2]
+                                                    ]
+                                                ],
+                                                [
+                                                    [
+                                                        [100, 0],
+                                                        [101, 0],
+                                                        [101, 1],
+                                                        [100, 1],
+                                                        [100, 0]
+                                                    ],
+                                                    [
+                                                        [100.2, 0.2],
+                                                        [100.2, 0.8],
+                                                        [100.8, 0.8],
+                                                        [100.8, 0.2],
+                                                        [100.2, 0.2]
+                                                    ]
+                                                ]
+                                            ]
+                                        }
+                                        """.trimIndent()
         val geo = MultiPolygon.fromJson(json)
         assertEquals(geo.polygons.first().outerLineStringRing.points.first().longitude, 102.0, DELTA)
         assertEquals(geo.polygons.first().outerLineStringRing.points.first().latitude, 2.0, DELTA)
@@ -148,10 +223,38 @@ class MultiPolygonTest {
 
     @Test
     fun toJson() {
-        val json = "{\"type\":\"MultiPolygon\",\"coordinates\": " +
-                "    [[[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]]," +
-                "     [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]]," +
-                "      [[100.2, 0.2], [100.2, 0.8], [100.8, 0.8], [100.8, 0.2], [100.2, 0.2]]]]}"
+        val json = """
+                    {
+                        "type": "MultiPolygon",
+                        "coordinates": [
+                            [
+                                [
+                                    [102.0, 2.0],
+                                    [103.0, 2.0],
+                                    [103.0, 3.0],
+                                    [102.0, 3.0],
+                                    [102.0, 2.0]
+                                ]
+                            ],
+                            [
+                                [
+                                    [100.0, 0.0],
+                                    [101.0, 0.0],
+                                    [101.0, 1.0],
+                                    [100.0, 1.0],
+                                    [100.0, 0.0]
+                                ],
+                                [
+                                    [100.2, 0.2],
+                                    [100.2, 0.8],
+                                    [100.8, 0.8],
+                                    [100.8, 0.2],
+                                    [100.2, 0.2]
+                                ]
+                            ]
+                        ]
+                    }
+                    """.trimIndent()
 
         val multiPolygon = MultiPolygon.fromJson(json)
 
@@ -163,7 +266,14 @@ class MultiPolygonTest {
     @Test
     fun fromJson_coordinatesPresent() {
         assertFailsWith(SerializationException::class) {
-            MultiPolygon.fromJson("{\"type\":\"MultiPolygon\",\"coordinates\":null}")
+            MultiPolygon.fromJson(
+                """
+                {
+                    "type": "MultiPolygon",
+                    "coordinates": null
+                }
+                """.trimIndent()
+            )
         }
     }
 }
