@@ -1,5 +1,6 @@
 package org.maplibre.geojson.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
@@ -27,6 +28,7 @@ sealed interface GeoJson {
     /**
      * The [BoundingBox] of this GeoJson.
      */
+    @SerialName("bbox")
     val boundingBox: BoundingBox?
 
     /**
