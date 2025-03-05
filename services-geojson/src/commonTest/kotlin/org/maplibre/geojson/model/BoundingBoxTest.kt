@@ -1,14 +1,15 @@
 package org.maplibre.geojson.model
 
+import kotlinx.serialization.json.Json
 import org.maplibre.geojson.TestUtils.DELTA
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 
 class BoundingBoxTest {
 
     @Test
-    @Throws(Exception::class)
     fun sanity() {
         val southwest = Point(2.0, 2.0)
         val northeast = Point(4.0, 4.0)
@@ -17,7 +18,6 @@ class BoundingBoxTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun southWest_doesReturnMostSouthwestCoordinate() {
         val southwest = Point(1.0, 2.0)
         val northeast = Point(3.0, 4.0)
@@ -26,7 +26,6 @@ class BoundingBoxTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun northEast_doesReturnMostNortheastCoordinate() {
         val southwest = Point(1.0, 2.0)
         val northeast = Point(3.0, 4.0)
@@ -35,7 +34,6 @@ class BoundingBoxTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun west_doesReturnMostWestCoordinate() {
         val southwest = Point(1.0, 2.0)
         val northeast = Point(3.0, 4.0)
@@ -44,7 +42,6 @@ class BoundingBoxTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun south_doesReturnMostSouthCoordinate() {
         val southwest = Point(1.0, 2.0)
         val northeast = Point(3.0, 4.0)
@@ -53,7 +50,6 @@ class BoundingBoxTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun east_doesReturnMostEastCoordinate() {
         val southwest = Point(1.0, 2.0)
         val northeast = Point(3.0, 4.0)
@@ -62,11 +58,51 @@ class BoundingBoxTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun north_doesReturnMostNorthCoordinate() {
         val southwest = Point(1.0, 2.0)
         val northeast = Point(3.0, 4.0)
         val boundingBox = BoundingBox(southwest, northeast)
         assertEquals(4.0, boundingBox.north, DELTA)
+    }
+
+    @Test
+    fun `JSON serializing without altitude`() {
+        val boundingBox = BoundingBox(Point(1.0, 2.0), Point(3.0, 4.0))
+        val json = boundingBox.toJson()
+
+        assertEquals(Json.parseToJsonElement(json), Json.parseToJsonElement("[1.0, 2.0, 3.0, 4.0]"))
+    }
+
+    @Test
+    fun `JSON serializing with altitude`() {
+        val boundingBox = BoundingBox(Point(1.0, 2.0, 3.0), Point(4.0, 5.0, 6.0))
+        val json = boundingBox.toJson()
+
+        assertEquals(Json.parseToJsonElement(json), Json.parseToJsonElement("[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]"))
+    }
+
+    @Test
+    fun `JSON deserializing without altitude`() {
+        val json = "[1.0, 2.0, 3.0, 4.0]"
+        val boundingBox = BoundingBox.fromJson(json)
+
+        assertEquals(BoundingBox(Point(1.0, 2.0), Point(3.0, 4.0)), boundingBox)
+    }
+
+    @Test
+    fun `JSON deserializing with altitude`() {
+        val json = "[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]"
+        val boundingBox = BoundingBox.fromJson(json)
+
+        assertEquals(BoundingBox(Point(1.0, 2.0, 3.0), Point(4.0, 5.0, 6.0)), boundingBox)
+    }
+
+    @Test
+    fun `JSON deserializing with wrong array size`() {
+        val json = "[1.0, 2.0, 3.0, 4.0, 5.0]"
+
+        assertFailsWith(IllegalArgumentException::class) {
+            BoundingBox.fromJson(json)
+        }
     }
 }

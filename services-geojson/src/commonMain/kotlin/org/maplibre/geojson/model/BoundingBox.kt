@@ -1,7 +1,10 @@
 package org.maplibre.geojson.model
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
 import org.maplibre.geojson.serializer.BoundingBoxSerializer
+import org.maplibre.geojson.utils.json
+import kotlin.jvm.JvmStatic
 
 /**
  * Model representing a GeoJSON bounding box.
@@ -84,4 +87,22 @@ data class BoundingBox(
      */
     val north: Double
         get() = northeast.latitude
+
+    /**
+     * Converts this [BoundingBox] to its GeoJSON representation, as [String].
+     *
+     * @return a [String] that contains JSON
+     */
+    fun toJson() = json.encodeToString(this)
+
+    companion object {
+
+        /**
+         * Create a new [BoundingBox] from a GeoJSON representation.
+         *
+         * @param jsonString the GeoJSON [String]
+         */
+        @JvmStatic
+        fun fromJson(jsonString: String): BoundingBox = json.decodeFromString(jsonString)
+    }
 }
