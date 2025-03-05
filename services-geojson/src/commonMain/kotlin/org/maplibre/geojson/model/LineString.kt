@@ -33,32 +33,6 @@ data class LineString(
     /**
      *
      */
-    constructor(multiPoint: MultiPoint) : this(multiPoint, null)
-
-    /**
-     *
-     */
-    constructor(multiPoint: MultiPoint, bbox: BoundingBox?) : this(
-        multiPoint.points,
-        bbox
-    )
-
-    /**
-     *
-     */
-    constructor(polyline: String, precision: Int) : this(polyline, precision, null)
-
-    /**
-     *
-     */
-    constructor(polyline: String, precision: Int, bbox: BoundingBox?) : this(
-        PolylineUtils.decode(polyline, precision),
-        bbox
-    )
-
-    /**
-     *
-     */
     init {
         require(points.size >= 2) { "LineString must have at least two Points" }
     }
@@ -76,6 +50,21 @@ data class LineString(
     override fun toJson(): String = json.encodeToString(this)
 
     companion object {
+
+        /**
+         *
+         */
+        @JvmStatic
+        fun fromPolyline(polyline: String, precision: Int) = fromPolyline(polyline, precision, null)
+
+        /**
+         *
+         */
+        @JvmStatic
+        fun fromPolyline(polyline: String, precision: Int, bbox: BoundingBox?): LineString {
+            val points = PolylineUtils.decode(polyline, precision)
+            return LineString(points, bbox)
+        }
 
         /**
          *

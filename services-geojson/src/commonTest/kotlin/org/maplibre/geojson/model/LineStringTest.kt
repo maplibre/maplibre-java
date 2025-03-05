@@ -23,18 +23,6 @@ class LineStringTest {
     }
 
     @Test
-    fun fromLngLats_generatedFromMultipoint() {
-        val points = listOf(
-            Point(1.0, 2.0),
-            Point(4.0, 8.0)
-        )
-
-        val multiPoint = MultiPoint(points)
-        val lineString = LineString(multiPoint)
-        assertEquals("_gayB_c`|@_wemJ_kbvD", lineString.toPolyline(PRECISION_6))
-    }
-
-    @Test
     fun bbox_nullWhenNotSet() {
         val points = listOf(
             Point(1.0, 1.0),
@@ -146,9 +134,5 @@ class LineStringTest {
         assertFailsWith(SerializationException::class) {
             LineString.fromJson("{\"type\":\"LineString\",\"coordinates\":null}")
         }
-    }
-
-    companion object {
-        private const val PRECISION_6 = 6
     }
 }

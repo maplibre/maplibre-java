@@ -43,7 +43,7 @@ class PolylineUtilsTest {
             Point(2.4, 48.9)
         )
         val encoded = PolylineUtils.encode(originalPath, PRECISION_6)
-        val path = LineString(encoded, PRECISION_6).points
+        val path = LineString.fromPolyline(encoded, PRECISION_6).points
 
         assertEquals(originalPath.size.toLong(), path.size.toLong())
         for (i in originalPath.indices) {
@@ -54,7 +54,7 @@ class PolylineUtilsTest {
 
     @Test
     fun testFromPolylineAndDecode() {
-        val path1 = LineString(TEST_LINE6, PRECISION_6).points
+        val path1 = LineString.fromPolyline(TEST_LINE6, PRECISION_6).points
         val path2 = PolylineUtils.decode(TEST_LINE6, PRECISION_6)
 
         assertEquals(path1.size, path2.size)
