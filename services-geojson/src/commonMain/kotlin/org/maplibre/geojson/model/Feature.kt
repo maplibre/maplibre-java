@@ -8,7 +8,8 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 /**
- * Model representing a GeoJSON feature.
+ * Model representing a GeoJSON feature. A [Feature] contains a [Geometry] and additional information like
+ * properties, id and a [BoundingBox].
  *
  * See [Feature specification](https://tools.ietf.org/html/rfc7946#section-3.2) for more details.
  *
@@ -74,9 +75,9 @@ data class Feature(
     constructor(geometry: Geometry?, properties: JsonObject?, id: String?): this(geometry, properties, id, null)
 
     /**
-     * Converts this [Feature] to its GeoJSON representation, as [String].
+     * Converts this [Feature] to its GeoJSON representation, as String.
      *
-     * @return a [String] that contains JSON
+     * @return a String that contains JSON
      */
     override fun toJson() = json.encodeToString(this)
 
@@ -85,7 +86,7 @@ data class Feature(
         /**
          * Create a new [Feature] from a GeoJSON representation.
          *
-         * @param jsonString the GeoJSON [String]
+         * @param jsonString the GeoJSON String
          */
         @JvmStatic
         fun fromJson(jsonString: String): Feature = json.decodeFromString(jsonString)

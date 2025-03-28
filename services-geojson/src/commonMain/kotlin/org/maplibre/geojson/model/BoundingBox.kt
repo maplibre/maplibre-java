@@ -7,7 +7,8 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 /**
- * Model representing a GeoJSON bounding box.
+ * Model representing a GeoJSON bounding box. This is an optional member of all [GeoJson] objects.
+ * Bounding boxes are represented by two positions: the southwest corner and the northeast corner.
  *
  * See [Bounding Box specification](https://tools.ietf.org/html/rfc7946#section-5) for more details.
  *
@@ -89,9 +90,9 @@ data class BoundingBox(
         get() = northeast.latitude
 
     /**
-     * Converts this [BoundingBox] to its GeoJSON representation, as [String].
+     * Converts this [BoundingBox] to its GeoJSON representation, as String.
      *
-     * @return a [String] that contains JSON
+     * @return a String that contains JSON
      */
     fun toJson() = json.encodeToString(this)
 
@@ -100,7 +101,7 @@ data class BoundingBox(
         /**
          * Create a new [BoundingBox] from a GeoJSON representation.
          *
-         * @param jsonString the GeoJSON [String]
+         * @param jsonString the GeoJSON String
          */
         @JvmStatic
         fun fromJson(jsonString: String): BoundingBox = json.decodeFromString(jsonString)

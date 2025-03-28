@@ -7,7 +7,8 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 /**
- * Model representing a GeoJSON feature collection.
+ * Model representing a GeoJSON feature collection. as the name already suggests,
+ * [FeatureCollection] holds a list of [Feature]s.
  *
  * See [FeatureCollection specification](https://tools.ietf.org/html/rfc7946#section-3.3) for more details.
  *
@@ -35,9 +36,9 @@ data class FeatureCollection(
     constructor(features: List<Feature>) : this(features, null)
 
     /**
-     * Converts this [FeatureCollection] to its GeoJSON representation, as [String].
+     * Converts this [FeatureCollection] to its GeoJSON representation, as String.
      *
-     * @return a [String] that contains JSON
+     * @return a String that contains JSON
      */
     override fun toJson() = json.encodeToString(this)
 
@@ -46,7 +47,7 @@ data class FeatureCollection(
         /**
          * Create a new [FeatureCollection] from a GeoJSON representation.
          *
-         * @param jsonString the GeoJSON [String]
+         * @param jsonString the GeoJSON String
          */
         @JvmStatic
         fun fromJson(jsonString: String): FeatureCollection = json.decodeFromString(jsonString)
