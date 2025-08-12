@@ -1,14 +1,12 @@
-package org.maplibre.geojson.turf
+package org.maplibre.geojson.util
 
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readString
-import platform.Foundation.NSBundle
 
 actual fun readResourceFile(filename: String): String {
-    val resourcePath = NSBundle.mainBundle.resourcePath!!
-    val filePath = Path("${resourcePath}/resources/${filename}")
+    val filePath = Path("kotlin/$filename")
     return SystemFileSystem.source(filePath).use { rawSource ->
         rawSource.buffered().readString()
     }

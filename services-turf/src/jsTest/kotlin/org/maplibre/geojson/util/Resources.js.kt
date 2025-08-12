@@ -1,4 +1,4 @@
-package org.maplibre.geojson.turf
+package org.maplibre.geojson.util
 
 import kotlinx.io.buffered
 import kotlinx.io.files.Path

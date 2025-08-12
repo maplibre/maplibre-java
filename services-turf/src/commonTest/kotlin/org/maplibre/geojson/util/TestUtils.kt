@@ -1,4 +1,4 @@
-package org.maplibre.geojson.turf
+package org.maplibre.geojson.util
 
 import kotlinx.serialization.json.Json
 import kotlin.test.assertEquals
