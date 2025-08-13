@@ -20,9 +20,9 @@ import org.maplibre.geojson.model.Point
  * @see MultiPoint
  */
 @OptIn(ExperimentalSerializationApi::class)
-internal class MultiPointSerializer : KSerializer<MultiPoint> {
-    private val pointListSerializer = ListSerializer(PointCoordinatesSerializer())
-    private val boundingBoxSerializer = BoundingBoxSerializer()
+internal object MultiPointSerializer : KSerializer<MultiPoint> {
+    private val pointListSerializer = ListSerializer(PointCoordinatesSerializer)
+    private val boundingBoxSerializer = BoundingBoxSerializer
 
     override val descriptor = buildClassSerialDescriptor("MultiPoint") {
         element("coordinates", pointListSerializer.descriptor)

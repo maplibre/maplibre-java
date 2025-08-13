@@ -17,9 +17,9 @@ import org.maplibre.geojson.model.Point
  * @see Point
  */
 @OptIn(ExperimentalSerializationApi::class)
-internal class PointSerializer : KSerializer<Point> {
-    private val pointCoordinatesSerializer = PointCoordinatesSerializer()
-    private val boundingBoxSerializer = BoundingBoxSerializer()
+internal object PointSerializer : KSerializer<Point> {
+    private val pointCoordinatesSerializer = PointCoordinatesSerializer
+    private val boundingBoxSerializer = BoundingBoxSerializer
 
     override val descriptor = buildClassSerialDescriptor("Point") {
         element("coordinates", pointCoordinatesSerializer.descriptor)

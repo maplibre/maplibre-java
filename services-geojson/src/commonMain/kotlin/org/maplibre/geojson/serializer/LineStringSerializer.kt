@@ -19,9 +19,9 @@ import org.maplibre.geojson.model.Point
  * @see LineString
  */
 @OptIn(ExperimentalSerializationApi::class)
-internal class LineStringSerializer : KSerializer<LineString> {
-    private val pointListSerializer = ListSerializer(PointCoordinatesSerializer())
-    private val boundingBoxSerializer = BoundingBoxSerializer()
+internal object LineStringSerializer : KSerializer<LineString> {
+    private val pointListSerializer = ListSerializer(PointCoordinatesSerializer)
+    private val boundingBoxSerializer = BoundingBoxSerializer
 
     override val descriptor = buildClassSerialDescriptor("LineString") {
         element("coordinates", pointListSerializer.descriptor)

@@ -13,7 +13,7 @@ import org.maplibre.geojson.model.Point
  *
  * @see Point
  */
-internal class PointCoordinatesSerializer : KSerializer<Point> {
+internal object PointCoordinatesSerializer : KSerializer<Point> {
     private val delegateSerializer = DoubleArraySerializer()
 
     @OptIn(ExperimentalSerializationApi::class)

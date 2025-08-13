@@ -21,9 +21,9 @@ import org.maplibre.geojson.model.Polygon
  * @see MultiPolygon
  */
 @OptIn(ExperimentalSerializationApi::class)
-internal class MultiPolygonSerializer : KSerializer<MultiPolygon> {
-    private val polygonsCoordinatesListSerializer = ListSerializer(PolygonCoordinatesSerializer())
-    private val boundingBoxSerializer = BoundingBoxSerializer()
+internal object MultiPolygonSerializer : KSerializer<MultiPolygon> {
+    private val polygonsCoordinatesListSerializer = ListSerializer(PolygonCoordinatesSerializer)
+    private val boundingBoxSerializer = BoundingBoxSerializer
 
     override val descriptor = buildClassSerialDescriptor("MultiPolygon") {
         element("coordinates", polygonsCoordinatesListSerializer.descriptor)

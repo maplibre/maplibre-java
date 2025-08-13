@@ -17,9 +17,9 @@ import org.maplibre.geojson.model.Polygon
  * @see Polygon
  */
 @OptIn(ExperimentalSerializationApi::class)
-internal class PolygonSerializer : KSerializer<Polygon> {
-    private val polygonCoordinatesSerializer = PolygonCoordinatesSerializer()
-    private val boundingBoxSerializer = BoundingBoxSerializer()
+internal object PolygonSerializer : KSerializer<Polygon> {
+    private val polygonCoordinatesSerializer = PolygonCoordinatesSerializer
+    private val boundingBoxSerializer = BoundingBoxSerializer
 
     override val descriptor = buildClassSerialDescriptor("Polygon") {
         element("coordinates", polygonCoordinatesSerializer.descriptor)

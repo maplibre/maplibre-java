@@ -19,9 +19,9 @@ import org.maplibre.geojson.model.MultiLineString
  * @see MultiLineString
  */
 @OptIn(ExperimentalSerializationApi::class)
-internal class MultiLineStringSerializer : KSerializer<MultiLineString> {
-    private val lineStringCoordinatesListSerializer = ListSerializer(LineStringCoordinatesSerializer())
-    private val boundingBoxSerializer = BoundingBoxSerializer()
+internal object MultiLineStringSerializer : KSerializer<MultiLineString> {
+    private val lineStringCoordinatesListSerializer = ListSerializer(LineStringCoordinatesSerializer)
+    private val boundingBoxSerializer = BoundingBoxSerializer
 
     override val descriptor = buildClassSerialDescriptor("MultiLineString") {
         element("coordinates", lineStringCoordinatesListSerializer.descriptor)

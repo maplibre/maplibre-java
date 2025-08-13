@@ -14,7 +14,7 @@ import org.maplibre.geojson.model.Point
  *
  * @see BoundingBox
  */
-internal class BoundingBoxSerializer : KSerializer<BoundingBox> {
+internal object BoundingBoxSerializer : KSerializer<BoundingBox> {
     private val delegateSerializer = DoubleArraySerializer()
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -26,10 +26,10 @@ internal class BoundingBoxSerializer : KSerializer<BoundingBox> {
             doubleArrayOf(
                 value.southwest.longitude,
                 value.southwest.latitude,
-                value.southwest.altitude!!,
+                value.southwest.altitude,
                 value.northeast.longitude,
                 value.northeast.latitude,
-                value.northeast.altitude!!
+                value.northeast.altitude
             )
         } else {
             doubleArrayOf(
