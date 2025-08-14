@@ -8,7 +8,7 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 /**
- * Model representing a GeoJSON Polygon. Polygons are build by an outer [LineString] ring and
+ * Model representing a GeoJSON Polygon. Polygons are built by an outer [LineString] ring and
  * zero or more inner [LineString] rings.
  *
  * Every ring (inner, and outer) are a closed linear line rings. This means, that minimum four points are required,
