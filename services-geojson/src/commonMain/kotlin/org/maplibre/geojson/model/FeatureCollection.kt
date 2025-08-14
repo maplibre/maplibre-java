@@ -12,7 +12,7 @@ import kotlin.jvm.JvmStatic
  *
  * See [FeatureCollection specification](https://tools.ietf.org/html/rfc7946#section-3.3) for more details.
  *
- * @param features [Feature]s that holds by this collection.
+ * @param features [Feature]s held by this collection.
  * @param boundingBox [BoundingBox] for the feature collection.
  */
 @Serializable
