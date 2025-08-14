@@ -13,8 +13,8 @@ import kotlin.jvm.JvmStatic
  *
  * See [MultiLineString specification](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.5) for more details.
  *
- * @param lineStrings [LineString] list, that holds by this instance
- * @param boundingBox [BoundingBox] of this multie line
+ * @param lineStrings [LineString] list held by this instance
+ * @param boundingBox [BoundingBox] of this multi line string
  * @throws IllegalArgumentException if the given list of [LineString]s is empty
  */
 @Serializable(with = MultiLineStringSerializer::class)
