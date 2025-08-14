@@ -21,7 +21,7 @@ import kotlin.jvm.JvmStatic
 @SerialName("MultiLineString")
 data class MultiLineString(
     /**
-     * List of [LineString] holds by this instance.
+     * List of [LineString] held by this instance.
      */
     val lineStrings: List<LineString>,
 

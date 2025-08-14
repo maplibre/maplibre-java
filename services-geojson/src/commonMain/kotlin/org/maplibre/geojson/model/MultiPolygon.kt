@@ -8,12 +8,12 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 /**
- * Model representing a GeoJSON MultiPolygon. MultiPolygons are build by an array of [Polygon]s.
+ * Model representing a GeoJSON MultiPolygon. MultiPolygons are built by an array of [Polygon]s.
  * Minimum one Polygon item is required.
  *
  * See [MultiPolygon specification](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.7) for more details.
  *
- * @param polygons [Polygon] list, that holds by this instance
+ * @param polygons [Polygon] list held by this instance
  * @param boundingBox [BoundingBox] of this multi polygon
  * @throws IllegalArgumentException if the given list of [Polygon]s is empty
  */

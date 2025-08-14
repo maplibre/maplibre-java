@@ -8,7 +8,7 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 /**
- * Model representing a GeoJSON Point. Points are build by required [latitude] and [longitude].
+ * Model representing a GeoJSON Point. Points are built by required [latitude] and [longitude].
  * Additionally, an optional [altitude] and [boundingBox] can be provided.
  *
  * See [Point specification](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.2) and
