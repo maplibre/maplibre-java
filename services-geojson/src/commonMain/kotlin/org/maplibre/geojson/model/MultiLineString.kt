@@ -8,7 +8,7 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 /**
- * Model representing a GeoJSON MultiLineString. MultiLineStrings are build by an array of [LineString]s.
+ * Model representing a GeoJSON MultiLineString. MultiLineStrings are built by an array of [LineString]s.
  * Minimum one LineString item is required.
  *
  * See [MultiLineString specification](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.5) for more details.
