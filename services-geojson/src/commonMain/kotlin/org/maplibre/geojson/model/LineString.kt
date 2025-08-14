@@ -9,7 +9,7 @@ import org.maplibre.geojson.utils.json
 import kotlin.jvm.JvmStatic
 
 /**
- * Model representing a GeoJSON LineString. LineStrings are build by an array of two or more [Point]s.
+ * Model representing a GeoJSON LineString. LineStrings are built by an array of two or more [Point]s.
  * A LineString must contains at least two points.
  *
  * See [LineString specification](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.4) for more details.
