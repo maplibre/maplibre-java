@@ -19,7 +19,7 @@ import kotlin.jvm.JvmStatic
 @SerialName("FeatureCollection")
 data class FeatureCollection(
     /**
-     * [Feature]s that holds by this collection.
+     * [Feature]s held by this collection.
      */
     val features: List<Feature>,
 
